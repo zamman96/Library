@@ -1,5 +1,7 @@
 package service;
 
+import util.JDBCUtil;
+
 /**
  * @author 송예진
  *
@@ -17,6 +19,7 @@ public class BookService {
 		}
 		return instance;
 	}
+	JDBCUtil jdbc = JDBCUtil.getInstance();
 	
-
+	//
 }
