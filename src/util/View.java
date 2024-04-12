@@ -7,6 +7,8 @@ public enum View {
 	SIGN,					// 회원가입
 	FOUND,					// 아이디 비밀번호 찾기
 	MYPAGE,
+	IDFOUND,
+	PWFOUND,
 	
 	BOOKSEARCH,					// 검색
 	BOOKSTATE,				// 책 대출/반납/연장 interface
