@@ -137,7 +137,6 @@ public class BookDao {
 		jdbc.update(sql, param);
 	}
 	
-	public List
-	
+
 	// 연장
 }
