@@ -137,6 +137,9 @@ public class BookDao {
 		jdbc.update(sql, param);
 	}
 	
-
+	public void bookDelayChk(List<Object> param) {
+		String sql = "";
+		
+	}
 	// 연장
 }
