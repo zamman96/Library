@@ -1,5 +1,8 @@
 package service;
 
+import java.util.List;
+
+import dao.BookDao;
 import util.JDBCUtil;
 
 /**
@@ -19,7 +22,10 @@ public class BookService {
 		}
 		return instance;
 	}
-	JDBCUtil jdbc = JDBCUtil.getInstance();
+	BookDao bdao = BookDao.getInstance();
 	
 	//
+	public void bookReservation(List<Object> param) {
+		bdao.bookReservation(param);
+	}
 }
