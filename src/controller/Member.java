@@ -82,9 +82,15 @@ public class Member {
 		String id = ScanUtil.nextLine("ID : ");
 		String pw = ScanUtil.nextLine("pass : ");
 		List<Object> param = new ArrayList();
-
+		param.add(id);
+		param.add(pw);
+		boolean loginchk = memberService.login(param);
+		if(loginchk) {
+			Map<String, Object> member = (Map<String, Object>) sessionStorage.get("member");
+			System.out.println(member.get("name")+"님 환영합니다");
+		}
 		
-		return null;
+		return View.MAIN;
 	}
 
 	
