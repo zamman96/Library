@@ -1,7 +1,7 @@
 package controller;
 
-import dao.BookDao;
+import service.BookService;
 
 public class MainController {
-	BookDao book = BookDao.getInstance();
+	BookService bookService = BookService.getInstance();
 }
