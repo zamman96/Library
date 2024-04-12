@@ -10,6 +10,14 @@ import util.JDBCUtil;
  * @author 송예진
  *
  */
+/**
+ * @author PC-13
+ *
+ */
+/**
+ * @author PC-13
+ *
+ */
 public class BookDao {
 	private static BookDao instance;
 
@@ -137,9 +145,19 @@ public class BookDao {
 		jdbc.update(sql, param);
 	}
 	
-	public void bookDelayChk(List<Object> param) {
-		String sql = "";
-		
+	
+	/**	반납/연장해야할 책 목록
+	 * @param param MEM_NO
+	 * @return 빌린 책 목록
+	 */
+	public List<Map<String,Object>> bookDelayChk(List<Object> param) {
+		String sql = "SELECT A.BOOK_NO, A.BOOK_NAME, A.BOOK_AUTHOR, A.BOOK_PUB, A.BOOK_PUB_YEAR, C.CATE_NAME, L.LIB_NAME, B.RENT_DATE, B. RETURN_DATE\r\n" + 
+				"FROM BOOK A, BOOK_RENT B, BOOK_CATEGORY C, LIBRARY L\r\n" + 
+				"WHERE A.BOOK_NO=B.BOOK_NO\r\n" + 
+				"AND A.CATE_NO=C.CATE_NO\r\n" + 
+				"AND A.LIB_NO=L.LIB_NO\r\n" + 
+				"AND B.MEM_NO=?";
+		return jdbc.selectList(sql, param);		
 	}
 	// 연장
 }
