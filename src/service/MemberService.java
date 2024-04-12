@@ -30,8 +30,8 @@ public class MemberService {
 		}
 		Member.sessionStorage.put("member", member);
 		return true;
-		
 	}
+	
 	public void sign(List<Object>param) {
 		memdao.sign(param);
 	}

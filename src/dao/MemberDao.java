@@ -28,7 +28,7 @@ public class MemberDao {
 					 " FROM MEMBER \r\n" +
 					 " WHERE MEM_ID = ? \r\n" +
 					 " AND MEM_PASS = ? " +
-					 " AND DELYN = 'N' ";
+					 " AND DEL_YN = 'N' ";
 		return jdbc.selectOne(sql,param);
 	}
 	
