@@ -2,41 +2,70 @@ package print;
 
 import java.util.Map;
 
+import service.BookService;
+
 public class Print {
+	BookService bookService = BookService.getInstance();
 	public static final String END = "\u001B[0m";
 	public static final String YELLOW = "\u001B[33m";
 	public static final String GREEN = "\u001B[32m";
-	
+
 	public void printVar() {
-		System.out.println("─────────────────────────────────────────────────────────────────────────────────────────────────────────────");
+		System.out.println(
+				"─────────────────────────────────────────────────────────────────────────────────────────────────────────────");
 	}
+
 	public void printBookIndex() {
-		System.out.println("도서 번호\t분류\t제목\t\t\t\t\t작가\t\t출판사");
+		System.out.println("도서 상태\t도서 번호\t분류\t제목\t\t\t\t작가\t\t\t출판사\t\t출판년도");
 	}
-	
+
 	public void printBookList(Map<String, Object> map) {
-				String title= (String) map.get("BOOK_NAME");
-				String author= (String) map.get("BOOK_AUTHOR");
-				System.out.print(map.get("BOOK_NO")+"\t"+
-						map.get("CATE_NAME")+"\t");
-				if(title.length()>=24) {
-					System.out.print(title.substring(0,23)+"..");
-				} else {
-					System.out.print(title);	
-					for(int j=title.length()/5;j<24/5;j++) {
-						System.out.print("\t");
-					}
+		String bookNo = (String) map.get("BOOK_NO");
+		String state = bookService.bookRentState(bookNo);
+		String title = (String) map.get("BOOK_NAME");
+		String author = (String) map.get("BOOK_AUTHOR");
+		String pub = (String) map.get("BOOK_PUB");
+		System.out.print(state + "\t" + map.get("BOOK_NO") + "\t" + map.get("CATE_NAME") + "\t");
+		if (title.length() >= 24) {
+			System.out.print(title.substring(0, 23) + "..");
+		} else {
+			System.out.print(title);
+			for (int j = title.length() / 7; j < 24 / 7; j++) {
+				System.out.print("\t");
+				if(title.length()>=13&&j<2) {
+					break;
 				}
-				if(title.length()>9) {System.out.print("\t");}
-				if(author.length()>=10) {
-					System.out.print("\t"+author.substring(0,9)+"..\t");
-				} else {
-					System.out.print("\t"+author);	
-					for(int j=author.length()/5;j<10/5;j++) {
-						System.out.print("\t");
-					}
-				}
-				if(author.length()>7&&author.length()<8||author.length()>3&&author.length()<7) {System.out.print("\t");}
-				System.out.println(map.get("BOOK_PUB"));
+			}
+
+		}
+		System.out.print("\t");
+		if (author.length() >= 15) {
+			System.out.print(author.substring(0, 14) + "..\t");
+		} else {
+			System.out.print(author);
+			for (int j = author.length() / 7; j < 15 / 7; j++) {
+				System.out.print("\t");
+			}
+
+
+		}
+
+		if (pub.length() >= 10) {
+			System.out.print("\t" + pub.substring(0, 9) + "..\t");
+		} else {
+			System.out.print("\t" + pub);
+			for (int j = pub.length() / 5; j < 10 / 5; j++) {
+				System.out.print("\t");
+			}
+			if(pub.length()>=7&&pub.matches("^[a-zA-Z]*$")) {
+				System.out.print("\t");
+			}
+			
+
+		}
+		if(pub.length()==5) {
+			System.out.print("\t");
+		}
+		System.out.println(map.get("BOOK_PUB_YEAR"));
 	}
 }

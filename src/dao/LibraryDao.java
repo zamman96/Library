@@ -41,4 +41,12 @@ public class LibraryDao {
 				"FROM LIBRARY\r\n";
 		return jdbc.selectList(sql);
 	}
+	
+	// 도서관 하나 저장
+	public Map<String,Object> librarySel(int libNo){
+		String sql ="SELECT *\r\n" + 
+				"FROM LIBRARY\r\n" + 
+				"WHERE LIB_NO="+libNo;
+		return jdbc.selectOne(sql);
+	}
 }

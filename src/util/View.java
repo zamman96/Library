@@ -21,9 +21,9 @@ public enum View {
 	
 	SEATREF,
 	
-	ADMIN					// 관리자	interface > 연체정보, 회원정보, 책추가, 관리자 추가
+	ADMIN,					// 관리자	interface > 연체정보, 회원정보, 책추가, 관리자 추가
 	
-	
+	LIBRARY// 도서관 선택
 	
 	
 }

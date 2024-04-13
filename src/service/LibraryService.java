@@ -3,6 +3,7 @@ package service;
 import java.util.List;
 import java.util.Map;
 
+import controller.MainController;
 import dao.LibraryDao;
 import util.JDBCUtil;
 
@@ -38,4 +39,8 @@ public class LibraryService {
 		return libdao.librarylist();
 	}
 	
+	public void librarySel(int libNo){
+		Map<String, Object> library = libdao.librarySel(libNo);
+		MainController.sessionStorage.put("library", library);
+	}
 }

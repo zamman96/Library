@@ -40,11 +40,11 @@ public class BookDao {
 	}
 	
 	/** O
-	 * @param param BOOK_NO
+	 * @param BOOK_NO
 	 * @return 대출가능할 경우 책 RETURN 없을 경우 NULL > 대출예약 여부
 	 * 이미 대출예약이된 책이거나 대출이된 책을 제외한 리스트의 책 검색 조건
 	 */
-	public Map<String, Object> bookRentYN(List<Object> param){
+	public Map<String, Object> bookRentYN(String bookNo){
 		String sql = "SELECT A.*\r\n" + 
 				"FROM BOOK A\r\n" + 
 				"LEFT OUTER JOIN BOOK_RENT B ON (A.BOOK_NO=B.BOOK_NO)\r\n" + 
@@ -55,8 +55,28 @@ public class BookDao {
 				"FROM BOOK_RENT A, BOOK_REF B\r\n" + 
 				"WHERE A.BOOK_REF_NO=B.BOOK_REF_NO AND A.BOOK_REF_CHK=1)\r\n" + 
 				"AND BOOK_REMARK='사용가능'\r\n" + 
-				"AND A.BOOK_NO=?";
-		return jdbc.selectOne(sql, param);
+				"AND A.BOOK_NO="+bookNo;
+		return jdbc.selectOne(sql);
+	}
+/////////////////// 확인필요
+	
+	/**
+	 * @param bookNo
+	 * @return 대출되지않은대출 예약중인 도서
+	 */
+	public Map<String,Object> bookRefState(String bookNo){
+		String sql = "SELECT A.*  \r\n" + 
+				"				FROM BOOK A  \r\n" + 
+				"				LEFT OUTER JOIN BOOK_RENT B ON (A.BOOK_NO=B.BOOK_NO)  \r\n" + 
+				"				WHERE A.BOOK_NO NOT IN (SELECT BOOK_NO  \r\n" + 
+				"				FROM BOOK_RENT  \r\n" + 
+				"				WHERE RETURN_YN='N')  \r\n" + 
+				"				AND A.BOOK_NO IN (SELECT DISTINCT A.BOOK_NO  \r\n" + 
+				"				FROM BOOK_RENT A, BOOK_REF B  \r\n" + 
+				"				WHERE A.BOOK_REF_NO=B.BOOK_REF_NO AND A.BOOK_REF_CHK=1)  \r\n" + 
+				"				AND BOOK_REMARK='사용가능'  \r\n" + 
+				"				AND A.BOOK_NO="+bookNo;
+		return jdbc.selectOne(sql);
 	}
 	
 	/** O
@@ -168,7 +188,7 @@ public class BookDao {
 	}
 	
 	/**	O
-	 * 만약에 대출 예약날짜 이후로 7일이 지났다면 예약가능 
+	 * 만약에 전 사람의 대출 예약날짜 이후로 7일이 지났다면 예약가능 
 	 * @param param = MEM_NO
 	 * @return 현재 도서관에서 대출 가능한 목록 / null일 경우 빌릴수 있는 예약도서가 없음
 	 * 예약할지 여부를 물어본 뒤 (현재 방문한 도서관에 있는 걸) BOOK_REF_CHK 변경해야함
@@ -409,7 +429,7 @@ public class BookDao {
 	
 	
 	// 연체시 member avadate 업데이트 
-	/**
+	/**O
 	 * @param param MEM_NO
 	 * 연체 시에 전체 반납시 UPDATE
 	 */
@@ -428,7 +448,7 @@ public class BookDao {
 		
 	}
 	
-	/**
+	/**O
 	 * @param param BOOK_NO, MEM_NO
 	 * 연체 시 부분 반납시 UPDATE
 	 */
@@ -447,6 +467,48 @@ public class BookDao {
 		jdbc.update(sql, param);
 	}
 	
+	/**O
+	 * @param param BOOK_NO
+	 * 대출 insert시에 써야함 (대출 / 대출 예약)
+	 */
+	public void bookRentCount(List<Object>param) {
+		String sql = "UPDATE BOOK\r\n" + 
+				"SET BOOK_RENT_COUNT=BOOK_RENT_COUNT+1\r\n" + 
+				"WHERE BOOK_NO = ?";
+		jdbc.update(sql, param);
+	}
 
+/////////////////////////////////////////
+	/**
+	 * @param param LIB_NO
+	 * @return 한 도서관에서의 전체 순위 10위
+	 */
+	public List<Map<String,Object>> bookTopList(List<Object> param){
+		String sql = "SELECT A.*\r\n" + 
+				"FROM(SELECT A.BOOK_NO, A.BOOK_NAME, A.BOOK_AUTHOR, A.BOOK_PUB, A.BOOK_PUB_YEAR, B.CATE_NAME, A.BOOK_RENT_COUNT\r\n" + 
+				"FROM BOOK A, BOOK_CATEGORY B\r\n" + 
+				"WHERE A.CATE_NO=B.CATE_NO\r\n" + 
+				"AND A.BOOK_REMARK='사용가능'\r\n" + 
+				"AND A.LIB_NO=?\r\n" + 
+				"ORDER BY A.BOOK_RENT_COUNT DESC)A\r\n" + 
+				"WHERE ROWNUM<=10";
+		return jdbc.selectList(sql, param);
+	}
+	
+//	/**
+//	 * @param param LIB_NO, CATE_NO
+//	 * @return 한 도서관의 분류별 순위 5위
+//	 */
+//	public List<Map<String,Object>> bookCateTopList(List<Object> param){
+//		String sql = "SELECT A.*\r\n" + 
+//				"FROM(SELECT A.BOOK_NO, A.BOOK_NAME, A.BOOK_AUTHOR, A.BOOK_PUB, A.BOOK_PUB_YEAR, B.CATE_NAME, A.BOOK_RENT_COUNT\r\n" + 
+//				"FROM BOOK A, BOOK_CATEGORY B\r\n" + 
+//				"WHERE A.CATE_NO=B.CATE_NO\r\n" + 
+//				"AND A.BOOK_REMARK='사용가능'\r\n" + 
+//				"AND A.LIB_NO=?\r\n" + 
+//				"AND A.CATE_NO=?\r\n" + 
+//				"ORDER BY A.BOOK_RENT_COUNT DESC)A\r\n" + 
+//				"WHERE ROWNUM<=5";
+//	}
 
 }
