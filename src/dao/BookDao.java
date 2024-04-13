@@ -152,7 +152,7 @@ public class BookDao {
 	
 	/**	반납해야할 책 목록
 	 * @param param MEM_NO
-	 * @return 빌린 책 목록
+	 * @return 빌린 책 목록 리스트
 	 */
 	public List<Map<String,Object>> bookReturnList(List<Object> param) {
 		String sql = "SELECT A.BOOK_NO, A.BOOK_NAME, A.BOOK_AUTHOR, A.BOOK_PUB, A.BOOK_PUB_YEAR, C.CATE_NAME, L.LIB_NAME, B.RENT_DATE, B. RETURN_DATE\r\n" + 
@@ -167,7 +167,7 @@ public class BookDao {
 	
 	/**
 	 * @param param MEM_NO
-	 * @return 연장 가능한 책 목록
+	 * @return 연장 가능한 책 목록 리스트
 	 */
 	public List<Map<String,Object>> bookDelayList(List<Object> param) {
 		String sql = "SELECT A.BOOK_NO, A.BOOK_NAME, A.BOOK_AUTHOR, A.BOOK_PUB, A.BOOK_PUB_YEAR, C.CATE_NAME, L.LIB_NAME, B.RENT_DATE, B. RETURN_DATE\r\n" + 
