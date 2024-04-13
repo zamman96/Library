@@ -11,7 +11,7 @@ public class Print {
 		System.out.println("─────────────────────────────────────────────────────────────────────────────────────────────────────────────");
 	}
 	public void printBookIndex() {
-		System.out.println("도서 번호\t분류\t제목\t\t\t\t\t작가\t\t발행처");
+		System.out.println("도서 번호\t분류\t제목\t\t\t\t\t작가\t\t출판사");
 	}
 	
 	public void printBookList(Map<String, Object> map) {

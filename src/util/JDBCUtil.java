@@ -1,15 +1,13 @@
 package util;
 
-import java.math.BigDecimal;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +45,8 @@ public class JDBCUtil {
 	private Connection conn = null;
 	private ResultSet rs = null;
 	private PreparedStatement ps = null;
+	
+
 	
 	public List<Map<String, Object>> selectList(String sql, List<Object> param){
 		// sql => "SELECT * FROM MEMBER WHERE MEM_ADD1 LIKE '%'||?||'%'"
@@ -154,7 +154,7 @@ public class JDBCUtil {
 		}
 		return result;
 	}
-	
+		
 	public <T> List<T> selectList(String sql,  List<Object> param , Class<T> type) {
 		List<Map<String, Object>> list = selectList(sql, param);
 		return ConvertUtils.convertToList(list, type);
