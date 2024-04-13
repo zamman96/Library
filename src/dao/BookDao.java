@@ -18,6 +18,10 @@ import util.JDBCUtil;
  * @author PC-13
  *
  */
+/**
+ * @author PC-13
+ *
+ */
 public class BookDao {
 	private static BookDao instance;
 
@@ -146,11 +150,11 @@ public class BookDao {
 	}
 	
 	
-	/**	반납/연장해야할 책 목록
+	/**	반납해야할 책 목록
 	 * @param param MEM_NO
 	 * @return 빌린 책 목록
 	 */
-	public List<Map<String,Object>> bookDelayChk(List<Object> param) {
+	public List<Map<String,Object>> bookReturnList(List<Object> param) {
 		String sql = "SELECT A.BOOK_NO, A.BOOK_NAME, A.BOOK_AUTHOR, A.BOOK_PUB, A.BOOK_PUB_YEAR, C.CATE_NAME, L.LIB_NAME, B.RENT_DATE, B. RETURN_DATE\r\n" + 
 				"FROM BOOK A, BOOK_RENT B, BOOK_CATEGORY C, LIBRARY L\r\n" + 
 				"WHERE A.BOOK_NO=B.BOOK_NO\r\n" + 
@@ -159,5 +163,20 @@ public class BookDao {
 				"AND B.MEM_NO=?";
 		return jdbc.selectList(sql, param);		
 	}
-	// 연장
+	
+	
+	/**
+	 * @param param MEM_NO
+	 * @return 연장 가능한 책 목록
+	 */
+	public List<Map<String,Object>> bookDelayList(List<Object> param) {
+		String sql = "SELECT A.BOOK_NO, A.BOOK_NAME, A.BOOK_AUTHOR, A.BOOK_PUB, A.BOOK_PUB_YEAR, C.CATE_NAME, L.LIB_NAME, B.RENT_DATE, B. RETURN_DATE\r\n" + 
+				"FROM BOOK A, BOOK_RENT B, BOOK_CATEGORY C, LIBRARY L\r\n" + 
+				"WHERE A.BOOK_NO=B.BOOK_NO\r\n" + 
+				"AND A.CATE_NO=C.CATE_NO\r\n" + 
+				"AND A.LIB_NO=L.LIB_NO\r\n" + 
+				"AND B.DELAY_YN='N'\r\n" + 
+				"AND B.MEM_NO=?";
+		return jdbc.selectList(sql, param);
+	}
 }
