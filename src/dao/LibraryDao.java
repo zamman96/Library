@@ -49,4 +49,11 @@ public class LibraryDao {
 				"WHERE LIB_NO="+libNo;
 		return jdbc.selectOne(sql);
 	}
+	
+	public List<Map<String,Object>> searchLibrary(String input){
+		String sql = "SELECT *\r\n" + 
+				"FROM LIBRARY\r\n" + 
+				"WHERE LIB_NAME LIKE '%"+input+"%'";
+		return jdbc.selectList(sql);
+	}
 }

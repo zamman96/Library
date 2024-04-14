@@ -299,7 +299,7 @@ public class BookService {
 	public void memberOverdueUpdate(List<Object> param) {
 		bdao.memberOverdueUpdate(param);
 	}
-	
+// 책 리스트
 	/**
 	 * @param bookNo
 	 * @return 책의 대출 상태
@@ -312,7 +312,131 @@ public class BookService {
 		return "대출불가";
 	}
 	
+	/**
+	 * @param LIB_NO
+	 * @return 한 도서관에서의 전체 순위 10위
+	 */
 	public List<Map<String,Object>> bookTopList(List<Object> param){
 		return bdao.bookTopList(param);
 	}
+	
+	/**
+	 * @return 전체 도서관에서의 전체 순위
+	 * 
+	 */
+	public List<Map<String,Object>> bookTopAllList(){
+		return bdao.bookTopAllList();
+	}
+	
+	/**O
+	 * @param LIB_NO, ROWNUM
+	 * @return 한 도서관 전체 리스트
+	 */
+	public List<Map<String,Object>> bookList(List<Object> param){
+		return bdao.bookList(param);
+	}
+	
+	/**O
+	 * @param LIB_NO
+	 * @return 한 도서관의 전체 도서 리스트 갯수
+	 */
+	public int bookListCount(List<Object> param){
+		Map<String,Object> map = bdao.bookListCount(param);
+		int count = ((BigDecimal) map.get("COUNT")).intValue();
+		return count;
+	}
+
+	/**O
+	 * @param ROWNUM
+	 * @return 도서관 전체리스트
+	 */
+	public List<Map<String,Object>> bookAllList(List<Object> param){
+		return bdao.bookAllList(param);
+	}
+	
+	/**O
+	 * @return 전체 도서관의 전체 도서 갯수
+	 */
+	public int bookAllListCount(){
+		Map<String,Object> map = bdao.bookAllListCount();
+		int count = ((BigDecimal) map.get("COUNT")).intValue();
+		return count;
+	}
+	
+	/**
+	 * @param LIB_NO, CATE_NO, ROWNUM
+	 * @return 한 도서관의 분류별 책 리스트
+	 */
+	public List<Map<String,Object>> bookCateList(List<Object> param){
+		return bdao.bookCateList(param);
+	}
+	
+	/**
+	 * @param LIB_NO, CATE_NO
+	 * @return 한 도서관의 분류별 전체 갯수
+	 */
+	public int bookCateListCount(List<Object> param){
+		Map<String,Object> map = bdao.bookCateListCount(param);
+		int count = ((BigDecimal) map.get("COUNT")).intValue();
+		return count;
+	}
+	
+	/**
+	 * @param CATE_NO, ROWNUM
+	 * @return 전체 도서관의 분류별 책 리스트
+	 */
+	public List<Map<String,Object>> bookCateAllList(List<Object> param){
+		return bdao.bookCateAllList(param);
+	}
+	
+	/**
+	 * @param CATE_NO
+	 * @return 전체 도서관의 분류별 전체 갯수
+	 */
+	public int bookCateAllListCount(List<Object> param){
+		Map<String,Object> map = bdao.bookCateAllListCount(param);
+		int count = ((BigDecimal) map.get("COUNT")).intValue();
+		return count;
+	}
+	
+	/**
+	 * @param LIB_NO
+	 * @param 1 = 제목, 2 = 작가, 3 = 출판사 검색
+	 * @param ROWNUM
+	 * @return 한 도서관의 검색결과
+	 */
+	public List<Map<String,Object>> bookSearchList(List<Object> param, int sel){
+		return bdao.bookSearchList(param, sel);
+	}
+	
+	/**
+	 * @param LIB_NO
+	 * @param 1 = 제목, 2 = 작가, 3 = 출판사 검색
+	 * @return 한 도서관의 검색결과 전체 갯수
+	 */
+	public int bookSearchListCount(List<Object> param, int sel){
+		Map<String,Object> map = bdao.bookSearchListCount(param, sel);
+		int count = ((BigDecimal) map.get("COUNT")).intValue();
+		return count;
+	}
+	/**
+	 * @param 1 = 제목, 2 = 작가, 3 = 출판사 검색
+	 * @param ROWNUM
+	 * @return 전체 도서관의 도서 검색결과
+	 */
+	public List<Map<String,Object>> bookSearchAllList(List<Object> param, int sel){
+		return bdao.bookSearchAllList(param, sel);
+	}
+	
+	/**
+	 * @param 1 = 제목, 2 = 작가, 3 = 출판사 검색
+	 * @return 전체 도서관의 검색결과 전체 갯수
+	 */
+	public int bookSearchAllListCount(List<Object> param, int sel){
+		Map<String,Object> map = bdao.bookSearchAllListCount(param, sel);
+		int count = ((BigDecimal) map.get("COUNT")).intValue();
+		return count;
+	}
+	
+	
 }

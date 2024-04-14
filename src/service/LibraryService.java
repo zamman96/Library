@@ -30,6 +30,10 @@ public class LibraryService {
 	}
 	
 	// 지역선택 시 지역에 맞는 도서관 출럭
+	/**
+	 * @LOC_NO
+	 * @return
+	 */
 	public List<Map<String,Object>> localLibraryList(List<Object> param){
 		return libdao.localLibraryList(param);
 	}
@@ -39,8 +43,16 @@ public class LibraryService {
 		return libdao.librarylist();
 	}
 	
+	/**
+	 * @param libNo
+	 * sessionStorage에 library정보 저장
+	 */
 	public void librarySel(int libNo){
 		Map<String, Object> library = libdao.librarySel(libNo);
 		MainController.sessionStorage.put("library", library);
+	}
+	
+	public List<Map<String,Object>> searchLibrary(String input) {
+		return libdao.searchLibrary(input);
 	}
 }

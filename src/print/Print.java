@@ -1,10 +1,13 @@
 package print;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import service.BookService;
 
-public class Print {
+public class Print extends Notice {
 	BookService bookService = BookService.getInstance();
 	public static final String END = "\u001B[0m";
 	public static final String YELLOW = "\u001B[33m";
@@ -12,11 +15,11 @@ public class Print {
 
 	public void printVar() {
 		System.out.println(
-				"─────────────────────────────────────────────────────────────────────────────────────────────────────────────");
+				"─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────");
 	}
 
 	public void printBookIndex() {
-		System.out.println("도서 상태\t도서 번호\t분류\t제목\t\t\t\t작가\t\t\t출판사\t\t출판년도");
+		System.out.println("도서관이름\t\t도서 상태\t도서 번호\t분류\t제목\t\t\t\t작가\t\t\t출판사\t\t출판년도");
 	}
 
 	public void printBookList(Map<String, Object> map) {
@@ -25,6 +28,8 @@ public class Print {
 		String title = (String) map.get("BOOK_NAME");
 		String author = (String) map.get("BOOK_AUTHOR");
 		String pub = (String) map.get("BOOK_PUB");
+		System.out.print(map.get("LIB_NAME")+"\t");
+		if(((String) map.get("LIB_NAME")).length()<=5) {System.out.print("\t");}
 		System.out.print(state + "\t" + map.get("BOOK_NO") + "\t" + map.get("CATE_NAME") + "\t");
 		if (title.length() >= 24) {
 			System.out.print(title.substring(0, 23) + "..");
@@ -36,7 +41,9 @@ public class Print {
 					break;
 				}
 			}
-
+			if(title.contains(":")&&title.length()<15) {
+				System.out.print("\t");
+			}
 		}
 		System.out.print("\t");
 		if (author.length() >= 15) {
@@ -67,5 +74,32 @@ public class Print {
 			System.out.print("\t");
 		}
 		System.out.println(map.get("BOOK_PUB_YEAR"));
+	}
+
+	public Map<Integer, Integer> printLibraryList(List<Map<String,Object>> list) {
+		// 
+		Map<Integer, Integer> num = new HashMap<Integer, Integer>();
+		int count = 0;
+		for (Map<String, Object> map : list) {
+			System.out.print(map.get("LIB_NO"));
+			if(((BigDecimal) map.get("LIB_NO")).intValue()<10) System.out.print(" ");
+			System.out.print(" : "+map.get("LIB_NAME") + "\t");
+			if(((String) map.get("LIB_NAME")).length()<=7) {System.out.print("\t");}
+			count++;
+			if(count%4==0&&count!=20) System.out.println();
+			num.put(((BigDecimal)map.get("LIB_NO")).intValue(), 1);
+		}
+		System.out.println();
+		return num;
+	}
+	
+	public Map<Integer, Integer> printLocalList(List<Map<String,Object>> list){
+		Map<Integer, Integer> num = new HashMap<Integer, Integer>();
+		for (Map<String, Object> map : list) {
+			System.out.print(map.get("LOC_NO") + " : " + map.get("LOC_NAME") + "  ");
+			num.put(((BigDecimal)map.get("LOC_NO")).intValue() , 1);
+		}
+		System.out.println();
+		return num;
 	}
 }

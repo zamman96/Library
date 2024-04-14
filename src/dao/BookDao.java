@@ -478,16 +478,19 @@ public class BookDao {
 		jdbc.update(sql, param);
 	}
 
-/////////////////////////////////////////
-	/**
-	 * @param param LIB_NO
+
+//  리스트
+	
+	/**O
+	 * @param LIB_NO
 	 * @return 한 도서관에서의 전체 순위 10위
 	 */
 	public List<Map<String,Object>> bookTopList(List<Object> param){
 		String sql = "SELECT A.*\r\n" + 
-				"FROM(SELECT A.BOOK_NO, A.BOOK_NAME, A.BOOK_AUTHOR, A.BOOK_PUB, A.BOOK_PUB_YEAR, B.CATE_NAME, A.BOOK_RENT_COUNT\r\n" + 
-				"FROM BOOK A, BOOK_CATEGORY B\r\n" + 
+				"FROM(SELECT A.BOOK_NO, A.BOOK_NAME, A.BOOK_AUTHOR, A.BOOK_PUB, A.BOOK_PUB_YEAR, B.CATE_NAME, C.LIB_NAME, A.BOOK_RENT_COUNT\r\n" + 
+				"FROM BOOK A, BOOK_CATEGORY B, LIBRARY C\r\n" + 
 				"WHERE A.CATE_NO=B.CATE_NO\r\n" + 
+				"AND A.LIB_NO=C.LIB_NO\r\n" + 
 				"AND A.BOOK_REMARK='사용가능'\r\n" + 
 				"AND A.LIB_NO=?\r\n" + 
 				"ORDER BY A.BOOK_RENT_COUNT DESC)A\r\n" + 
@@ -495,20 +498,266 @@ public class BookDao {
 		return jdbc.selectList(sql, param);
 	}
 	
-//	/**
-//	 * @param param LIB_NO, CATE_NO
-//	 * @return 한 도서관의 분류별 순위 5위
-//	 */
-//	public List<Map<String,Object>> bookCateTopList(List<Object> param){
-//		String sql = "SELECT A.*\r\n" + 
-//				"FROM(SELECT A.BOOK_NO, A.BOOK_NAME, A.BOOK_AUTHOR, A.BOOK_PUB, A.BOOK_PUB_YEAR, B.CATE_NAME, A.BOOK_RENT_COUNT\r\n" + 
-//				"FROM BOOK A, BOOK_CATEGORY B\r\n" + 
-//				"WHERE A.CATE_NO=B.CATE_NO\r\n" + 
-//				"AND A.BOOK_REMARK='사용가능'\r\n" + 
-//				"AND A.LIB_NO=?\r\n" + 
-//				"AND A.CATE_NO=?\r\n" + 
-//				"ORDER BY A.BOOK_RENT_COUNT DESC)A\r\n" + 
-//				"WHERE ROWNUM<=5";
-//	}
+	/**
+	 * @return 전체 도서관에서의 전체 순위 10위
+	 */
+	public List<Map<String,Object>> bookTopAllList(){
+		String sql = "SELECT A.*  \r\n" + 
+				"				FROM(SELECT A.BOOK_NO, A.BOOK_NAME, A.BOOK_AUTHOR, A.BOOK_PUB, A.BOOK_PUB_YEAR, B.CATE_NAME, C.LIB_NAME, A.BOOK_RENT_COUNT  \r\n" + 
+				"				FROM BOOK A, BOOK_CATEGORY B, LIBRARY C  \r\n" + 
+				"				WHERE A.CATE_NO=B.CATE_NO \r\n" + 
+				"				AND A.LIB_NO=C.LIB_NO  \r\n" + 
+				"				AND A.BOOK_REMARK='사용가능'  \r\n" + 
+				"				ORDER BY A.BOOK_RENT_COUNT DESC)A  \r\n" + 
+				"				WHERE ROWNUM<=10";
+		return jdbc.selectList(sql);
+	}
+	
+	
+	/**
+	 * @param LIB_NO, ROWNUM
+	 * @return 한 도서관 전체 리스트
+	 */
+	public List<Map<String,Object>> bookList(List<Object> param){
+		String sql="SELECT *\r\n" + 
+				"FROM (\r\n" + 
+				"SELECT ROWNUM AS RN,A.BOOK_NO, A.BOOK_NAME, A.BOOK_AUTHOR, A.BOOK_PUB, A.BOOK_PUB_YEAR, B.CATE_NAME, C.LIB_NAME\r\n" + 
+				"FROM BOOK A, BOOK_CATEGORY B, LIBRARY C\r\n" + 
+				"WHERE A.CATE_NO=B.CATE_NO\r\n" + 
+				"AND A.LIB_NO=C.LIB_NO\r\n" + 
+				" AND A.BOOK_REMARK= '사용가능' "+
+				"AND A.LIB_NO=? \r\n" + 
+				"ORDER BY A.LIB_NO, A.CATE_NO, A.BOOK_NO)\r\n" + 
+				"WHERE RN>=? AND RN<=?";
+		return jdbc.selectList(sql, param);
+	}
+	
+	/**
+	 * @param LIB_NO
+	 * @return 한 도서관 전체 리스트 총 갯수
+	 */
+	public Map<String,Object> bookListCount(List<Object> param){
+		String sql="SELECT COUNT(*) AS COUNT\r\n" + 
+				"FROM (\r\n" + 
+				"SELECT A.BOOK_NO, A.BOOK_NAME, A.BOOK_AUTHOR, A.BOOK_PUB, A.BOOK_PUB_YEAR, B.CATE_NAME, C.LIB_NAME\r\n" + 
+				"FROM BOOK A, BOOK_CATEGORY B, LIBRARY C\r\n" + 
+				"WHERE A.CATE_NO=B.CATE_NO\r\n" + 
+				"AND A.LIB_NO=C.LIB_NO\r\n" + 
+				" AND A.BOOK_REMARK= '사용가능' "+
+				"AND A.LIB_NO=? \r\n" + 
+				"ORDER BY A.LIB_NO, A.CATE_NO, A.BOOK_NO)\r\n";
+		return jdbc.selectOne(sql, param);
+	}
+	
+	/**
+	 * @param ROWNUM
+	 * @return 전체 도서관 전체 리스트
+	 */
+	public List<Map<String,Object>> bookAllList(List<Object> param){
+		String sql="SELECT *\r\n" + 
+				"FROM (\r\n" + 
+				"SELECT ROWNUM AS RN,A.BOOK_NO, A.BOOK_NAME, A.BOOK_AUTHOR, A.BOOK_PUB, A.BOOK_PUB_YEAR, B.CATE_NAME, C.LIB_NAME\r\n" + 
+				"FROM BOOK A, BOOK_CATEGORY B, LIBRARY C\r\n" + 
+				"WHERE A.CATE_NO=B.CATE_NO\r\n" + 
+				"AND A.LIB_NO=C.LIB_NO\r\n" + 
+				" AND A.BOOK_REMARK= '사용가능' "+
+				"ORDER BY A.LIB_NO, A.CATE_NO, A.BOOK_NO)\r\n" + 
+				"WHERE RN>=? AND RN<=?";
+		return jdbc.selectList(sql, param);
+	}
+	
+	/**
+	 * @return 모든 도서관 도서관 전체 리스트 총 갯수
+	 */
+	public Map<String,Object> bookAllListCount(){
+		String sql="SELECT COUNT(*) AS COUNT\r\n" + 
+				"FROM (\r\n" + 
+				"SELECT A.BOOK_NO, A.BOOK_NAME, A.BOOK_AUTHOR, A.BOOK_PUB, A.BOOK_PUB_YEAR, B.CATE_NAME, C.LIB_NAME\r\n" + 
+				"FROM BOOK A, BOOK_CATEGORY B, LIBRARY C\r\n" + 
+				"WHERE A.CATE_NO=B.CATE_NO\r\n" + 
+				"AND A.LIB_NO=C.LIB_NO\r\n" + 
+				" AND A.BOOK_REMARK= '사용가능' "+
+				"ORDER BY A.LIB_NO, A.CATE_NO, A.BOOK_NO)\r\n";
+		return jdbc.selectOne(sql);
+	}
 
+	/**
+	 * @param LIB_NO, CATE_NO, ROWNUM
+	 * @return 한 도서관의 분류별 책 리스트
+	 */
+	public List<Map<String,Object>> bookCateList(List<Object> param){
+		String sql ="SELECT *\r\n" + 
+				"FROM (\r\n" + 
+				"SELECT A.BOOK_NO, A.BOOK_NAME, A.BOOK_AUTHOR, A.BOOK_PUB, A.BOOK_PUB_YEAR, B.CATE_NAME, C.LIB_NAME\r\n" + 
+				"FROM BOOK A, BOOK_CATEGORY B, LIBRARY C\r\n" + 
+				"WHERE A.CATE_NO=B.CATE_NO\r\n" + 
+				" AND A.BOOK_REMARK= '사용가능' "+
+				"AND A.LIB_NO=C.LIB_NO\r\n" + 
+				"AND A.LIB_NO=? \r\n" + 
+				"AND A.CATE_NO=?\r\n" + 
+				"ORDER BY A.LIB_NO, A.CATE_NO, A.BOOK_NO)\r\n" + 
+				"WHERE ROWNUM>=? AND ROWNUM<=?";
+		return jdbc.selectList(sql, param);
+	}
+	
+	/**
+	 * @param LIB_NO, CATE_NO
+	 * @return 한 도서관의 분류별 전체 갯수
+	 */
+	public Map<String,Object> bookCateListCount(List<Object> param){
+		String sql ="SELECT COUNT(*) AS COUNT\r\n" + 
+				"FROM (\r\n" + 
+				"SELECT A.BOOK_NO, A.BOOK_NAME, A.BOOK_AUTHOR, A.BOOK_PUB, A.BOOK_PUB_YEAR, B.CATE_NAME, C.LIB_NAME\r\n" + 
+				"FROM BOOK A, BOOK_CATEGORY B, LIBRARY C\r\n" + 
+				"WHERE A.CATE_NO=B.CATE_NO\r\n" + 
+				" AND A.BOOK_REMARK= '사용가능' "+
+				"AND A.LIB_NO=C.LIB_NO\r\n" + 
+				"AND A.LIB_NO=? \r\n" + 
+				"AND A.CATE_NO=?\r\n" + 
+				"ORDER BY A.LIB_NO, A.CATE_NO, A.BOOK_NO)\r\n";
+		return jdbc.selectOne(sql, param);
+	}
+	/**
+	 * @param CATE_NO, ROWNUM
+	 * @return 전체 도서관의 분류별 책 리스트
+	 */
+	public List<Map<String,Object>> bookCateAllList(List<Object> param){
+		String sql ="SELECT *\r\n" + 
+				"FROM (\r\n" + 
+				"SELECT A.BOOK_NO, A.BOOK_NAME, A.BOOK_AUTHOR, A.BOOK_PUB, A.BOOK_PUB_YEAR, B.CATE_NAME, C.LIB_NAME\r\n" + 
+				"FROM BOOK A, BOOK_CATEGORY B, LIBRARY C\r\n" + 
+				"WHERE A.CATE_NO=B.CATE_NO\r\n" +
+				" AND A.BOOK_REMARK= '사용가능' "+
+				"AND A.LIB_NO=C.LIB_NO\r\n" + 
+				"AND A.CATE_NO=?\r\n" + 
+				"ORDER BY ORDER BY A.LIB_NO, A.CATE_NO, A.BOOK_NO)\r\n" + 
+				"WHERE ROWNUM>=? AND ROWNUM<=?";
+		return jdbc.selectList(sql, param);
+	}
+	
+	/**
+	 * @param CATE_NO
+	 * @return 전체 도서관의 분류별 전체 갯수
+	 */
+	public Map<String,Object> bookCateAllListCount(List<Object> param){
+		String sql ="SELECT COUNT(*) AS COUNT\r\n" + 
+				"FROM (\r\n" + 
+				"SELECT A.BOOK_NO, A.BOOK_NAME, A.BOOK_AUTHOR, A.BOOK_PUB, A.BOOK_PUB_YEAR, B.CATE_NAME, C.LIB_NAME\r\n" + 
+				"FROM BOOK A, BOOK_CATEGORY B, LIBRARY C\r\n" + 
+				"WHERE A.CATE_NO=B.CATE_NO\r\n" + 
+				" AND A.BOOK_REMARK= '사용가능' "+
+				"AND A.LIB_NO=C.LIB_NO\r\n" + 
+				"AND A.CATE_NO=?\r\n" + 
+				"ORDER BY A.LIB_NO, A.CATE_NO, A.BOOK_NO)\r\n";
+		return jdbc.selectOne(sql, param);
+	}
+	
+	/**
+	 * @param LIB_NO
+	 * @param 1 = 제목, 2 = 작가, 3 = 출판사 검색
+	 * @param ROWNUM
+	 * @return 한 도서관의 검색결과
+	 */
+	public List<Map<String, Object>> bookSearchList(List<Object> param, int sel){
+		String sql = "SELECT *\r\n" + 
+				"FROM (\r\n" + 
+				"SELECT ROWNUM AS RN,A.BOOK_NO, A.BOOK_NAME, A.BOOK_AUTHOR, A.BOOK_PUB, A.BOOK_PUB_YEAR, B.CATE_NAME, C.LIB_NAME\r\n" + 
+				"FROM BOOK A, BOOK_CATEGORY B, LIBRARY C\r\n" + 
+				"WHERE A.CATE_NO=B.CATE_NO\r\n" + 
+				"AND A.LIB_NO=C.LIB_NO\r\n" + 
+				"AND A.LIB_NO=? \r\n"
+		+ " AND A.BOOK_REMARK= '사용가능' ";
+		if(sel==1) {
+				sql+="AND A.BOOK_NAME LIKE '%||?||%'\r\n";
+		}
+		if(sel==2) {
+				sql+="AND A.BOOK_AUTHOR LIKE '%||?||%'\r\n";
+		}
+		if(sel==3) {
+				sql+="AND A.BOOK_PUB LIKE '%||?||%'\r\n";
+		}
+				sql+="ORDER BY A.LIB_NO, A.CATE_NO, A.BOOK_NO)\r\n" + 
+				"WHERE RN>=? AND RN<=?";
+			return jdbc.selectList(sql, param);
+	}
+	
+	/**
+	 * @param LIB_NO
+	 * @param 1 = 제목, 2 = 작가, 3 = 출판사 검색
+	 * @return 한 도서관의 검색결과 전체 갯수
+	 */
+	public Map<String, Object> bookSearchListCount(List<Object> param, int sel){
+		String sql = "SELECT COUNT(*) AS COUNT\r\n" + 
+				"FROM (\r\n" + 
+				"SELECT A.BOOK_NO, A.BOOK_NAME, A.BOOK_AUTHOR, A.BOOK_PUB, A.BOOK_PUB_YEAR, B.CATE_NAME, C.LIB_NAME\r\n" + 
+				"FROM BOOK A, BOOK_CATEGORY B, LIBRARY C\r\n" + 
+				"WHERE A.CATE_NO=B.CATE_NO\r\n" + 
+				"AND A.LIB_NO=C.LIB_NO\r\n" + 
+				"AND A.LIB_NO=? \r\n"
+		+ " AND A.BOOK_REMARK= '사용가능' ";
+		if(sel==1) {
+				sql+="AND A.BOOK_NAME LIKE '%||?||%'\r\n";
+		}
+		if(sel==2) {
+				sql+="AND A.BOOK_AUTHOR LIKE '%||?||%'\r\n";
+		}
+		if(sel==3) {
+				sql+="AND A.BOOK_PUB LIKE '%||?||%'\r\n";
+		}
+				sql+="ORDER BY A.LIB_NO, A.CATE_NO, A.BOOK_NO)\r\n";
+			return jdbc.selectOne(sql, param);
+	}
+	
+	/**
+	 * @param 1 = 제목, 2 = 작가, 3 = 출판사 검색
+	 * @param ROWNUM
+	 * @return 전체 도서관의 도서 검색결과
+	 */
+	public List<Map<String, Object>> bookSearchAllList(List<Object> param, int sel){
+		String sql = "SELECT *\r\n" + 
+				"FROM (\r\n" + 
+				"SELECT ROWNUM AS RN, A.BOOK_NO, A.BOOK_NAME, A.BOOK_AUTHOR, A.BOOK_PUB, A.BOOK_PUB_YEAR, B.CATE_NAME, C.LIB_NAME\r\n" + 
+				"FROM BOOK A, BOOK_CATEGORY B, LIBRARY C\r\n" + 
+				"WHERE A.CATE_NO=B.CATE_NO\r\n" + 
+				"AND A.LIB_NO=C.LIB_NO\r\n"
+				+ " AND A.BOOK_REMARK= '사용가능' ";
+		if(sel==1) {
+			sql+="AND A.BOOK_NAME LIKE '%||?||%'\r\n";
+		}
+		if(sel==2) {
+			sql+="AND A.BOOK_AUTHOR LIKE '%||?||%'\r\n";
+		}
+		if(sel==3) {
+			sql+="AND A.BOOK_PUB LIKE '%||?||%'\r\n";
+		}
+		sql+="ORDER BY A.LIB_NO, A.CATE_NO, A.BOOK_NO)\r\n" + 
+				"WHERE RN>=? AND RN<=?";
+		return jdbc.selectList(sql, param);
+	}
+	
+	/**
+	 * @param 1 = 제목, 2 = 작가, 3 = 출판사 검색
+	 * @return 전체 도서관의 검색결과 전체 갯수
+	 */
+	public Map<String, Object> bookSearchAllListCount(List<Object> param, int sel){
+		String sql = "SELECT COUNT(*) AS COUNT\r\n" + 
+				"FROM (\r\n" + 
+				"SELECT A.BOOK_NO, A.BOOK_NAME, A.BOOK_AUTHOR, A.BOOK_PUB, A.BOOK_PUB_YEAR, B.CATE_NAME, C.LIB_NAME\r\n" + 
+				"FROM BOOK A, BOOK_CATEGORY B, LIBRARY C\r\n" + 
+				"WHERE A.CATE_NO=B.CATE_NO\r\n" + 
+				"AND A.LIB_NO=C.LIB_NO\r\n" + 
+				" AND A.BOOK_REMARK= '사용가능' ";
+		if(sel==1) {
+				sql+="AND A.BOOK_NAME LIKE '%||?||%'\r\n";
+		}
+		if(sel==2) {
+				sql+="AND A.BOOK_AUTHOR LIKE '%||?||%'\r\n";
+		}
+		if(sel==3) {
+				sql+="AND A.BOOK_PUB LIKE '%||?||%'\r\n";
+		}
+				sql+="ORDER BY A.LIB_NO, A.CATE_NO, A.BOOK_NO)\r\n";
+			return jdbc.selectOne(sql, param);
+	}
+	
 }
