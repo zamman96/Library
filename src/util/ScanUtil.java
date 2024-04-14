@@ -15,6 +15,11 @@ public class ScanUtil   {
 		return nextLine();
 	}
 	
+	public static String bookNo() {
+		System.out.print("도서 번호 입력 : ");
+		return BookNo();
+	}
+	
 	private static String nextLine() {
 		return sc.nextLine();
 	}
@@ -39,5 +44,20 @@ public class ScanUtil   {
 			}
 		}
 	}
+	private static String BookNo() {
+        // return 이 될 때까지 반복
+        while(true) {
+            try {
+                String result = sc.nextLine();
+                if (result.length() == 5 && result.matches("\\d+")) {
+                    return result;
+                } else {
+                    System.out.println("다섯 자리 숫자를 입력하세요.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("잘못 입력!!");
+            }
+        }
+    }
 	
 }

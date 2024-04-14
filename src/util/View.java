@@ -15,17 +15,18 @@ public enum View {
 	IDFOUND,
 	PWFOUND,
 	
-	BOOKSEARCH,					// 검색
-	BOOKSTATE,				// 책 대출/반납/연장 interface
+
 	
 	BOOK,					// 책  interface > 순위보기, 검색, 대출(로그인 체크), 연장, 반납(로그인 체크&대여상태 체크)
 	BOOK_LIST,
 	BOOK_CATE_LIST,
 	BOOK_SEARCH_LIST,
+	
+	BOOK_OVERDUE_CHK,
 	BOOK_RENT,// 대출
 	// 연장
 	// 반납
-	RANK,					// 순위보기, 카테고리별 순위보기		
+	BOOK_RESERVATION,
 
 	LIBRARY,// 도서관 선택
 	LIBRARY_LIST,

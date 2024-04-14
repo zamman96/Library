@@ -32,7 +32,7 @@ public class BookService {
  * 회원 자체의 연체 불가능 상태이다 memberOverdueChk를 하고 memberOverdue 를 통해 연체 가능날짜 띄움
  * 연체된 책을 반납하지 않았다  bookOverdueChk를 하고 반납할 위치와 책 정보를 bookOverdue를 통해 띄움
  * 이미 대출한 책이 5권 이상이다 memberRentChk로 확인한 후 "최대 대출 가능한 도서의 수를 넘겼습니다."
- * 이미 대출예약한 책이 3권 이상이다 memberRefChk로 "최대 대출 예약 가능한 도서의 수를 넘겼습니다."
+ * 이미 대출예약한 책이 3권 이상이다 memberRefChk로 "ㅠ"
  * 하고 예전의 View상태로 돌아가기
  */
 	/**
@@ -117,13 +117,34 @@ public class BookService {
 	}
 	
 	/**대출하기 (이미 빌리고있는 책이 연체된경우엔 대출 불가능 )
-	 * @param BOOK_NO, MEM_NO
+	 * @param MEM_NO, BOOK_NO
 	 * @return 반납일 띄우기 위해 book_rent 테이블 값 전체 리턴
 	 */
 	public Map<String,Object> bookRent(List<Object> param) {
 		return bdao.bookRent(param);
 	}
 	
+	////////////////////////////dao에 입력하기ㄴ
+	/**
+	 * @param book_no
+	 * @return 책 정보 (확인을 위해)
+	 */
+//	public Map<String,Object> bookInformation(List<Object> param){
+//		return bdao.bookInformation
+//	}
+	
+	/**
+	 * @param Lib_no, Book_no
+	 * @return 책이 그 도서관에 있는지 확인
+	 * null인 경우 false(없음) true(대출 가능)
+	 */
+//	public boolean bookLibrary(List<Object> param) {
+//		Map<String, Object> map = bdao.bookLibaray(param);
+//		if(map!=null) {
+//			return true;
+//		}
+//		return false;
+//	}
 	
 	
 // 대출 예약
@@ -131,6 +152,14 @@ public class BookService {
 	/**
 	 * @param MEM_NO
 	 * @return 대출예약 가능 권 수
+	 */
+	/**
+	 * @param param
+	 * @return
+	 */
+	/**
+	 * @param param
+	 * @return
 	 */
 	public int memberRefVol(List<Object> param){
 		Map<String, Object> vol = bdao.memberRefYN(param);
@@ -292,7 +321,7 @@ public class BookService {
 	}
 	
 	/** 부분 반납 전 수행되어야하는 작업
-	 * @param BOOK_NO, MEM_NO
+	 * @param BOOK_NO, MEM_NO (이것만 순서 book이 먼저
 	 * 연체 된 상태에서 부분 반납시 avadate에 추가
 	 * memberOverdue를 이용해 반납가능일자를 출력
 	 */

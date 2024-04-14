@@ -10,6 +10,12 @@ import service.BookService;
 import util.ScanUtil;
 import util.View;
 
+/**
+ * @author thddp
+ * 페이징된 것들은 모두 다 완성할 경우
+ * 다른 View로 넘어갈 떄
+ * 세션에 저장된 pageEnd / (search / searchSel) / cate 지울 것
+ */
 public class BookListController extends Print {
 	private static BookListController instance;
 	
@@ -299,6 +305,10 @@ public class BookListController extends Print {
 
 	}
 
+	/**
+	 * @return 검색한 리스트
+	 * library가 저장되어있다면 도서관 내의 리스트
+	 */
 	public View bookSearchList() {
 		int cut = 5;
 		int pageNo = 1;

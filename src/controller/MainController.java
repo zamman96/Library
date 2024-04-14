@@ -14,6 +14,7 @@ import util.View;
 public class MainController extends Print {
 	BookListController bookListController = BookListController.getInstance();
 	LibraryController libraryController = LibraryController.getInstance();
+	BookRentController bookRentController = BookRentController.getInstance();
 	static public Map<String, Object> sessionStorage = new HashMap<>();
 	// 로그인을 위해 MemberService 클래스 호출
 
@@ -63,6 +64,12 @@ public class MainController extends Print {
 			case BOOK_SEARCH_LIST:
 				view = bookListController.bookSearchList();
 				break;
+			case BOOK_RENT:
+				view = bookRentController.bookRent();
+				break;
+//			case BOOK_RESERVATION:
+//				view = ;
+//				break;
 			case PDS:
 				view = pds();
 				break;
