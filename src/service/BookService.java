@@ -363,6 +363,10 @@ public class BookService {
 		return count;
 	}
 	
+	public List<Map<String,Object>> cateName(){
+		return bdao.cateName();
+	}
+	
 	/**
 	 * @param LIB_NO, CATE_NO, ROWNUM
 	 * @return 한 도서관의 분류별 책 리스트

@@ -19,7 +19,8 @@ public enum View {
 	BOOKSTATE,				// 책 대출/반납/연장 interface
 	
 	BOOK,					// 책  interface > 순위보기, 검색, 대출(로그인 체크), 연장, 반납(로그인 체크&대여상태 체크)
-	
+	BOOK_LIST,
+	BOOK_CATE_LIST,
 	BOOK_RENT,// 대출
 	// 연장
 	// 반납
@@ -31,7 +32,6 @@ public enum View {
 	LIBRARY_SEARCH,
 	
 	ADMIN,					// 관리자	interface > 연체정보, 회원정보, 책추가, 관리자 추가
-	BOOK_LIST,
 	
 	PDS
 	

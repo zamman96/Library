@@ -1,6 +1,8 @@
 package controller;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +27,19 @@ public class LibraryController extends Print {
 
 	LibraryService libraryService = LibraryService.getInstance();
 
+	public View mainMenu() {
+		if(MainController.sessionStorage.containsKey("member")&&MainController.sessionStorage.containsKey("library")) {
+			return View.MAIN_ALL;
+		}
+		if(MainController.sessionStorage.containsKey("member")) {
+			return View.MAIN_MEMBER;
+		}
+		if(MainController.sessionStorage.containsKey("library")) {
+			return View.MAIN_LIBRARY;
+		}
+		return View.MAIN;
+	}
+	
 	public View localLibrary() {
 		List<Map<String, Object>> list = libraryService.localName();
 		Map<Integer, Integer> map = printLocalList(list);
@@ -34,7 +49,7 @@ public class LibraryController extends Print {
 			if (locNo == 0) {
 				return View.LIBRARY;
 			}
-			if (map.get(locNo) != null) {
+			if (map.containsValue(locNo)) {
 				libraryService.librarySel(locNo);
 				MainController.sessionStorage.put("Location", locNo);
 				return View.LIBRARY_LIST;
@@ -52,16 +67,16 @@ public class LibraryController extends Print {
 		} else {
 			list = libraryService.librarylist();
 		}
-		Map<Integer, Integer> map = printLibraryList(list);
+		Map<Integer, Integer> num = printLibraryList(list);
 		System.out.println("0. 이전 화면");
 		do {
 			int libNo = ScanUtil.nextInt("선택 : ");
 			if (libNo == 0) {
 				return View.LIBRARY;
 			}
-			if (map.get(libNo) != null) {
+			if (num.containsValue(libNo)) {
 				libraryService.librarySel(libNo);
-				return View.BOOK_LIST;
+				return mainMenu();
 			}
 			System.out.println("유효하지 않은 숫자입니다.");
 		} while (true);
@@ -81,9 +96,9 @@ public class LibraryController extends Print {
 			if (libNo == 0) {
 				return View.LIBRARY;
 			}
-			if (map.get(libNo)!=null ) {
+			if (map.containsValue(libNo)) {
 				libraryService.librarySel(libNo);
-				return View.BOOK_LIST;
+				return mainMenu();
 			}
 			System.out.println("유효하지 않은 숫자입니다.");
 		} while (true);

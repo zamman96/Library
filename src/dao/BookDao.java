@@ -581,6 +581,12 @@ public class BookDao {
 		return jdbc.selectOne(sql);
 	}
 
+	
+	public List<Map<String, Object>> cateName(){
+		String sql = "SELECT *\r\n" + 
+				"FROM BOOK_CATEGORY";
+		return jdbc.selectList(sql);
+	}
 	/**
 	 * @param LIB_NO, CATE_NO, ROWNUM
 	 * @return 한 도서관의 분류별 책 리스트
@@ -588,7 +594,7 @@ public class BookDao {
 	public List<Map<String,Object>> bookCateList(List<Object> param){
 		String sql ="SELECT *\r\n" + 
 				"FROM (\r\n" + 
-				"SELECT A.BOOK_NO, A.BOOK_NAME, A.BOOK_AUTHOR, A.BOOK_PUB, A.BOOK_PUB_YEAR, B.CATE_NAME, C.LIB_NAME\r\n" + 
+				"SELECT ROWNUM AS RN,A.BOOK_NO, A.BOOK_NAME, A.BOOK_AUTHOR, A.BOOK_PUB, A.BOOK_PUB_YEAR, B.CATE_NAME, C.LIB_NAME\r\n" + 
 				"FROM BOOK A, BOOK_CATEGORY B, LIBRARY C\r\n" + 
 				"WHERE A.CATE_NO=B.CATE_NO\r\n" + 
 				" AND A.BOOK_REMARK= '사용가능' "+
@@ -596,7 +602,7 @@ public class BookDao {
 				"AND A.LIB_NO=? \r\n" + 
 				"AND A.CATE_NO=?\r\n" + 
 				"ORDER BY A.LIB_NO, A.CATE_NO, A.BOOK_NO)\r\n" + 
-				"WHERE ROWNUM>=? AND ROWNUM<=?";
+				"WHERE RN>=? AND RN<=?";
 		return jdbc.selectList(sql, param);
 	}
 	
@@ -624,14 +630,14 @@ public class BookDao {
 	public List<Map<String,Object>> bookCateAllList(List<Object> param){
 		String sql ="SELECT *\r\n" + 
 				"FROM (\r\n" + 
-				"SELECT A.BOOK_NO, A.BOOK_NAME, A.BOOK_AUTHOR, A.BOOK_PUB, A.BOOK_PUB_YEAR, B.CATE_NAME, C.LIB_NAME\r\n" + 
+				"SELECT ROWNUM AS RN,A.BOOK_NO, A.BOOK_NAME, A.BOOK_AUTHOR, A.BOOK_PUB, A.BOOK_PUB_YEAR, B.CATE_NAME, C.LIB_NAME\r\n" + 
 				"FROM BOOK A, BOOK_CATEGORY B, LIBRARY C\r\n" + 
 				"WHERE A.CATE_NO=B.CATE_NO\r\n" +
 				" AND A.BOOK_REMARK= '사용가능' "+
 				"AND A.LIB_NO=C.LIB_NO\r\n" + 
 				"AND A.CATE_NO=?\r\n" + 
-				"ORDER BY ORDER BY A.LIB_NO, A.CATE_NO, A.BOOK_NO)\r\n" + 
-				"WHERE ROWNUM>=? AND ROWNUM<=?";
+				"ORDER BY A.LIB_NO, A.CATE_NO, A.BOOK_NO)\r\n" + 
+				"WHERE RN>=? AND RN<=?";
 		return jdbc.selectList(sql, param);
 	}
 	
