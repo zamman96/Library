@@ -55,11 +55,13 @@ public class Print extends Notice {
 		System.out.println(
 				"╚═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝");
 	}
-
+	
 	public void printMenuVar() {
 		System.out.println("===============================================================================");
 	}
-
+	public void printMenuOverVar() {
+		System.out.println("╔══════════════════════════════════════════════════════════════════════════════╗");
+	}
 	public void printBookIndex() {
 		System.out.println("│도서관이름\t│도서 상태\t│도서 번호\t│분류\t│제목\t\t\t\t│작가\t\t\t│출판사\t\t│출판년도");
 	}

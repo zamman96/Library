@@ -12,7 +12,7 @@ import util.ScanUtil;
 import util.View;
 
 public class MainController extends Print {
-	BookController bookController = BookController.getInstance();
+	BookListController bookListController = BookListController.getInstance();
 	LibraryController libraryController = LibraryController.getInstance();
 	static public Map<String, Object> sessionStorage = new HashMap<>();
 	// 로그인을 위해 MemberService 클래스 호출
@@ -55,10 +55,13 @@ public class MainController extends Print {
 				view = book();
 				break;
 			case BOOK_LIST:
-				view = bookController.bookList();
+				view = bookListController.bookList();
 				break;
 			case BOOK_CATE_LIST:
-				view = bookController.bookCateList();
+				view = bookListController.bookCateList();
+				break;
+			case BOOK_SEARCH_LIST:
+				view = bookListController.bookSearchList();
 				break;
 			case PDS:
 				view = pds();
@@ -129,7 +132,8 @@ public class MainController extends Print {
 	private View home_library() {
 		Map<String, Object> library = (Map<String, Object>) sessionStorage.get("library");
 		String name = (String) library.get("LIB_NAME");
-		System.out.println("\t" + name);
+		printMenuOverVar();
+		System.out.println("\t\t\t\t📖" + name);
 		printMenuVar();
 		System.out.println("\t\t1. 도서 조회\t2. 자료실 좌석 조회");
 		System.out.println("\t\t3. 로그인\t4. 아이디/비밀번호 찾기\t5. 회원가입");
@@ -166,9 +170,20 @@ public class MainController extends Print {
 	}
 
 	private View book() {
-		if (!sessionStorage.containsKey("libaray")) {
+		if (!sessionStorage.containsKey("library")) {
 			noticeLibraryNoSel();
+			printMenuOverVar();
+			System.out.println("\t\t\t📖인기 도서 순위");
+			printMenuVar();
+
+		} else {
+			Map<String, Object> library = (Map<String, Object>) sessionStorage.get("library");
+			String name = (String) library.get("LIB_NAME");
+			printMenuOverVar();
+			System.out.println("\t\t\t📖" + name + "의 인기 도서 순위");
+			printMenuVar();
 		}
+		bookListController.bookTopList();
 		printMenuVar();
 		System.out.println("\t\t1. 모든 도서 조회\t2. 분류별 도서 조회\t3. 도서 검색");
 		if (sessionStorage.containsKey("member")) {
@@ -187,12 +202,12 @@ public class MainController extends Print {
 			return View.BOOK_LIST;
 		case 2:
 			return View.BOOK_CATE_LIST;
-//		case 3:
-//			return View.LIBRARY_LIST;
+		case 3:
+			return View.BOOK_SEARCH_LIST;
 //		case 4:
-//			return View.LIBRARY_LIST;
+//			return View.BOOK_RENT;
 //		case 5:
-//			return View.LIBRARY_LIST;
+//			return View.BOOK_RESERVATION;
 //		case 6:
 //			return View.LIBRARY_LIST;
 		case 0:

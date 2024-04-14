@@ -367,7 +367,7 @@ public class BookService {
 		return bdao.cateName();
 	}
 	
-	/**
+	/**O
 	 * @param LIB_NO, CATE_NO, ROWNUM
 	 * @return 한 도서관의 분류별 책 리스트
 	 */
@@ -375,7 +375,7 @@ public class BookService {
 		return bdao.bookCateList(param);
 	}
 	
-	/**
+	/**O
 	 * @param LIB_NO, CATE_NO
 	 * @return 한 도서관의 분류별 전체 갯수
 	 */
@@ -385,7 +385,7 @@ public class BookService {
 		return count;
 	}
 	
-	/**
+	/**O
 	 * @param CATE_NO, ROWNUM
 	 * @return 전체 도서관의 분류별 책 리스트
 	 */
@@ -393,7 +393,7 @@ public class BookService {
 		return bdao.bookCateAllList(param);
 	}
 	
-	/**
+	/**O
 	 * @param CATE_NO
 	 * @return 전체 도서관의 분류별 전체 갯수
 	 */
@@ -403,7 +403,7 @@ public class BookService {
 		return count;
 	}
 	
-	/**
+	/**O
 	 * @param LIB_NO
 	 * @param 1 = 제목, 2 = 작가, 3 = 출판사 검색
 	 * @param ROWNUM
@@ -413,7 +413,7 @@ public class BookService {
 		return bdao.bookSearchList(param, sel);
 	}
 	
-	/**
+	/**O
 	 * @param LIB_NO
 	 * @param 1 = 제목, 2 = 작가, 3 = 출판사 검색
 	 * @return 한 도서관의 검색결과 전체 갯수
@@ -423,7 +423,7 @@ public class BookService {
 		int count = ((BigDecimal) map.get("COUNT")).intValue();
 		return count;
 	}
-	/**
+	/**O
 	 * @param 1 = 제목, 2 = 작가, 3 = 출판사 검색
 	 * @param ROWNUM
 	 * @return 전체 도서관의 도서 검색결과
@@ -432,7 +432,7 @@ public class BookService {
 		return bdao.bookSearchAllList(param, sel);
 	}
 	
-	/**
+	/**O
 	 * @param 1 = 제목, 2 = 작가, 3 = 출판사 검색
 	 * @return 전체 도서관의 검색결과 전체 갯수
 	 */

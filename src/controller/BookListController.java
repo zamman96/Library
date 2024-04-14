@@ -10,16 +10,16 @@ import service.BookService;
 import util.ScanUtil;
 import util.View;
 
-public class BookController extends Print {
-	private static BookController instance;
+public class BookListController extends Print {
+	private static BookListController instance;
 	
-	private BookController() {
+	private BookListController() {
 		
 	}
 	
-	public static BookController getInstance() {
+	public static BookListController getInstance() {
 		if(instance == null) {	
-			instance = new BookController();	
+			instance = new BookListController();	
 		}
 		return instance;
 	}
@@ -58,7 +58,7 @@ public class BookController extends Print {
 		int count = 0;
 		for (Map<String, Object> map : list) {
 			count++;
-			System.out.print(count + "   위\t");
+			System.out.print("   "+count + " 위\t");
 			printBookList(map);
 		}
 		printUnderVar();
@@ -296,17 +296,140 @@ public class BookController extends Print {
 			return View.BOOK_CATE_LIST;
 		}
 	
-//		List<Object> param = new ArrayList<Object>();
-//		if (MainController.sessionStorage.containsKey("library")) {
-//			param = libraryNo();
-//		}
-//		param.add(1);
-//		param.add(1);
-//		param.add(5);
-//		List<Map<String, Object>> list = bookService.bookCateList(param);
-//		for (Map<String, Object> map : list) {			
-//		printBookList(map);
-//	}
-//		return null;
+
+	}
+
+	public View bookSearchList() {
+		int cut = 5;
+		int pageNo = 1;
+		int pageEnd = 0;
+		List<Object> param = new ArrayList<Object>();
+		if (MainController.sessionStorage.containsKey("library")) {
+			param = libraryNo();
+		}
+		int sel = 0;
+		if(!MainController.sessionStorage.containsKey("search")) {
+		printMenuOverVar();
+		System.out.println("\t\t\t검색할 도서 정보를 선택해주세요");
+		printMenuVar();
+		System.out.println("\t\t1.제목\t\t2.작가\t\t3.출판사");
+		printMenuVar();
+		sel = ScanUtil.nextInt("번호 : ");
+		if(sel==1) {
+			String name = ScanUtil.nextLine("제목 검색 : ");
+			param.add(name);
+			MainController.sessionStorage.put("search", name);
+		}
+		if(sel==2) {
+			String author = ScanUtil.nextLine("작가 검색 : ");
+			param.add(author);
+			MainController.sessionStorage.put("search", author);
+		}
+		if(sel==3) {
+			String pub = ScanUtil.nextLine("출판사 검색 : ");
+			param.add(pub);
+			MainController.sessionStorage.put("search", pub);
+		}
+		MainController.sessionStorage.put("searchSel", sel);
+		} else {
+			String search = (String) MainController.sessionStorage.get("search");
+			param.add(search);
+			sel = (int) MainController.sessionStorage.get("searchSel");
+		}
+		// pageEnd
+		if (!MainController.sessionStorage.containsKey("pageEnd")) {
+			if (MainController.sessionStorage.containsKey("library")) {
+				pageEnd = bookService.bookSearchListCount(param, sel) / cut;
+			} else {
+				pageEnd = bookService.bookSearchAllListCount(param, sel) / cut;
+			}
+			if (pageEnd % cut != 0) {
+				pageEnd++;
+			}
+			MainController.sessionStorage.put("pageEnd", pageEnd);
+		} else {
+			pageEnd = (int) MainController.sessionStorage.get("pageEnd");
+		}
+		// pageNo
+		if (MainController.sessionStorage.containsKey("pageNo")) {
+			pageNo = (int) MainController.sessionStorage.remove("pageNo");
+		}
+		int start = (pageNo - 1) * cut;
+		int end = (pageNo) * cut;
+		param.add(start);
+		param.add(end);
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		if (MainController.sessionStorage.containsKey("library")) {
+			list = bookService.bookSearchList(param, sel);
+		} else {
+			list = bookService.bookSearchAllList(param, sel);
+		}
+		printOverVar();
+
+		System.out.print("   순번\t");
+		printBookIndex();
+
+		printMiddleVar();
+		for (Map<String, Object> map : list) {			
+			System.out.print("  "+map.get("RN")+"\t");
+			printBookList(map);
+		}
+
+		if (pageNo != 1){
+			System.out.print("\t< 이전 페이지");
+		} else {
+			System.out.print("\t\t");
+		}
+			
+		System.out.print("\t\t\t\t\t\t" + pageNo + " / " + pageEnd + "\t\t\t\t\t\t");
+		if (pageNo != pageEnd) {
+			System.out.print("다음 페이지 >");
+		}
+		System.out.println();
+		printUnderVar();
+		System.out.println("1. 페이지 번호 입력");
+		System.out.println("2. 대출 하기");
+		System.out.println("3. 도서정보");
+		String select = ScanUtil.nextLine("메뉴 : ");
+		switch (select) {
+		case "<":
+			if (pageNo > 1) {
+				MainController.sessionStorage.put("pageNo", --pageNo);
+			}
+			MainController.sessionStorage.put("pageNo", pageNo);
+			return View.BOOK_SEARCH_LIST;
+		case ">":
+			if (pageNo < pageEnd) {
+				MainController.sessionStorage.put("pageNo", ++pageNo);
+			}
+			MainController.sessionStorage.put("pageNo", pageNo);
+			return View.BOOK_SEARCH_LIST;
+		case "1":
+			int no = 0;
+			do {
+				no = ScanUtil.nextInt("번호 입력 : ");
+				if (no >= 1 && no <= pageEnd) {
+					MainController.sessionStorage.put("pageNo", no);
+					return View.BOOK_CATE_LIST;
+				}
+				System.out.println("페이지를 벗어났습니다.");
+			} while (true);
+		case "2":
+			if (!MainController.sessionStorage.containsKey("library")) {
+				System.out.println("전체 도서 검색은 대출이 불가능합니다.");
+				System.out.println("도서관 선택창으로 돌아갑니다.");
+				return View.LIBRARY;
+			}
+			return View.BOOK_RENT;
+		case "3":
+			return View.BOOK;
+		default:
+			MainController.sessionStorage.put("pageNo", pageNo);
+			System.out.println("잘못된 입력입니다.");
+			return View.BOOK_SEARCH_LIST;
+		}
+	
+
+		
 	}
 }

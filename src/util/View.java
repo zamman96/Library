@@ -21,6 +21,7 @@ public enum View {
 	BOOK,					// 책  interface > 순위보기, 검색, 대출(로그인 체크), 연장, 반납(로그인 체크&대여상태 체크)
 	BOOK_LIST,
 	BOOK_CATE_LIST,
+	BOOK_SEARCH_LIST,
 	BOOK_RENT,// 대출
 	// 연장
 	// 반납

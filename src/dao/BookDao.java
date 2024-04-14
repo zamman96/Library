@@ -674,13 +674,13 @@ public class BookDao {
 				"AND A.LIB_NO=? \r\n"
 		+ " AND A.BOOK_REMARK= '사용가능' ";
 		if(sel==1) {
-				sql+="AND A.BOOK_NAME LIKE '%||?||%'\r\n";
+				sql+="AND A.BOOK_NAME LIKE '%'||?||'%'\r\n";
 		}
 		if(sel==2) {
-				sql+="AND A.BOOK_AUTHOR LIKE '%||?||%'\r\n";
+				sql+="AND A.BOOK_AUTHOR LIKE '%'||?||'%'\r\n";
 		}
 		if(sel==3) {
-				sql+="AND A.BOOK_PUB LIKE '%||?||%'\r\n";
+				sql+="AND A.BOOK_PUB LIKE '%'||?||'%'\r\n";
 		}
 				sql+="ORDER BY A.LIB_NO, A.CATE_NO, A.BOOK_NO)\r\n" + 
 				"WHERE RN>=? AND RN<=?";
@@ -702,13 +702,13 @@ public class BookDao {
 				"AND A.LIB_NO=? \r\n"
 		+ " AND A.BOOK_REMARK= '사용가능' ";
 		if(sel==1) {
-				sql+="AND A.BOOK_NAME LIKE '%||?||%'\r\n";
+				sql+="AND A.BOOK_NAME LIKE '%'||?||'%'\r\n";
 		}
 		if(sel==2) {
-				sql+="AND A.BOOK_AUTHOR LIKE '%||?||%'\r\n";
+				sql+="AND A.BOOK_AUTHOR LIKE '%'||?||'%'\r\n";
 		}
 		if(sel==3) {
-				sql+="AND A.BOOK_PUB LIKE '%||?||%'\r\n";
+				sql+="AND A.BOOK_PUB LIKE '%'||?||'%'\r\n";
 		}
 				sql+="ORDER BY A.LIB_NO, A.CATE_NO, A.BOOK_NO)\r\n";
 			return jdbc.selectOne(sql, param);
@@ -728,13 +728,13 @@ public class BookDao {
 				"AND A.LIB_NO=C.LIB_NO\r\n"
 				+ " AND A.BOOK_REMARK= '사용가능' ";
 		if(sel==1) {
-			sql+="AND A.BOOK_NAME LIKE '%||?||%'\r\n";
+			sql+="AND A.BOOK_NAME LIKE '%'||?||'%'\r\n";
 		}
 		if(sel==2) {
-			sql+="AND A.BOOK_AUTHOR LIKE '%||?||%'\r\n";
+			sql+="AND A.BOOK_AUTHOR LIKE '%'||?||'%'\r\n";
 		}
 		if(sel==3) {
-			sql+="AND A.BOOK_PUB LIKE '%||?||%'\r\n";
+			sql+="AND A.BOOK_PUB LIKE '%'||?||'%'\r\n";
 		}
 		sql+="ORDER BY A.LIB_NO, A.CATE_NO, A.BOOK_NO)\r\n" + 
 				"WHERE RN>=? AND RN<=?";
@@ -754,13 +754,13 @@ public class BookDao {
 				"AND A.LIB_NO=C.LIB_NO\r\n" + 
 				" AND A.BOOK_REMARK= '사용가능' ";
 		if(sel==1) {
-				sql+="AND A.BOOK_NAME LIKE '%||?||%'\r\n";
+				sql+="AND A.BOOK_NAME LIKE '%'||?||'%'\r\n";
 		}
 		if(sel==2) {
-				sql+="AND A.BOOK_AUTHOR LIKE '%||?||%'\r\n";
+				sql+="AND A.BOOK_AUTHOR LIKE '%'||?||'%'\r\n";
 		}
 		if(sel==3) {
-				sql+="AND A.BOOK_PUB LIKE '%||?||%'\r\n";
+				sql+="AND A.BOOK_PUB LIKE '%'||?||'%'\r\n";
 		}
 				sql+="ORDER BY A.LIB_NO, A.CATE_NO, A.BOOK_NO)\r\n";
 			return jdbc.selectOne(sql, param);
