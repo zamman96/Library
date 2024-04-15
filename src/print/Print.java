@@ -43,17 +43,17 @@ public class Print extends Notice {
 
 	public void printOverVar() {
 		System.out.println(
-				"╔═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗");
+				"╔═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗");
 	}
 
 	public void printMiddleVar() {
 		System.out.println(
-				"╠═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣");
+				"╠═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣");
 	}
 
 	public void printUnderVar() {
 		System.out.println(
-				"╚═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝");
+				"╚═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝");
 	}
 	
 	public void printMenuVar() {
@@ -63,7 +63,7 @@ public class Print extends Notice {
 		System.out.println("╔══════════════════════════════════════════════════════════════════════════════╗");
 	}
 	public void printBookIndex() {
-		System.out.println("│도서관이름\t│도서 상태\t│도서 번호\t│분류\t│제목\t\t\t\t│작가\t\t\t│출판사\t\t│출판년도");
+		System.out.println("│도서관이름\t\t│도서 상태\t│도서 번호\t│분류\t│제목\t\t\t\t│작가\t\t\t│출판사\t\t│출판년도");
 	}
 
 	public void printBookList(Map<String, Object> map) {
@@ -73,8 +73,12 @@ public class Print extends Notice {
 		String author = (String) map.get("BOOK_AUTHOR");
 		String pub = (String) map.get("BOOK_PUB");
 		System.out.print("│" + map.get("LIB_NAME") + "\t");
-		if(((String)map.get("LIB_NAME")).length()<=4) {System.out.print("\t");}
-		System.out.print("│"+state + "\t│" + map.get("BOOK_NO") + "\t│" + map.get("CATE_NAME") + "\t");
+		if(((String)map.get("LIB_NAME")).length()<=5) {System.out.print("\t");}
+		System.out.print("│");
+		if(state.equals("대출가능")) System.out.print(GREEN);
+		if(state.equals("대출예약")) System.out.print(YELLOW);
+		if(state.equals("대출불가")) System.out.print(RED);
+		System.out.print(state+END+ "\t│" + map.get("BOOK_NO") + "\t│" + map.get("CATE_NAME") + "\t");
 		if (title.length() >= 24) {
 			System.out.print("│"+title.substring(0, 23) + "..");
 		} else {
@@ -114,7 +118,7 @@ public class Print extends Notice {
 			System.out.print("\t");
 		}
 		System.out.println("│"+map.get("BOOK_PUB_YEAR"));
-		System.out.println("──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────");
+		System.out.println("─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────");
 	}
 	
 	public void printCateName(List<Map<String, Object>> cate) {

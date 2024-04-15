@@ -15,6 +15,8 @@ public class MainController extends Print {
 	BookListController bookListController = BookListController.getInstance();
 	LibraryController libraryController = LibraryController.getInstance();
 	BookRentController bookRentController = BookRentController.getInstance();
+	MemberController memberController = MemberController.getInstance();
+	BookService bookService = BookService.getInstance();
 	static public Map<String, Object> sessionStorage = new HashMap<>();
 	// 로그인을 위해 MemberService 클래스 호출
 
@@ -25,7 +27,6 @@ public class MainController extends Print {
 	private void start() {
 		View view = View.MAIN;
 //		View view = View.LIBRARY;
-//		View view = View.BOOK_CATE_LIST;
 		while (true) {
 			switch (view) {
 			case MAIN:
@@ -40,6 +41,11 @@ public class MainController extends Print {
 			case MAIN_ALL:
 				view = home_all();
 				break;
+			case LOGIN:
+				view = memberController.login();
+				break;
+			case SIGN:
+				view = memberController.sign();
 			case LIBRARY:
 				view = library();
 				break;
@@ -52,6 +58,8 @@ public class MainController extends Print {
 			case LIBRARY_LIST:
 				view = libraryController.librarylist();
 				break;
+			case BOOK_OVERDUE_CHK:
+				view = bookRentController.bookOverdueChk();
 			case BOOK:
 				view = book();
 				break;
@@ -67,9 +75,24 @@ public class MainController extends Print {
 			case BOOK_RENT:
 				view = bookRentController.bookRent();
 				break;
-//			case BOOK_RESERVATION:
-//				view = ;
-//				break;
+			case BOOK_RESERVATION:
+				view = bookRentController.bookReservation();
+				break;
+			case BOOK_RESERVATION_LIST:
+				view = bookRentController.bookRefRent();
+				break;
+			case BOOK_DELAY:
+				view = bookRentController.bookDelay();
+				break;
+			case BOOK_DELAY_PART:
+				view = bookRentController.Delay();
+				break;
+			case BOOK_RETURN:
+				view = bookRentController.returnBook();
+				break;
+			case BOOK_RETURN_PART:
+				view = bookRentController.returnBookPart();
+				break;
 			case PDS:
 				view = pds();
 				break;
@@ -93,6 +116,9 @@ public class MainController extends Print {
 	}
 
 	private View home() {
+		//시작전에 대출 예약 마감일이 지난 회원들의 상태를 변경해주고
+		//다음순번의 사람이 예약기회를 얻음
+		bookService.timeOver();
 		title();
 		System.out.println();
 		System.out.println();
@@ -109,6 +135,12 @@ public class MainController extends Print {
 			return View.BOOK;
 		case 3:
 			return View.PDS;
+		case 4:
+			return View.LOGIN;
+//		case 5:
+//			return View.PDS;
+		case 6:
+			return View.SIGN;
 
 		default:
 			return View.MAIN;
@@ -151,6 +183,12 @@ public class MainController extends Print {
 			return View.BOOK;
 		case 2:
 			return View.PDS;
+		case 3:
+			return View.LOGIN;
+//		case 4:
+//			return View.PDS;
+		case 5:
+			return View.SIGN;
 
 		default:
 			return View.MAIN_LIBRARY;
@@ -158,6 +196,11 @@ public class MainController extends Print {
 	}
 
 	private View home_all() {
+		Map<String, Object> library = (Map<String, Object>) sessionStorage.get("library");
+		String name = (String) library.get("LIB_NAME");
+		printMenuOverVar();
+		System.out.println("\t\t\t\t📖" + name);
+		printMenuVar();
 		printMenuVar();
 		System.out.println("\t\t1. 마이페이지\t2. 도서 조회 ");
 		System.out.println("\t\t3. 자료실 좌석 조회\t4. 로그아웃");
@@ -194,7 +237,7 @@ public class MainController extends Print {
 		printMenuVar();
 		System.out.println("\t\t1. 모든 도서 조회\t2. 분류별 도서 조회\t3. 도서 검색");
 		if (sessionStorage.containsKey("member")) {
-			System.out.println("\t\t4. 대출\t5. 대출 예약\t6. 연장 / 반납");
+			System.out.println("\t\t4. 대출\t5. 대출 예약\t6. 연장\t7. 반납");
 		}
 		System.out.println("\t\t\t\t0. 홈");
 		printMenuVar();
@@ -211,12 +254,14 @@ public class MainController extends Print {
 			return View.BOOK_CATE_LIST;
 		case 3:
 			return View.BOOK_SEARCH_LIST;
-//		case 4:
-//			return View.BOOK_RENT;
-//		case 5:
-//			return View.BOOK_RESERVATION;
-//		case 6:
-//			return View.LIBRARY_LIST;
+		case 4:
+			return View.BOOK_RENT;
+		case 5:
+			return View.BOOK_RESERVATION;
+		case 6:
+			return View.BOOK_DELAY;
+		case 7:
+			return View.BOOK_RETURN;
 		case 0:
 			return mainMenu();
 		default:
@@ -269,5 +314,19 @@ public class MainController extends Print {
 			return View.PDS;
 		}
 
+	}
+	
+	private View found() {
+		System.out.println("1. ID 찾기");
+		System.out.println("2. PASSWORD 찾기");
+		int sel = ScanUtil.menu();
+		switch (sel) {
+			case 1:
+				return View.IDFOUND;
+			case 2:
+				return View.PWFOUND;
+			default:
+				return View.FOUND;
+		}
 	}
 }

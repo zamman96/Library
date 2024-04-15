@@ -23,10 +23,16 @@ public enum View {
 	BOOK_SEARCH_LIST,
 	
 	BOOK_OVERDUE_CHK,
-	BOOK_RENT,// 대출
-	// 연장
-	// 반납
-	BOOK_RESERVATION,
+	BOOK_RENT,				// 대출
+	
+	BOOK_RESERVATION, 		//대출예약
+	BOOK_RESERVATION_LIST,
+	BOOK_RESERVATION_RENT,
+	
+	BOOK_DELAY,				// 연장
+	BOOK_DELAY_PART,		// 부분 연장
+	BOOK_RETURN,// 반납
+	BOOK_RETURN_PART,// 반납
 
 	LIBRARY,// 도서관 선택
 	LIBRARY_LIST,
@@ -36,7 +42,7 @@ public enum View {
 	ADMIN,					// 관리자	interface > 연체정보, 회원정보, 책추가, 관리자 추가
 	
 	PDS
-	
+
 	
 	
 }

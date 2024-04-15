@@ -1,14 +1,22 @@
 package service;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import controller.MainController;
 import dao.BookDao;
-
 
 /**
  * @author 송예진
+ *
+ */
+/**
+ * @author PC-13
  *
  */
 public class BookService {
@@ -27,12 +35,16 @@ public class BookService {
 	BookDao bdao = BookDao.getInstance();
 	
 	
+	public void timeOver() {
+		bdao.timeOver();
+	}
+	
 // 회원의 연체 확인
 /* 연체 확인 view를 만들 것
  * 회원 자체의 연체 불가능 상태이다 memberOverdueChk를 하고 memberOverdue 를 통해 연체 가능날짜 띄움
  * 연체된 책을 반납하지 않았다  bookOverdueChk를 하고 반납할 위치와 책 정보를 bookOverdue를 통해 띄움
  * 이미 대출한 책이 5권 이상이다 memberRentChk로 확인한 후 "최대 대출 가능한 도서의 수를 넘겼습니다."
- * 이미 대출예약한 책이 3권 이상이다 memberRefChk로 "ㅠ"
+ * 이미 대출예약한 책이 3권 이상이다 memberRefChk로 
  * 하고 예전의 View상태로 돌아가기
  */
 	/**
@@ -76,17 +88,17 @@ public class BookService {
 	}
 	
 	
-	/**
+	/**o
 	 * @param BOOK_NO
 	 * 대출할 시 book_rent_count 추가할 것
 	 */
-	public void bookRentCount(List<Object> param) {
-		bdao.bookRentCount(param);
+	public void bookRentCount(String bookNo) {
+		bdao.bookRentCount(bookNo);
 	}
 	
 // 대출
 	
-	/**
+	/**o
 	 * @param MEM_NO
 	 * @return 대출 가능권 수
 	 */
@@ -96,7 +108,8 @@ public class BookService {
 		return 5-num;
 	}
 
-	/**	회원 관점의 대출 여부 (대출한 권수, 기존 대출 연체 여부, 대출 가능 상태)
+	/**	o
+	 * 회원 관점의 대출 여부 (대출한 권수, 기존 대출 연체 여부, 대출 가능 상태)
 	 * @param MEM_NO
 	 * @return true > 대출 가능, false > 대출불가능
 	 */
@@ -106,7 +119,8 @@ public class BookService {
 		return false;
 	}
 	
-	/**	책 관점의 대출 여부
+	/**	o
+	 * 책 관점의 대출 여부
 	 * @param BOOK_NO
 	 * @return true > 대출 가능, false > 대출불가능, 대출예약여부확인
 	 */
@@ -116,7 +130,8 @@ public class BookService {
 		return true;
 	}
 	
-	/**대출하기 (이미 빌리고있는 책이 연체된경우엔 대출 불가능 )
+	/**o
+	 * 대출하기 (이미 빌리고있는 책이 연체된경우엔 대출 불가능 )
 	 * @param MEM_NO, BOOK_NO
 	 * @return 반납일 띄우기 위해 book_rent 테이블 값 전체 리턴
 	 */
@@ -124,42 +139,45 @@ public class BookService {
 		return bdao.bookRent(param);
 	}
 	
-	////////////////////////////dao에 입력하기ㄴ
-	/**
-	 * @param book_no
-	 * @return 책 정보 (확인을 위해)
+	/**o
+	 * @param BOOK_NO
+	 * @return 현재 도서관에 있는지 여부 확인 true 존재 (대출가능)
 	 */
-//	public Map<String,Object> bookInformation(List<Object> param){
-//		return bdao.bookInformation
-//	}
+	public boolean bookLibraryChk(List<Object> param, int libNo) {
+		Map<String, Object> map = bdao.bookLibraryChk(param);
+		int num = ( (BigDecimal) map.get("LIB_NO") ).intValue();
+		if(num==libNo) {
+			return true;
+		}
+		return false;
+	}
 	
-	/**
-	 * @param Lib_no, Book_no
-	 * @return 책이 그 도서관에 있는지 확인
-	 * null인 경우 false(없음) true(대출 가능)
+	/**o
+	 * @param bookNo
+	 * @return true 유효한 책 no, false 유효하지않은 번호
 	 */
-//	public boolean bookLibrary(List<Object> param) {
-//		Map<String, Object> map = bdao.bookLibaray(param);
-//		if(map!=null) {
-//			return true;
-//		}
-//		return false;
-//	}
+	public boolean bookChk(String bookNo) {
+		Map<String, Object> map = bdao.bookChk(bookNo);
+		if(map!=null) {
+			return true;
+		}
+		return false;
+	}
 	
+	/**o
+	 * @param BOOK_NO
+	 * @return 책 단일 정보
+	 */
+	public Map<String,Object> bookInformation(List<Object> param){
+		return bdao.bookLibraryChk(param);
+	}
+		
 	
 // 대출 예약
 	
-	/**
+	/**o
 	 * @param MEM_NO
 	 * @return 대출예약 가능 권 수
-	 */
-	/**
-	 * @param param
-	 * @return
-	 */
-	/**
-	 * @param param
-	 * @return
 	 */
 	public int memberRefVol(List<Object> param){
 		Map<String, Object> vol = bdao.memberRefYN(param);
@@ -167,7 +185,8 @@ public class BookService {
 		return 3-num;
 	}
 	
-	/** 회원 관점의 대출 예약 여부 (대출한 권수, 기존 대출 연체 여부, 대출 가능 상태)
+	/** o
+	 * 회원 관점의 대출 예약 여부 (대출한 권수, 기존 대출 연체 여부, 대출 가능 상태)
 	 * @param MEM_NO
 	 * @return true > 대출예약 가능, false > 대출예약불가능
 	 */
@@ -177,17 +196,18 @@ public class BookService {
 		return false;
 	}
 	
-	/** 책관점의 예약 중복 확인
-	 * @param BOOK_NO, MEM_NO
-	 * @return 이미 예약했다면 true, 대출 예약을 진행하는 것은 false
+	/** o
+	 * 책관점의 예약 중복 확인
+	 * @param MEM_NO, BOOK_NO
+	 * @return 이미 예약했다면 false, 대출 예약을 진행하는 것은 true
 	 */
 	public boolean bookRefDupChk(List<Object> param) {
 		Map<String, Object> map = bdao.bookRefDup(param);
-		if(map==null) return false;
-		return true;
+		if(map==null) return true;
+		return false;
 	}
 	
-	/**
+	/**o
 	 * @param BOOK_NO
 	 * 대출 예약 1번째(book_ref insert)
 	 */
@@ -195,17 +215,42 @@ public class BookService {
 		bdao.bookRefUpdate(param);
 	}
 	
-	/**
-	 * @param BOOK_NO,MEM_NO
+	/**o
+	 * @param MEM_NO, BOOK_NO
 	 *  대출 예약 2번째(book_rent insert)
 	 */
 	public void bookReservation(List<Object> param) {
 		bdao.bookReservation(param);
 	}
 	
+	/**o
+	 * @param MEM_NO, BOOK_NO
+	 * @return 데이터가 있다면 이미 대출 false, 없다면 예약가능 true
+	 */
+	public boolean bookRentChk(List<Object> param){
+		Map<String,Object> map = bdao.bookRentChk(param);
+		if(map==null) {return true;}
+		return false;
+	}
+	
+	/** o
+	 * 대출 예약 순번
+	 * @param MEM_NO, BOOK_NO
+	 * @param bookNo
+	 * @return 예약 순번
+	 */
+	public int bookMySeq(List<Object> param, String bookNo) {
+		Map<String, Object> mySeq = bdao.bookMySeq(param);
+		Map<String, Object> seq = bdao.bookSeq(bookNo);
+		int myNo = ((BigDecimal) mySeq.get("SEQ")).intValue();
+		int no = ((BigDecimal) seq.get("MIN")).intValue();
+		return myNo-no+1;
+	}
+	
 // 대출 예약 대출
 	
-	/** 만약에 전 순번의 대출 예약자가 예약일+7일 지났다면 예약 가능하므로 리스트 출력
+	/** o
+	 * 만약에 전 순번의 대출 예약자가 예약가능일+7일 지났다면 예약 가능하므로 리스트 출력
 	 * @param MEM_NO
 	 * @return ((현재 도서관에서)) 대출 가능한 목록 / null일 경우 빌릴수 있는 예약도서가 없음
 	 *  꼭 알림창에 현재 도서관에서 대출 가능한 예약 도서라고 위에 붙일 것!!!
@@ -214,15 +259,46 @@ public class BookService {
 		return bdao.bookRefPossList(param);
 	}
 	
-	/** 예약도서 대출 메소드 
-	 * @param BOOK_NO, MEM_NO
+	/**o
+	 * @param MEM_NO, BOOK_NO
+	 * @return true 대출가능 false 대출 불가능
+	 */
+	public boolean bookRefRentList(List<Object> param){
+		Map<String,Object> map = bdao.bookRefRentList(param);
+		if(map==null) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**o
+	 * @param MEM_NO
+	 * @return 대출예약한 것이 대출 가능할 경우 true;
+	 * 로그인 할때 확인
+	 */
+	public boolean bookRefYN(List<Object> param) {
+		List<Map<String,Object>> list = bdao.bookRefPossList(param);
+		if(list==null) {return false;}
+		Map<String, String> library = new HashMap<>();
+		for(Map<String,Object> map : list) {
+			String bookno = (String) map.get("BOOK_NO");
+			library.put(bookno, bookno);
+		}
+		MainController.sessionStorage.put("libraryRent",library);			
+		return true;
+	}
+	
+	/** o
+	 * 예약도서 대출 메소드 
+	 * @param MEM_NO, BOOK_NO
 	 * @return 반납일을 띄우기 위해 오늘 빌린 책의 정보를 출력
 	 */
 	public Map<String,Object> bookRefRent(List<Object> param){
 		return bdao.bookRefRent(param);
 	}
 	
-	/**	대출예약 기간 지난 리스트
+	/**	o
+	 * 대출예약 기간 지난 리스트
 	 * @param MEM_NO
 	 * @return 대출 예약 기간이 지나 취소된 리스트 (다른 도서관 포함)
 	 * 확인 후 꼭 refTimeOverUpdate 수행
@@ -231,7 +307,27 @@ public class BookService {
 		return bdao.refTimeOver(param);
 	}
 	
-	/**	대출예약 기간 지난 리스트를 BOOK_REF_CHK=4번으로 수정
+	/**다음 순번인 사람에게 ref_date부여 대출 메소드 bookRefRent가 시행된후 사용
+	 * @param bookNo
+	 */
+	public void updateRefDate(String bookNo) {
+		bdao.updateRefDate(bookNo);
+	}
+	
+	/**o
+	 * @param MEM_NO
+	 * @return false면 기간 지난것없음  true면 지남 > 리스트 출력 refTimeOver 
+	 */
+	public boolean refTimeOverChk(List<Object> param) {
+		List<Map<String,Object>> list = bdao.refTimeOver(param);
+		if(list==null) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**	o
+	 * 대출예약 기간 지난 리스트를 BOOK_REF_CHK=4번으로 수정
 	 * @param MEM_NO
 	 * 대출 예약 취소 UPDATE
 	 */
@@ -283,7 +379,7 @@ public class BookService {
 		bdao.bookDelayAll(param);
 	}
 	/** 부분 연장
-	 * @param BOOK_NO, MEM_NO
+	 * @param MEM_NO, BOOK_NO
 	 */
 	public void bookDelay(List<Object> param) {
 		bdao.bookDelay(param);
@@ -305,7 +401,7 @@ public class BookService {
 		bdao.bookReturnAll(param);
 	}
 	/** 부분 반납
-	 * @param LIB_NO, BOOK_NO, MEM_NO
+	 * @param BOOK_NO, MEM_NO 이것도 book 먼저!!
 	 */
 	public void bookReturn(List<Object> param) {
 		bdao.bookReturn(param);
@@ -321,13 +417,30 @@ public class BookService {
 	}
 	
 	/** 부분 반납 전 수행되어야하는 작업
-	 * @param BOOK_NO, MEM_NO (이것만 순서 book이 먼저
+	 * @param BOOK_NO, MEM_NO (이것만 순서 book이 먼저!!!!!!!
 	 * 연체 된 상태에서 부분 반납시 avadate에 추가
 	 * memberOverdue를 이용해 반납가능일자를 출력
 	 */
 	public void memberOverdueUpdate(List<Object> param) {
 		bdao.memberOverdueUpdate(param);
 	}
+	
+	public String memberOverdueInfo(int memNo){
+		Map<String, Object> map = bdao.memberOverdueInfo(memNo);
+		Date today = new Date();
+		Date rentDate = new Date(((Timestamp) map.get("RENT_AVADATE")).getTime());
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy년 MM월 dd일");
+		return dateFormat.format(rentDate);
+	}
+	
+	/**
+	 * @param bookNo
+	 * 다음순번에게 date입력
+	 */
+	public void bookRefDate(String bookNo) {
+		bdao.bookRefDate(bookNo);
+	}
+	
 // 책 리스트
 	/**
 	 * @param bookNo

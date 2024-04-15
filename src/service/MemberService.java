@@ -3,7 +3,8 @@ package service;
 import java.util.List;
 import java.util.Map;
 
-import controller.Member;
+import controller.MainController;
+import controller.MemberController;
 import dao.MemberDao;
 
 public class MemberService {
@@ -21,6 +22,7 @@ public class MemberService {
 	}
 	
 	MemberDao memdao = MemberDao.getInstance();
+
 	
 	public boolean login(List<Object> param) {
 		Map<String, Object> member = memdao.login(param);
@@ -28,7 +30,7 @@ public class MemberService {
 		if(member == null) {
 			return false;
 		}
-		Member.sessionStorage.put("member", member);
+		MainController.sessionStorage.put("member", member);
 		return true;
 	}
 	

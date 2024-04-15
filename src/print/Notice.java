@@ -29,7 +29,7 @@ public class Notice {
 		System.out.println("\t\t┃\t  * 알림 * \t ┃");
 		System.out.println("\t\t┃\t\t\t ┃");
 		System.out.println("\t\t┃    "+END+"도서관을 지정하지 않아"+RED+"\t\t ┃");
-		System.out.println("\t\t┃    "+END+"도서 조회만 가능합니다"+RED+"\t\t ┃");
+		System.out.println("\t\t┃    "+END+"도서 대출이 불가능합니다"+RED+"\t\t ┃");
 		System.out.println("\t\t┗━━━━━━━━━━━━━━━━━━━━━━━━┛"+END);
 	}
 }

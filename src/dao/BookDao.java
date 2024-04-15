@@ -26,6 +26,13 @@ public class BookDao {
 	
 	JDBCUtil jdbc = JDBCUtil.getInstance();
 	
+	
+	public Map<String,Object> bookChk(String bookNo){
+		String sql = "SELECT *\r\n" + 
+				"FROM BOOK\r\n" + 
+				"WHERE BOOK_NO="+bookNo;
+		return jdbc.selectOne(sql);
+	}
 	/** O
 	 * @param param MEM_NO
 	 * @return 대출한 권 수
@@ -117,7 +124,7 @@ public class BookDao {
 		int no = ((BigDecimal) jdbc.selectOne(sql).get("NO")).intValue();
 		
 		sql = "    INSERT INTO BOOK_RENT(MEM_NO, BOOK_NO, BOOK_REF_NO, BOOK_REF_CHK,RENT_NO)\r\n" + 
-				"SELECT ?, ?,"+no+",1,NVL(MAX(RENT_NO),0)+1\r\n" + 
+				"(SELECT ?, ?,"+no+",1,NVL(MAX(RENT_NO),0)+1\r\n" + 
 				"FROM BOOK_RENT)";
 		jdbc.update(sql, param);
 	}
@@ -137,6 +144,26 @@ public class BookDao {
 				"FROM BOOK_REF";
 		jdbc.update(sql);
 	}
+	
+	public Map<String,Object> bookMySeq(List<Object> param){
+		String sql = "SELECT B.BOOK_REF_SEQ AS SEQ\r\n" + 
+				"FROM BOOK_RENT A, BOOK_REF B\r\n" + 
+				"WHERE A.BOOK_REF_NO=B.BOOK_REF_NO \r\n" + 
+				"AND A.MEM_NO=?\r\n" + 
+				"AND A.BOOK_NO=?\r\n" + 
+				"AND A.BOOK_REF_CHK=1";
+		return jdbc.selectOne(sql, param);
+	}
+	
+	public Map<String, Object> bookSeq(String bookNo){
+		String sql = "SELECT MIN(B.BOOK_REF_SEQ) AS MIN\r\n" + 
+				"FROM BOOK_RENT A, BOOK_REF B\r\n" + 
+				"WHERE A.BOOK_REF_NO=B.BOOK_REF_NO \r\n" + 
+				"AND A.BOOK_NO="+bookNo+
+				" AND A.BOOK_REF_CHK=1";
+		return jdbc.selectOne(sql);
+	}
+	
 	 
 	/**	대출하기 O
 	 * @param param = MEM_NO, BOOK_NO
@@ -158,58 +185,159 @@ public class BookDao {
 
 	/** O
 	 * @param MEM_NO
-	 * @return 대출예약 취소된 리스트 (다른 도서관 포함)
+	 * @return 대출예약 기한이 지나서 취소된 리스트
 	 */
 	public List<Map<String,Object>> refTimeOver(List<Object> param){
 		String sql = "SELECT *\r\n" + 
-				"    FROM BOOK_REF A, BOOK_RENT B, BOOK C, BOOK_CATEGORY D, LIBRARY F\r\n" + 
-				"    WHERE A.BOOK_REF_NO=B.BOOK_REF_NO\r\n" + 
-				"    AND B.BOOK_REF_CHK=1\r\n" + 
-				"    AND A.BOOK_REF_DATE+7<SYSDATE\r\n" + 
-				"    AND B.BOOK_NO=C.BOOK_NO\r\n" + 
-				"    AND D.CATE_NO=C.CATE_NO\r\n" + 
-				"    AND C.LIB_NO=F.LIB_NO\r\n" + 
-				"    AND B.MEM_NO = ?";
+				"FROM BOOK A, BOOK_CATEGORY B, LIBRARY C, BOOK_RENT D, BOOK_REF E\r\n" + 
+				"WHERE A.CATE_NO=B.CATE_NO\r\n" + 
+				"AND A.LIB_NO=C.LIB_NO\r\n" + 
+				"AND A.BOOK_NO=D.BOOK_NO\r\n" + 
+				"AND D.BOOK_REF_NO=E.BOOK_REF_NO\r\n" + 
+				"AND D.BOOK_REF_CHK=4\r\n" + 
+				"AND D.MEM_NO=?";
 		return jdbc.selectList(sql, param);
 	}
-	
+		
 	/** O
 	 * @param MEM_NO
-	 * 대출 예약 취소 UPDATE refTimeOver 이후 실행
+	 * 대출 예약 CHK4번이 된것(예약기간 지난것)
+	 * 업데이트하기 전에 목록을 띄울것 2번째로 시작
+	 * 예약이 지난 것을 확인해야하므로 사용자가 확인 후 5로 변경
 	 */
 	public void refTimeOverUpdate(List<Object> param) {
 		String sql = "UPDATE BOOK_RENT A\r\n" + 
-				"SET BOOK_REF_CHK=4\r\n" + 
-				"WHERE BOOK_REF_NO IN (SELECT BOOK_REF_NO\r\n" + 
-				"                        FROM BOOK_REF\r\n" + 
-				"                        WHERE BOOK_REF_DATE+7<SYSDATE)\r\n" + 
+				"SET BOOK_REF_CHK=5\r\n" + 
+				"WHERE RENT_NO IN (SELECT RENT_NO\r\n" + 
+				"                                FROM BOOK_RENT\r\n" + 
+				"                        WHERE BOOK_REF_CHK=4)\r\n" + 
 				"AND MEM_NO=?";
 		jdbc.update(sql, param);
+	}
+	
+	
+	/**
+	 * @param MEM_NO, BOOK_NO
+	 * @return 데이터가 있다면 이미 대출, 없다면 예약가능
+	 */
+	public Map<String,Object> bookRentChk(List<Object> param){
+		String sql = "SELECT *\r\n" + 
+				"FROM BOOK_RENT\r\n" + 
+				"WHERE RETURN_YN='N'\r\n" + 
+				"AND MEM_NO = ?\r\n" + 
+				"AND BOOK_NO=?";
+		return jdbc.selectOne(sql, param);
+	}
+	
+	/**
+	 * 예약마감일이 지난 것을 4로 변경해주고 다음 번호에게 ref_date 입력
+	 */
+	public void timeOver() {
+		// CHK=4
+		String sql = "UPDATE BOOK_RENT\r\n" + 
+				"SET BOOK_REF_CHK=4\r\n" + 
+				"WHERE RENT_NO IN (\r\n" + 
+				"SELECT RENT_NO\r\n" + 
+				"FROM BOOK_RENT A, BOOK_REF B\r\n" + 
+				"WHERE A.BOOK_REF_NO=B.BOOK_REF_NO\r\n" + 
+				"AND B.BOOK_REF_DATE+7<SYSDATE\r\n" + 
+				"AND A.BOOK_REF_CHK=1)";
+		jdbc.update(sql);
+		// 다음 seq에게 ref_date
+		sql = "UPDATE BOOK_REF\r\n" + 
+				"SET BOOK_REF_DATE = \r\n" + 
+				"    (SELECT B.BOOK_REF_DATE + 7\r\n" + 
+				"    FROM BOOK_RENT A, BOOK_REF B\r\n" + 
+				"    WHERE A.BOOK_REF_NO = B.BOOK_REF_NO\r\n" + 
+				"    AND B.BOOK_REF_DATE + 7 < SYSDATE\r\n" + 
+				"    AND A.BOOK_REF_CHK = 1)\r\n" + 
+				"\r\n" + 
+				"WHERE BOOK_REF_NO IN \r\n" + 
+				"    (SELECT A.BOOK_REF_NO\r\n" + 
+				"    FROM BOOK_RENT A, BOOK_REF B\r\n" + 
+				"    WHERE A.BOOK_REF_NO = B.BOOK_REF_NO\r\n" + 
+				"    AND A.BOOK_NO IN\r\n" + 
+				"                 (SELECT A.BOOK_NO\r\n" + 
+				"                    FROM BOOK_RENT A, BOOK_REF B\r\n" + 
+				"                    WHERE A.BOOK_REF_NO = B.BOOK_REF_NO\r\n" + 
+				"                    AND B.BOOK_REF_DATE + 7 < SYSDATE\r\n" + 
+				"                    AND A.BOOK_REF_CHK = 1)\r\n" + 
+				"    AND B.BOOK_REF_SEQ IN\r\n" + 
+				"              (SELECT MIN(A.BOOK_REF_SEQ) + 1 AS SEQ\r\n" + 
+				"        FROM BOOK_REF A, BOOK_RENT B\r\n" + 
+				"        WHERE A.BOOK_REF_NO = B.BOOK_REF_NO\r\n" + 
+				"        AND B.BOOK_REF_CHK = 1\r\n" + 
+				"        AND B.BOOK_NO IN\r\n" + 
+				"                                     (SELECT A.BOOK_NO\r\n" + 
+				"                                        FROM BOOK_RENT A, BOOK_REF B\r\n" + 
+				"                                        WHERE A.BOOK_REF_NO = B.BOOK_REF_NO\r\n" + 
+				"                                        AND B.BOOK_REF_DATE + 7 < SYSDATE\r\n" + 
+				"                                        AND A.BOOK_REF_CHK = 1) \r\n" + 
+				"                    GROUP BY B.BOOK_NO\r\n" + 
+				"            )\r\n" + 
+				")";
+		jdbc.update(sql);
 	}
 	
 	/**	O
 	 * 만약에 전 사람의 대출 예약날짜 이후로 7일이 지났다면 예약가능 
 	 * @param MEM_NO
-	 * @return 현재 도서관에서 대출 가능한 목록 / null일 경우 빌릴수 있는 예약도서가 없음
-	 * 예약할지 여부를 물어본 뒤 (현재 방문한 도서관에 있는 걸) BOOK_REF_CHK 변경해야함
+	 * @return 회원에게 대출 가능한 책을 출력
 	 */
 	public List<Map<String, Object>> bookRefPossList(List<Object> param){
 		String sql = "SELECT *\r\n" + 
-				"FROM BOOK_REF A, BOOK_RENT B,\r\n" + 
-				"    (SELECT B.BOOK_NO AS MNO, MIN(A.BOOK_REF_SEQ) AS MSEQ\r\n" + 
-				"    FROM BOOK_REF A, BOOK_RENT B\r\n" + 
-				"    WHERE A.BOOK_REF_NO=B.BOOK_REF_NO\r\n" + 
-				"    AND B.BOOK_REF_CHK=1\r\n" + 
-				"    AND A.BOOK_REF_DATE+7>SYSDATE\r\n" + 
-				"    GROUP BY B.BOOK_NO) C, BOOK D, BOOK_CATEGORY F\r\n" + 
+				"FROM BOOK_RENT A, BOOK_REF B, BOOK C, BOOK_CATEGORY D, LIBRARY E\r\n" + 
 				"WHERE A.BOOK_REF_NO=B.BOOK_REF_NO\r\n" + 
-				"AND C.MNO=B.BOOK_NO\r\n" + 
-				"AND A.BOOK_REF_SEQ=C.MSEQ\r\n" + 
-				"AND B.BOOK_NO=D.BOOK_NO\r\n" + 
-				"AND D.CATE_NO=F.CATE_NO\r\n" + 
-				"AND B.MEM_NO=?\r\n" + 
-				"AND D.LIB_NO=?";
+				"AND B.BOOK_REF_SEQ IN (\r\n" + 
+				"                    SELECT CASE WHEN BOOK_REF_DATE+7>SYSDATE THEN BOOK_REF_SEQ\r\n" + 
+				"                                                 ELSE BOOK_REF_SEQ+1 END AS SEQ\r\n" + 
+				"                    FROM BOOK_REF A, BOOK_RENT B  \r\n" + 
+				"                    WHERE A.BOOK_REF_NO=B.BOOK_REF_NO  \r\n" + 
+				"                    AND A.BOOK_REF_SEQ IN (\r\n" + 
+				"                             SELECT MIN(A.BOOK_REF_SEQ) AS MSEQ  \r\n" + 
+				"                            FROM BOOK_REF A, BOOK_RENT B  \r\n" + 
+				"                            WHERE A.BOOK_REF_NO=B.BOOK_REF_NO  \r\n" + 
+				"                            AND B.BOOK_REF_CHK=1  \r\n" + 
+				"                            GROUP BY B.BOOK_NO) \r\n" + 
+				"                    AND B.BOOK_REF_CHK=1 \r\n" + 
+				")\r\n" + 
+				"AND A.BOOK_NO=C.BOOK_NO\r\n" + 
+				"AND C.CATE_NO=D.CATE_NO\r\n" + 
+				"AND C.LIB_NO=E.LIB_NO\r\n" + 
+				"AND A.BOOK_REF_CHK=1 \r\n" + 
+				"AND A.MEM_NO=?\r\n" + 
+				"AND B.BOOK_REF_DATE IS NOT NULL";
 		return jdbc.selectList(sql, param);
+	}
+	
+	/**
+	 * @param MEM_NO, BOOK_NO
+	 * @return null일경우 예약불가능
+	 */
+	public Map<String,Object> bookRefRentList(List<Object> param){
+		String sql ="SELECT *\r\n" + 
+				"FROM BOOK_RENT A, BOOK_REF B, BOOK C, BOOK_CATEGORY D, LIBRARY E\r\n" + 
+				"WHERE A.BOOK_REF_NO=B.BOOK_REF_NO\r\n" + 
+				"AND B.BOOK_REF_SEQ IN (\r\n" + 
+				"                    SELECT CASE WHEN BOOK_REF_DATE+7>SYSDATE THEN BOOK_REF_SEQ\r\n" + 
+				"                                                 ELSE BOOK_REF_SEQ+1 END AS SEQ\r\n" + 
+				"                    FROM BOOK_REF A, BOOK_RENT B  \r\n" + 
+				"                    WHERE A.BOOK_REF_NO=B.BOOK_REF_NO  \r\n" + 
+				"                    AND A.BOOK_REF_SEQ IN (\r\n" + 
+				"                             SELECT MIN(A.BOOK_REF_SEQ) AS MSEQ  \r\n" + 
+				"                            FROM BOOK_REF A, BOOK_RENT B  \r\n" + 
+				"                            WHERE A.BOOK_REF_NO=B.BOOK_REF_NO  \r\n" + 
+				"                            AND B.BOOK_REF_CHK=1  \r\n" + 
+				"                            GROUP BY B.BOOK_NO) \r\n" + 
+				"                    AND B.BOOK_REF_CHK=1 \r\n" + 
+				")\r\n" + 
+				"AND A.BOOK_NO=C.BOOK_NO\r\n" + 
+				"AND C.CATE_NO=D.CATE_NO\r\n" + 
+				"AND C.LIB_NO=E.LIB_NO\r\n" + 
+				"AND A.BOOK_REF_CHK=1 \r\n" + 
+				"AND A.MEM_NO=?\r\n" + 
+				"AND A.BOOK_NO=?";
+		return jdbc.selectOne(sql, param);
 	}
 	// 다른 도서관에 예약도서 예약가능 알림을 띄울것
 	
@@ -239,6 +367,27 @@ public class BookDao {
 				"AND TO_CHAR(RENT_DATE,'YYYYMMDD')=TO_CHAR(SYSDATE,'YYYYMMDD')";
 		return jdbc.selectOne(sql, param);
 	}
+	
+	public void updateRefDate(String bookNo) {
+		String sql = "UPDATE BOOK_REF\r\n" + 
+				"SET BOOK_REF_DATE = SYSDATE\r\n" + 
+				"WHERE BOOK_REF_NO IN \r\n" + 
+				"    (SELECT A.BOOK_REF_NO\r\n" + 
+				"    FROM BOOK_RENT A, BOOK_REF B\r\n" + 
+				"    WHERE A.BOOK_REF_NO = B.BOOK_REF_NO\r\n" + 
+				"    AND A.BOOK_NO=" + bookNo+
+				"    AND B.BOOK_REF_SEQ IN\r\n" + 
+				"              (SELECT MIN(A.BOOK_REF_SEQ) AS SEQ\r\n" + 
+				"        FROM BOOK_REF A, BOOK_RENT B\r\n" + 
+				"        WHERE A.BOOK_REF_NO = B.BOOK_REF_NO\r\n" + 
+				"        AND B.BOOK_REF_CHK = 1\r\n" + 
+				"        AND B.BOOK_NO="+bookNo+
+				"        GROUP BY B.BOOK_NO\r\n" + 
+				"        )\r\n" + 
+				")";
+		jdbc.update(sql);
+	}
+	
 	
 	/**	O
 	 * book_ref_chk=3(체크) 꼭 나가기전에 되묻기   (현재 도서관에 있는것만)
@@ -373,7 +522,7 @@ public class BookDao {
 		String sql = "SELECT *\r\n" + 
 				"FROM MEMBER\r\n" + 
 				"WHERE RENT_AVADATE>SYSDATE\r\n" + 
-				"WHERE MEM_NO=?";
+				"AND MEM_NO=?";
 		return jdbc.selectOne(sql, param);
 	}
 	
@@ -409,9 +558,31 @@ public class BookDao {
 				"AND A.MEM_NO=?\r\n" + 
 				"AND RETURN_YN='N')";
 	}
+	
+	/**반납시 다음 대출 예약자에게 시간 부여
+	 * @param bookNo
+	 */
+	public void bookRefDate(String bookNo) {
+		String sql = "UPDATE BOOK_REF\r\n" + 
+				"SET BOOK_REF_DATE=SYSDATE+7\r\n" + 
+				"WHERE BOOK_REF_NO IN \r\n" + 
+				"( SELECT B.BOOK_REF_NO\r\n" + 
+				"FROM BOOK_RENT A, BOOK_REF B\r\n" + 
+				"WHERE A.BOOK_REF_NO=B.BOOK_REF_NO\r\n" + 
+				"AND A.BOOK_NO=" +bookNo+
+				" AND A.BOOK_REF_CHK=1\r\n" + 
+				"AND B.BOOK_REF_SEQ IN (\r\n" + 
+				"    SELECT MIN(B.BOOK_REF_SEQ)\r\n" + 
+				"    FROM BOOK_RENT A, BOOK_REF B\r\n" + 
+				"    WHERE A.BOOK_REF_NO=B.BOOK_REF_NO\r\n" + 
+				"    AND A.BOOK_NO="+bookNo+ 
+				"    AND A.BOOK_REF_CHK=1)\r\n" + 
+				"    )";
+		jdbc.update(sql);
+	}
 	//부분 반납 update
 	/** O
-	 * @param param LIB_NO, MEM_NO, BOOK_NO
+	 * @param param BOOK_NO MEM_NO
 	 */
 	public void bookReturn(List<Object> param) {
 		String sql = "UPDATE BOOK_RENT\r\n" + 
@@ -421,17 +592,17 @@ public class BookDao {
 				"SELECT RENT_NO\r\n" + 
 				"FROM BOOK_RENT A, BOOK B\r\n" + 
 				"WHERE A.BOOK_NO=B.BOOK_NO\r\n" + 
-				"AND B.LIB_NO =?\r\n" + 
-				"AND A.MEM_NO=?\r\n" + 
 				"AND A.BOOK_NO=?\r\n" + 
+				"AND A.MEM_NO=?\r\n" + 
 				"AND RETURN_YN='N')";
+		jdbc.update(sql, param);
 	}
 	
 	
 	// 연체시 member avadate 업데이트 
 	/**O
-	 * @param param MEM_NO
-	 * 연체 시에 전체 반납시 UPDATE
+	 * @param param LIB_NO MEM_NO
+	 * 연체 시에 도서관 에있는 도서를 전체 반납시 UPDATE
 	 */
 	public void memberOverdueUpdateAll(List<Object> param) {
 		String sql="UPDATE MEMBER\r\n" + 
@@ -442,10 +613,17 @@ public class BookDao {
 				"AND A.BOOK_NO=B.BOOK_NO\r\n" + 
 				"AND B.LIB_NO=C.LIB_NO\r\n" + 
 				"AND B.CATE_NO=D.CATE_NO\r\n" + 
-				"AND A.RETURN_YN='N'\r\n" + 
+				"AND A.RETURN_YN='N'\r\n"
+				+ "	AND	B.LIB_NO=? " + 
 				"WHERE MEM_NO=?";
 		jdbc.update(sql, param);
-		
+	}
+///////////// 회원 정보
+	public Map<String, Object> memberOverdueInfo(int memNo) {
+		String sql="SELECT *\r\n" + 
+				"FROM MEMBER\r\n" + 
+				"WHERE MEM_NO="+memNo;
+		return jdbc.selectOne(sql);
 	}
 	
 	/**O
@@ -461,8 +639,8 @@ public class BookDao {
 				"AND A.BOOK_NO=B.BOOK_NO\r\n" + 
 				"AND B.LIB_NO=C.LIB_NO\r\n" + 
 				"AND B.CATE_NO=D.CATE_NO\r\n" + 
-				"AND A.RETURN_YN='N'\r\n" + 
-				"AND A.BOOK_NO=?)\r\n" + 
+				"AND A.RETURN_YN='N'\r\n"+
+				" AND A.BOOK_NO=?) \r\n" + 
 				"WHERE MEM_NO=?";
 		jdbc.update(sql, param);
 	}
@@ -471,11 +649,11 @@ public class BookDao {
 	 * @param param BOOK_NO
 	 * 대출 insert시에 써야함 (대출 / 대출 예약)
 	 */
-	public void bookRentCount(List<Object>param) {
+	public void bookRentCount(String bookNo) {
 		String sql = "UPDATE BOOK\r\n" + 
 				"SET BOOK_RENT_COUNT=BOOK_RENT_COUNT+1\r\n" + 
-				"WHERE BOOK_NO = ?";
-		jdbc.update(sql, param);
+				"WHERE BOOK_NO ="+bookNo;
+		jdbc.update(sql);
 	}
 
 
@@ -764,6 +942,19 @@ public class BookDao {
 		}
 				sql+="ORDER BY A.LIB_NO, A.CATE_NO, A.BOOK_NO)\r\n";
 			return jdbc.selectOne(sql, param);
+	}
+	
+	/**
+	 * @param BOOK_NO
+	 * @return 현재 도서에 있는 book정보 없으면 정보가없음으로 대출 불가능
+	 */
+	public Map<String,Object> bookLibraryChk(List<Object> param){
+		String sql ="SELECT *\r\n" + 
+				"FROM BOOK A, BOOK_CATEGORY B, LIBRARY C\r\n" + 
+				"WHERE A.CATE_NO=B.CATE_NO\r\n" + 
+				"AND A.LIB_NO=C.LIB_NO\r\n" + 
+				"AND BOOK_NO=?";
+		return jdbc.selectOne(sql, param);
 	}
 	
 }
