@@ -60,6 +60,7 @@ public class MainController extends Print {
 				break;
 			case BOOK_OVERDUE_CHK:
 				view = bookRentController.bookOverdueChk();
+				break;
 			case BOOK:
 				view = book();
 				break;

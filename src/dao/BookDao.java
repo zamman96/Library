@@ -450,13 +450,14 @@ public class BookDao {
 	 */
 	public List<Map<String,Object>> bookDelayList(List<Object> param) {
 		String sql = "SELECT *\r\n" + 
-				"FROM BOOK A, BOOK_RENT B, BOOK_CATEGORY C, LIBRARY L\r\n" + 
-				"WHERE A.BOOK_NO=B.BOOK_NO\r\n" + 
-				"AND A.CATE_NO=C.CATE_NO\r\n" + 
-				"AND A.LIB_NO=L.LIB_NO\r\n" + 
-				"AND B.DELAY_YN='N'\r\n" + 
-				"AND B.RENT_DATE+7<SYSDATE\r\n" + 
-				"AND B.MEM_NO=?";
+				"				FROM BOOK A, BOOK_RENT B, BOOK_CATEGORY C, LIBRARY L\r\n" + 
+				"				WHERE A.BOOK_NO=B.BOOK_NO \r\n" + 
+				"				AND A.CATE_NO=C.CATE_NO\r\n" + 
+				"				AND A.LIB_NO=L.LIB_NO \r\n" + 
+				"				AND B.DELAY_YN='N' \r\n" + 
+				"                AND B.RETURN_YN='N'\r\n" + 
+				"				AND B.RENT_DATE+7<SYSDATE\r\n" + 
+				"				AND B.MEM_NO=?";
 		return jdbc.selectList(sql, param);
 	}
 	
@@ -538,7 +539,8 @@ public class BookDao {
 				"AND A.CATE_NO=C.CATE_NO\r\n" + 
 				"AND A.LIB_NO=L.LIB_NO\r\n" + 
 				"AND A.LIB_NO=?\r\n" + 
-				"AND B.MEM_NO=?";
+				"AND B.MEM_NO=?"
+				+ " AND B.RETURN_YN='N' ";
 		return jdbc.selectList(sql, param);		
 	}
 	
@@ -557,6 +559,7 @@ public class BookDao {
 				"AND B.LIB_NO =?\r\n" + 
 				"AND A.MEM_NO=?\r\n" + 
 				"AND RETURN_YN='N')";
+		jdbc.update(sql,param);
 	}
 	
 	/**반납시 다음 대출 예약자에게 시간 부여
@@ -564,7 +567,7 @@ public class BookDao {
 	 */
 	public void bookRefDate(String bookNo) {
 		String sql = "UPDATE BOOK_REF\r\n" + 
-				"SET BOOK_REF_DATE=SYSDATE+7\r\n" + 
+				"SET BOOK_REF_DATE=SYSDATE\r\n" + 
 				"WHERE BOOK_REF_NO IN \r\n" + 
 				"( SELECT B.BOOK_REF_NO\r\n" + 
 				"FROM BOOK_RENT A, BOOK_REF B\r\n" + 
@@ -606,16 +609,16 @@ public class BookDao {
 	 */
 	public void memberOverdueUpdateAll(List<Object> param) {
 		String sql="UPDATE MEMBER\r\n" + 
-				"SET RENT_AVADATE=(\r\n" + 
-				"SELECT SYSDATE+SUM(SYSDATE-RETURN_DATE)*2\r\n" + 
-				"FROM BOOK_RENT A, BOOK B, LIBRARY C, BOOK_CATEGORY D\r\n" + 
-				"WHERE RETURN_DATE<SYSDATE\r\n" + 
-				"AND A.BOOK_NO=B.BOOK_NO\r\n" + 
-				"AND B.LIB_NO=C.LIB_NO\r\n" + 
-				"AND B.CATE_NO=D.CATE_NO\r\n" + 
-				"AND A.RETURN_YN='N'\r\n"
-				+ "	AND	B.LIB_NO=? " + 
-				"WHERE MEM_NO=?";
+				"				SET RENT_AVADATE=(  \r\n" + 
+				"				SELECT SYSDATE+SUM(SYSDATE-RETURN_DATE)*2  \r\n" + 
+				"				FROM BOOK_RENT A, BOOK B, LIBRARY C, BOOK_CATEGORY D  \r\n" + 
+				"				WHERE RETURN_DATE<SYSDATE  \r\n" + 
+				"				AND A.BOOK_NO=B.BOOK_NO  \r\n" + 
+				"				AND B.LIB_NO=C.LIB_NO  \r\n" + 
+				"				AND B.CATE_NO=D.CATE_NO  \r\n" + 
+				"				AND A.RETURN_YN='N'\r\n" + 
+				"                AND B.LIB_NO=?)  \r\n" + 
+				"				WHERE MEM_NO=?";
 		jdbc.update(sql, param);
 	}
 ///////////// 회원 정보

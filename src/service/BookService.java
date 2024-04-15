@@ -74,9 +74,9 @@ public class BookService {
 	public boolean memberOverdueChk(List<Object> param) {
 		Map<String, Object> map = bdao.memberOverdue(param);
 		if(map==null) {
-			return false;
+			return true;
 		}
-		return true;
+		return false;
 	}
 	
 	/**
