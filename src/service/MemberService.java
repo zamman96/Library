@@ -1,7 +1,9 @@
 package service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ArrayBlockingQueue;
 
 import controller.MainController;
 import controller.MemberController;
@@ -10,9 +12,11 @@ import dao.MemberDao;
 public class MemberService {
 	private static MemberService instance;
 
-	private MemberService() {
 
+	private MemberService() {
 	}
+	
+		
 
 	public static MemberService getInstance() {
 		if (instance == null) {
@@ -36,6 +40,19 @@ public class MemberService {
 	
 	public void sign(List<Object>param) {
 		memdao.sign(param);
+	}
+	
+	public boolean isIdExists(List<Object> idList) {
+        return memdao.isIdExists(idList);
+    }
+	
+	public String findId(String name, String tel) {
+        return memdao.findId(name, tel);
+    }
+
+
+	public String findPassword(String id, String name, String tel) {
+		return memdao.findPassword(id, name, tel);
 	}
 
 }

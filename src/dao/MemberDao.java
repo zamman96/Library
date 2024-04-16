@@ -1,5 +1,7 @@
 package dao;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -40,6 +42,44 @@ public class MemberDao {
 		jdbc.update(sql, param);
 		
 	} 
+	
+	// 아이디 중복 체크
+	public boolean isIdExists(List<Object> idList) {
+	    String sql = "SELECT COUNT(*) FROM MEMBER WHERE MEM_ID =" +idList ;
+	    int count = ((BigDecimal) jdbc.selectOne(sql).get("COUNT(*)")).intValue();
+	    return count > 0;
+	}
+	
+	
+	// 아이디 찾기
+	public String findId(String name, String tel) {
+        String sql = "SELECT MEM_ID FROM MEMBER WHERE MEM_NAME = ? AND MEM_TELNO = ?";
+        List<Object> param = new ArrayList<>();
+        param.add(name);
+        param.add(tel);
+        Map<String, Object> result = jdbc.selectOne(sql, param);
+        if (result != null && result.containsKey("MEM_ID")) {
+            return (String) result.get("MEM_ID");
+        } else {
+            return null;
+        }
+    }
+	
+	// 비밀번호 찾기
+	public String findPassword(String id, String name, String tel) {
+        String sql = "SELECT MEM_PASS FROM MEMBER WHERE MEM_ID = ? AND MEM_NAME = ? AND MEM_TELNO = ?";
+        List<Object> param = new ArrayList<>();
+        param.add(id);
+        param.add(name);
+        param.add(tel);
+        Map<String, Object> result = jdbc.selectOne(sql, param);
+        if (result != null && result.containsKey("MEM_PASS")) {
+            return (String) result.get("MEM_PASS");
+        } else {
+            return null;
+        }
+    }
+	
 
 	
 	

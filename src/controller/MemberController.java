@@ -25,6 +25,7 @@ public class MemberController extends Print {
 		}
 		return instance;
 	}
+
 	static public Map<String, Object> sessionStorage = new HashMap<>();
 	MemberService memberService = MemberService.getInstance();
 	BookService bookService = BookService.getInstance();
@@ -46,7 +47,6 @@ public class MemberController extends Print {
 		return View.MAIN;
 	}
 
-
 	/**
 	 * @return mem_no정보를 담고있는 param
 	 */
@@ -57,23 +57,45 @@ public class MemberController extends Print {
 		param.add(no);
 		return param;
 	}
-	
+
 	// ID 이름 번호 받고
 	// 3자리 뺴고 3자리는 *
 
 	// pass id 이름 번호
 	// 비번 수정
-	
-		/**
-		 * <main> 로그인 비밀번호 회원가입 아이디 비밀번호 찾기 책 검색 자료실 좌석 조회
-		 */
-	private View idfound() {
-		
-		
-		
-		return null;
+
+	/**
+	 * <main> 로그인 비밀번호 회원가입 아이디 비밀번호 찾기 책 검색 자료실 좌석 조회
+	 */
+
+	public View idfound() {
+		String name = ScanUtil.nextLine("이름을 입력하세요 : ");
+		String tel = ScanUtil.nextLine("전화번호를 입력하세요 : ");
+
+		String id = memberService.findId(name, tel);
+		if (id != null) {
+			System.out.println("회원님의 아이디는 " + id + "입니다.");
+		} else {
+			System.out.println("일치하는 회원 정보가 없습니다.");
+		}
+
+		return mainMenu();
 	}
 
+	public View pwfound() {
+		String name = ScanUtil.nextLine("이름을 입력하세요 : ");
+		String id = ScanUtil.nextLine("아이디를 입력하세요 : ");
+		String tel = ScanUtil.nextLine("전화번호를 입력하세요 : ");
+
+		String password = memberService.findPassword(id, name, tel);
+		if (password != null) {
+			System.out.println("회원님의 비밀번호는 " + password + "입니다.");
+		} else {
+			System.out.println("일치하는 회원 정보가 없습니다.");
+		}
+
+		return mainMenu();
+	}
 
 	public View sign() {
 		while (true) {
@@ -88,6 +110,18 @@ public class MemberController extends Print {
 			param.add(pw);
 			param.add(tel);
 			memberService.sign(param);
+
+			List<Object> idList = new ArrayList<Object>();
+			idList.add(id);
+			memberService.sign(idList);
+
+			if (memberService.isIdExists(idList)) {
+				System.out.println("중복된 아이디입니다. 다시 회원가입을 진행해 주세요.");
+				continue;
+			}
+
+			memberService.sign(param);
+			System.out.println("회원가입이 완료되었습니다.");
 
 			return View.LOGIN;
 		}
@@ -120,23 +154,23 @@ public class MemberController extends Print {
 		List<Object> no = memberNo();
 		// 대출예약 기간 지난 리스트가 있으면 출력
 		boolean bookTimeOverChk = bookService.refTimeOverChk(no);
-		if(bookTimeOverChk) {
+		if (bookTimeOverChk) {
 			System.out.println("대출예약기간이 지난 도서가 있습니다");
-			List<Map<String, Object>> list = bookService.refTimeOver(no);	//알림창
+			List<Map<String, Object>> list = bookService.refTimeOver(no); // 알림창
 			printOverVar();
 			printBookIndex();
 			printMiddleVar();
-			for(Map<String, Object> map:list) {
-			printBookList(map);
+			for (Map<String, Object> map : list) {
+				printBookList(map);
 			}
 			printUnderVar();
-			
+
 			bookService.refTimeOverUpdate(no);
 		}
 		// 로그인 성공 시 대출 예약한 것이 대출이 가능한지 확인
 		boolean bookRes = bookService.bookRefYN(no);
-		if(bookRes) {
-			System.out.println("대출 가능한 예약도서가 있습니다.");				//알림창
+		if (bookRes) {
+			System.out.println("대출 가능한 예약도서가 있습니다."); // 알림창
 			return View.BOOK_RESERVATION_LIST;
 		}
 		return mainMenu();

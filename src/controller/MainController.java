@@ -47,6 +47,15 @@ public class MainController extends Print {
 				break;
 			case SIGN:
 				view = memberController.sign();
+			case FOUND:
+				view = found();
+				break;
+			case IDFOUND:
+				view = memberController.idfound();	
+				break;
+			case PWFOUND:
+				view = memberController.pwfound();
+				break;
 			case LIBRARY:
 				view = library();
 				break;
@@ -151,8 +160,8 @@ public class MainController extends Print {
 			return View.PDS;
 		case 4:
 			return View.LOGIN;
-//		case 5:
-//			return View.PDS;
+		case 5:
+			return View.FOUND;
 		case 6:
 			return View.SIGN;
 
@@ -200,7 +209,7 @@ public class MainController extends Print {
 		case 3:
 			return View.LOGIN;
 		case 4:
-			return View.PDS;
+			return View.FOUND;
 		case 5:
 			return View.SIGN;
 
@@ -352,4 +361,5 @@ public class MainController extends Print {
 				return View.FOUND;
 		}
 	}
+	
 }
