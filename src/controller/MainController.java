@@ -26,8 +26,8 @@ public class MainController extends Print {
 	}
 
 	private void start() {
-//		View view = View.MAIN;
-		View view = View.PDS_LIST;
+		View view = View.MAIN;
+//		View view = View.PDS_LIST;
 		while (true) {
 			switch (view) {
 			case MAIN:
