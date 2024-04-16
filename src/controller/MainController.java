@@ -47,6 +47,7 @@ public class MainController extends Print {
 				break;
 			case SIGN:
 				view = memberController.sign();
+				break;
 			case FOUND:
 				view = found();
 				break;

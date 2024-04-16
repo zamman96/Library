@@ -44,11 +44,12 @@ public class MemberDao {
 	} 
 	
 	// 아이디 중복 체크
-	public boolean isIdExists(List<Object> idList) {
-	    String sql = "SELECT COUNT(*) FROM MEMBER WHERE MEM_ID =" +idList ;
-	    int count = ((BigDecimal) jdbc.selectOne(sql).get("COUNT(*)")).intValue();
-	    return count > 0;
-	}
+	 public Map<String, Object> idcheck(List<Object> param) {
+	        String sql = " SELECT MEM_ID\r\n" + 
+	        			 " FROM MEMBER\r\n" + 
+	        			 " WHERE MEM_ID = ?"  ;
+	        return jdbc.selectOne(sql, param);
+	    }
 	
 	
 	// 아이디 찾기

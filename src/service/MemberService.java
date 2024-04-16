@@ -41,11 +41,19 @@ public class MemberService {
 	public void sign(List<Object>param) {
 		memdao.sign(param);
 	}
+
 	
-	public boolean isIdExists(List<Object> idList) {
-        return memdao.isIdExists(idList);
+    public boolean idcheck(List<Object> param) {
+    	Map<String, Object> result = memdao.idcheck(param);
+    	if (result != null && !result.isEmpty()) {
+            System.out.println("중복된 아이디입니다. 다시 시도해주세요" );
+            return false; // 중복된 아이디가 있음을 나타내는 값을 반환
+        }
+        
+        return true;
+    	
     }
-	
+    
 	public String findId(String name, String tel) {
         return memdao.findId(name, tel);
     }

@@ -68,13 +68,16 @@ public class MemberController extends Print {
 	 * <main> 로그인 비밀번호 회원가입 아이디 비밀번호 찾기 책 검색 자료실 좌석 조회
 	 */
 
+	// 아이디 찾기
 	public View idfound() {
 		String name = ScanUtil.nextLine("이름을 입력하세요 : ");
 		String tel = ScanUtil.nextLine("전화번호를 입력하세요 : ");
-
 		String id = memberService.findId(name, tel);
 		if (id != null) {
-			System.out.println("회원님의 아이디는 " + id + "입니다.");
+			if (id.length() > 3) {
+				String truncatedId = id.substring(0, id.length() - 3);
+				System.out.println("회원님의 아이디는 " + truncatedId + "***" + "입니다.");
+			}
 		} else {
 			System.out.println("일치하는 회원 정보가 없습니다.");
 		}
@@ -82,14 +85,16 @@ public class MemberController extends Print {
 		return mainMenu();
 	}
 
+	// 비번 찾기
 	public View pwfound() {
 		String name = ScanUtil.nextLine("이름을 입력하세요 : ");
 		String id = ScanUtil.nextLine("아이디를 입력하세요 : ");
 		String tel = ScanUtil.nextLine("전화번호를 입력하세요 : ");
 
 		String password = memberService.findPassword(id, name, tel);
-		if (password != null) {
-			System.out.println("회원님의 비밀번호는 " + password + "입니다.");
+		if (password.length() > 3) {
+			String truncatedPw = password.substring(0, id.length() - 3);
+			System.out.println("회원님의 비밀번호는 " + truncatedPw + "***" + "입니다.");
 		} else {
 			System.out.println("일치하는 회원 정보가 없습니다.");
 		}
@@ -97,36 +102,32 @@ public class MemberController extends Print {
 		return mainMenu();
 	}
 
+	// 회원가입
 	public View sign() {
-		while (true) {
-			String nm = ScanUtil.nextLine("NAME : ");
-			String id = ScanUtil.nextLine("ID: ");
-			String pw = ScanUtil.nextLine("PASS : ");
-			String tel = ScanUtil.nextLine("TELL : ");
 
-			List<Object> param = new ArrayList<Object>();
-			param.add(nm);
-			param.add(id);
-			param.add(pw);
-			param.add(tel);
-			memberService.sign(param);
+	    while (true) {
+	        String nm = ScanUtil.nextLine("NAME : ");
+	        String id = ScanUtil.nextLine("ID: ");
+	        String pw = ScanUtil.nextLine("PASS : ");
+	        String tel = ScanUtil.nextLine("TELL : ");
 
-			List<Object> idList = new ArrayList<Object>();
-			idList.add(id);
-			memberService.sign(idList);
+	        List<Object> param = new ArrayList<Object>();
+	        param.add(nm);
+	        param.add(id);
+	        param.add(pw);
+	        param.add(tel);
+	        
+	        List<Object> idList = new ArrayList<Object>();
+	        idList.add(id);
+	        
+	        boolean Idchk = memberService.idcheck(idList);
 
-			if (memberService.isIdExists(idList)) {
-				System.out.println("중복된 아이디입니다. 다시 회원가입을 진행해 주세요.");
-				continue;
-			}
 
-			memberService.sign(param);
-			System.out.println("회원가입이 완료되었습니다.");
-
-			return View.LOGIN;
-		}
+	        return View.SIGN;
+	    }
 	}
 
+	// 로그인
 	public View login() {
 		String id = ScanUtil.nextLine("ID : ");
 		String pw = ScanUtil.nextLine("pass : ");
@@ -151,6 +152,7 @@ public class MemberController extends Print {
 				return View.LOGIN;
 			}
 		}
+		
 		List<Object> no = memberNo();
 		// 대출예약 기간 지난 리스트가 있으면 출력
 		boolean bookTimeOverChk = bookService.refTimeOverChk(no);
@@ -176,26 +178,26 @@ public class MemberController extends Print {
 		return mainMenu();
 	}
 
-	private View home() {
-		System.out.println("1. 로그인");
-		System.out.println("2. 회원가입");
-		System.out.println("3. 책 검색");
-//		System.out.println("4. 자료실 좌석 조회");
-		System.out.println("4. 아이디 비밀번호 찾기");
-
-		int sel = ScanUtil.menu();
-		switch (sel) {
-		case 1:
-			return View.LOGIN;
-		case 2:
-			return View.SIGN;
-		case 3:
-			return View.BOOK;
-		case 4:
-			return View.PDS;
-		default:
-			return View.MAIN;
-		}
-	}
+//	private View home() {
+//		System.out.println("1. 로그인");
+//		System.out.println("2. 회원가입");
+//		System.out.println("3. 책 검색");
+////		System.out.println("4. 자료실 좌석 조회");
+//		System.out.println("4. 아이디 비밀번호 찾기");
+//
+//		int sel = ScanUtil.menu();
+//		switch (sel) {
+//		case 1:
+//			return View.LOGIN;
+//		case 2:
+//			return View.SIGN;
+//		case 3:
+//			return View.BOOK;
+//		case 4:
+//			return View.PDS;
+//		default:
+//			return View.MAIN;
+//		}
+//	}
 
 }
