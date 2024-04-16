@@ -52,14 +52,15 @@ public class PDSDao {
 	}
 	
 	/** 좌석 예약
-	 * @param MEM_NO, HOUR, SEAT_NO
+	 * @param MEM_NO, HOUR
 	 * @param libNo
+	 * @param seatNo
 	 */
-	public void pdsRent(List<Object> param, int libNo){
+	public void pdsRent(List<Object> param, int libNo, int seatNo){
 		String sql = "INSERT INTO PDS_REF(SEAT_NO, MEM_NO,SEAT_REF_HOUR)\r\n" + 
 				"SELECT SEAT_NO, ?, ?\r\n" + 
 				"FROM PDS_SEAT\r\n" + 
-				"WHERE SEAT_NAME='PC'||?\r\n" + 
+				"WHERE SEAT_NAME='PC"+seatNo+"'\r\n" + 
 				"AND LIB_NO="+libNo;
 		jdbc.update(sql, param);
 	}
@@ -70,42 +71,93 @@ public class PDSDao {
 	 * @param libNo
 	 * @return
 	 */
-	public Map<String, Object> pdsRentChk(List<Object> param, int libNo){
+	public Map<String, Object> pdsRentChk(List<Object> param, int libNo, int seatNo){
 		String sql = "SELECT *\r\n" + 
 				"FROM PDS_REF\r\n" + 
 				"WHERE SEAT_NO IN(\r\n" + 
 				"SELECT SEAT_NO\r\n" + 
 				"FROM PDS_SEAT\r\n" + 
 				"WHERE LIB_NO="+libNo+"\r\n" + 
-				"AND SEAT_NAME='PC'||?)\r\n" + 
+				"AND SEAT_NAME='PC"+seatNo+"'\r\n" + 
 				"AND SEAT_REF_HOUR=?\r\n" + 
 				"AND TO_CHAR(SEAT_REF_DATE,'YYYYMMDD') = TO_CHAR(SYSDATE,'YYYYMMDD')\r\n" + 
-				"AND SEAT_REF_YN='N'";
+				"AND SEAT_REF_YN='N')";
 		return jdbc.selectOne(sql, param);
 	}
 	
-	// 전체 취소
-	/**
-	 * @param SEAT_NO, MEM_NO,SEAT_REF_HOUR
-	 * @param libNo
+	
+	/** 중복체크
+	 * @param HOUR, MEM_NO
 	 * @return
 	 */
-	public Map<String, Object> pdsRentCancelAll(List<Object> param, int libNo){
-		String sql = "UPDATE PDS_REF\r\n" + 
-				"SET SEAT_REF_YN='Y'\r\n" + 
-				"WHERE SEAT_NO IN (SELECT SEAT_NO\r\n" + 
-				"FROM PDS_SEAT\r\n" + 
-				"WHERE LIB_NO="+libNo+"\r\n" + 
-				"AND SEAT_NAME='PC'||?)\r\n" + 
-				"AND SEAT_REF_DATE=SYSDATE\r\n" + 
-				"AND MEM_NO=?\r\n" + 
-				"AND SEAT_REF_HOUR =?";
+	public Map<String,Object> pdsTimeDupChk(List<Object>param, int libNo){
+		String sql = "SELECT *\r\n" + 
+				"FROM PDS_REF A, PDS_SEAT B\r\n" + 
+				"WHERE TO_CHAR(A.SEAT_REF_DATE,'YYYYMMDD') = TO_CHAR(SYSDATE,'YYYYMMDD')\r\n" + 
+				"AND A.SEAT_REF_HOUR=?\r\n" + 
+				"AND A.SEAT_REF_YN='N'\r\n" + 
+				"AND A.MEM_NO=?"+
+				" AND A.SEAT_NO=B.SEAT_NO "
+				+ " AND B.LIB_NO="+libNo;
 		return jdbc.selectOne(sql, param);
 	}
 	
-	
+	// 현재 도서관의 전체 취소
+	/** 현재시간 이후만 가능
+	 * @param MEM_NO,libNo
+	 */
+	public void pdsRentCancelAll(List<Object> param){
+		String sql = "UPDATE PDS_REF\r\n" + 
+				"SET SEAT_REF_YN='Y'\r\n" + 
+				"WHERE MEM_NO=?\r\n" + 
+				"AND TO_CHAR(SEAT_REF_DATE,'YYYYMMDD') = TO_CHAR(SYSDATE,'YYYYMMDD')\r\n" + 
+				"AND SEAT_REF_HOUR >= TO_CHAR(SYSDATE, 'HH24')\r\n" +
+				"AND SEAT_NO IN (\r\n" + 
+				"SELECT SEAT_NO\r\n" + 
+				"FROM PDS_SEAT\r\n" + 
+				"WHERE LIB_NO=?)";
+		jdbc.update(sql, param);
+	}
+
 	// 부분취소
+	/** 현재시간 이후만 가능
+	 * @param MEM_NO, LIB_NO
+	 * @param seatNo
+	 */
+	public void pdsRentCancel(List<Object> param, int seatNo, int sel) {
+		String sql = "UPDATE PDS_REF\r\n" + 
+				"SET SEAT_REF_YN='Y'\r\n" + 
+				"WHERE MEM_NO=?\r\n" + 
+				"AND TO_CHAR(SEAT_REF_DATE,'YYYYMMDD') = TO_CHAR(SYSDATE,'YYYYMMDD')\r\n" + 
+				"AND SEAT_REF_HOUR >= TO_CHAR(SYSDATE, 'HH24')\r\n" + 
+				"AND SEAT_NO IN (\r\n" + 
+				"SELECT SEAT_NO\r\n" + 
+				"FROM PDS_SEAT\r\n" + 
+				"WHERE LIB_NO=?\r\n" + 
+				"AND SEAT_NAME='PC"+seatNo+"')";
+		if(sel==2) {
+			sql+="  AND SEAT_REF_HOUR=?  ";
+		}
+		jdbc.update(sql, param);
+	}
 	
-	
+	/**
+	 * @param MEM_NO, LIB_NO
+	 * @param seatNo
+	 * @param sel 2번이면 부분취소이므로 param에 hour도 받아야함
+	 * @return
+	 */
+	public Map<String,Object> pdsResChk(List<Object>param, int seatNo, int sel){
+		String sql= "SELECT *\r\n" + 
+				"FROM PDS_REF A, PDS_SEAT B\r\n" + 
+				"WHERE A.SEAT_NO=B.SEAT_NO\r\n" + 
+				"AND A.MEM_NO=?\r\n" + 
+				"AND B.LIB_NO=?\r\n" + 
+				"AND B.SEAT_NAME='PC"+seatNo+"'\r\n";
+		if(sel==2) {
+				sql+="AND A.SEAT_REF_HOUR=?\r\n";}
+				sql+="AND A.SEAT_REF_HOUR >= TO_CHAR(SYSDATE, 'HH24')";
+		return jdbc.selectOne(sql, param);
+	}
 	
 }

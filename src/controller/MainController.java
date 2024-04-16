@@ -102,13 +102,13 @@ public class MainController extends Print {
 				view = bookRentController.returnBookPart();
 				break;
 			case PDS:
-				view = pds();
-				break;
-			case PDS_LIST:
-				view = pdsController.pdsList();
+				view = pdsController.pds();
 				break;
 			case PDS_RESERVATION:
 				view = pdsController.pdsReserve();
+				break;
+			case PDS_CANCEL:
+				view = pdsController.pdsCancel();
 				break;
 			default:
 				break;
@@ -310,33 +310,6 @@ public class MainController extends Print {
 		default:
 			return View.LIBRARY;
 		}
-	}
-
-	private View pds() {
-		if (!sessionStorage.containsKey("library")) {
-			noticeLibrarySel();
-			return View.LIBRARY;
-		}
-		Map<String, Object> library = (Map<String, Object>) sessionStorage.get("library");
-		String name = (String) library.get("LIB_NAME");
-		printMenuOverVar();
-		System.out.println("\t\t\t\t📖" + name);
-		printMenuVar();
-		System.out.println("\t\t1. 자료실 좌석 조회\t2. 예약 좌석 조회 / 취소");
-		System.out.println("\t\t\t0. 홈");
-		printMenuVar();
-		int sel = ScanUtil.menu();
-		switch (sel) {
-		case 1:
-			return View.PDS_LIST;
-		case 2:
-			return View.PDS_RESERVATION;
-		case 0:
-			return mainMenu();
-		default:
-			return View.PDS;
-		}
-
 	}
 	
 	private View found() {

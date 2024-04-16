@@ -45,7 +45,7 @@ public class BookDao {
 				"AND MEM_NO=?";
 		return jdbc.selectOne(sql, param);
 	}
-	
+		
 	/**
 	 * @param mem_no
 	 * @return	대출한 책 목록
