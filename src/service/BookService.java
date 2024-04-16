@@ -240,11 +240,38 @@ public class BookService {
 	 * @return 예약 순번
 	 */
 	public int bookMySeq(List<Object> param, String bookNo) {
-		Map<String, Object> mySeq = bdao.bookMySeq(param);
+		Map<String, Object> mySeq = bdao.bookMySeq(param, bookNo);
 		Map<String, Object> seq = bdao.bookSeq(bookNo);
 		int myNo = ((BigDecimal) mySeq.get("SEQ")).intValue();
 		int no = ((BigDecimal) seq.get("MIN")).intValue();
 		return myNo-no+1;
+	}
+	
+	/**
+	 * @param mem_no
+	 * @return	대출한 책 목록
+	 */
+	public List<Map<String, Object>> bookRentList(List<Object> param){
+		return bdao.bookRentList(param);
+	}
+	
+	/**
+	 * @param MEM_no
+	 * @return 대출 예약 리스트
+	 * 예약순번은 bookMySeq에서 (param(mem_no),bookNo)를 받아 넣을 것
+	 */
+	public List<Map<String,Object>> bookResList(List<Object> param){
+		return bdao.bookResList(param);
+	}
+	/**
+	 * @param MEM_NO
+	 * @param bookNo
+	 * @return 순번 대출 가능은 0번
+	 */
+	public int bookResSeq(List<Object> param, String bookNo){
+		Map<String, Object> map = bdao.bookResSeq(param, bookNo);
+		int seq = ((BigDecimal) map.get("SEQ")).intValue();
+		return seq;
 	}
 	
 // 대출 예약 대출
@@ -442,6 +469,26 @@ public class BookService {
 	}
 	
 // 책 리스트
+	
+	/**
+	 * @param MEM_NO, ROWNUM
+	 * @return 빌렸던 내역
+	 * 만약 return_yn = n일경우 return_date는 예정일이므로 초록색으로 표시?
+	 */
+	public List<Map<String,Object>> bookRentListPast(List<Object> param){
+		return bdao.bookRentListPast(param);
+	}
+	
+	/**
+	 * @param MEM_NO
+	 * @return 빌렸던 내역 갯수
+	 */
+	public int bookRentListPastCount(List<Object> param){
+		Map<String,Object> map = bdao.bookRentListPastCount(param);
+		int count =((BigDecimal)map.get("COUNT")).intValue();
+		return count;
+	}
+	
 	/**
 	 * @param bookNo
 	 * @return 책의 대출 상태

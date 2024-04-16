@@ -46,6 +46,39 @@ public class BookDao {
 		return jdbc.selectOne(sql, param);
 	}
 	
+	/**
+	 * @param mem_no
+	 * @return	대출한 책 목록
+	 */
+	public List<Map<String, Object>> bookRentList(List<Object> param){
+		String sql = "SELECT *\r\n" + 
+				"FROM BOOK A, BOOK_CATEGORY B, LIBRARY C, BOOK_RENT D\r\n" + 
+				"WHERE A.CATE_NO=B.CATE_NO\r\n" + 
+				"AND A.LIB_NO=C.LIB_NO\r\n" + 
+				"AND A.BOOK_NO=D.BOOK_NO\r\n" + 
+				"AND A.BOOK_REMARK = '사용가능'\r\n" + 
+				"AND D.RETURN_YN = 'N'\r\n" + 
+				"AND D.MEM_NO=?";
+		return jdbc.selectList(sql, param);
+	}
+	
+	/**
+	 * @param MEM_no
+	 * @return 대출 예약 리스트
+	 * 예약순번은 bookMySeq에서 (param(mem_no),bookNo)를 받아 넣을 것
+	 */
+	public List<Map<String,Object>> bookResList(List<Object> param){
+		String sql = "SELECT *\r\n" + 
+				"FROM BOOK A, BOOK_CATEGORY B, LIBRARY C, BOOK_RENT D\r\n" + 
+				"WHERE A.CATE_NO=B.CATE_NO\r\n" + 
+				"AND A.LIB_NO=C.LIB_NO\r\n" + 
+				"AND A.BOOK_NO=D.BOOK_NO\r\n" + 
+				"AND A.BOOK_REMARK = '사용가능'\r\n" + 
+				"AND D.BOOK_REF_CHK=1\r\n" + 
+				"AND D.MEM_NO=? ";
+		return jdbc.selectList(sql, param);
+	}
+	
 	/** O
 	 * @param BOOK_NO
 	 * @return 대출가능할 경우 책 RETURN 없을 경우 NULL > 대출예약 여부
@@ -145,13 +178,13 @@ public class BookDao {
 		jdbc.update(sql);
 	}
 	
-	public Map<String,Object> bookMySeq(List<Object> param){
+	public Map<String,Object> bookMySeq(List<Object> param, String bookNo){
 		String sql = "SELECT B.BOOK_REF_SEQ AS SEQ\r\n" + 
 				"FROM BOOK_RENT A, BOOK_REF B\r\n" + 
 				"WHERE A.BOOK_REF_NO=B.BOOK_REF_NO \r\n" + 
 				"AND A.MEM_NO=?\r\n" + 
-				"AND A.BOOK_NO=?\r\n" + 
-				"AND A.BOOK_REF_CHK=1";
+				"AND A.BOOK_NO="+bookNo+ 
+				" AND A.BOOK_REF_CHK=1";
 		return jdbc.selectOne(sql, param);
 	}
 	
@@ -308,6 +341,25 @@ public class BookDao {
 				"AND A.MEM_NO=?\r\n" + 
 				"AND B.BOOK_REF_DATE IS NOT NULL";
 		return jdbc.selectList(sql, param);
+	}
+	
+	/**
+	 * @param MEM_NO
+	 * @param bookNo
+	 * @return 순번 대출 가능은 0번
+	 */
+	public Map<String,Object> bookResSeq(List<Object> param, String bookNo){
+		String sql = "SELECT BOOK_REF_SEQ-C.MIN AS SEQ \r\n" + 
+				"FROM BOOK_RENT A, BOOK_REF B,\r\n" + 
+				"(SELECT MIN(BOOK_REF_SEQ) AS MIN\r\n" + 
+				"FROM BOOK_RENT A, BOOK_REF B\r\n" + 
+				"WHERE A.BOOK_REF_NO=B.BOOK_REF_NO\r\n" + 
+				"AND A.BOOK_NO="+bookNo+ 
+				"  AND A.BOOK_REF_CHK=1) C\r\n" + 
+				"WHERE A.BOOK_REF_NO=B.BOOK_REF_NO\r\n" + 
+				"AND A.MEM_NO=?\r\n" + 
+				"AND A.BOOK_NO ="+bookNo;
+		return jdbc.selectOne(sql, param);
 	}
 	
 	/**
@@ -662,6 +714,39 @@ public class BookDao {
 
 //  리스트
 	
+	/**
+	 * @param MEM_NO, ROWNUM
+	 * @return 빌렸던 내역
+	 * 만약 return_yn = n일경우 return_date는 예정일이므로 초록색으로 표시?
+	 */
+	public List<Map<String,Object>> bookRentListPast(List<Object> param){
+		String sql = "SELECT *\r\n" + 
+				"FROM (SELECT ROWNUM AS RN, A.BOOK_NO, A.BOOK_NAME, A.BOOK_AUTHOR, A.BOOK_PUB, A.BOOK_PUB_YEAR, B.CATE_NAME, C.LIB_NAME, D.RETURN_DATE, D.RETURN_YN, D.RENT_DATE\r\n" + 
+				"            FROM BOOK A, BOOK_CATEGORY B, LIBRARY C, BOOK_RENT D\r\n" + 
+				"            WHERE A.CATE_NO=B.CATE_NO\r\n" + 
+				"            AND A.LIB_NO=C.LIB_NO\r\n" + 
+				"            AND A.BOOK_NO=D.BOOK_NO\r\n" + 
+				"            AND D.MEM_NO=?\r\n" + 
+				"            AND D.RENT_DATE IS NOT NULL) \r\n" + 
+				"WHERE RN>=? AND RN<=?";
+		return jdbc.selectList(sql, param);
+	}
+	
+	/**
+	 * @param MEM_NO
+	 * @return 빌렸던 내역 갯수
+	 */
+	public Map<String,Object> bookRentListPastCount(List<Object> param){
+		String sql = "SELECT COUNT(*) AS COUNT\r\n" + 
+				"FROM (SELECT ROWNUM AS RN, A.BOOK_NO, A.BOOK_NAME, A.BOOK_AUTHOR, A.BOOK_PUB, A.BOOK_PUB_YEAR, B.CATE_NAME, C.LIB_NAME, D.RETURN_DATE, D.RETURN_YN, D.RENT_DATE\r\n" + 
+				"            FROM BOOK A, BOOK_CATEGORY B, LIBRARY C, BOOK_RENT D\r\n" + 
+				"            WHERE A.CATE_NO=B.CATE_NO\r\n" + 
+				"            AND A.LIB_NO=C.LIB_NO\r\n" + 
+				"            AND A.BOOK_NO=D.BOOK_NO\r\n" + 
+				"            AND D.MEM_NO=?\r\n" + 
+				"            AND D.RENT_DATE IS NOT NULL) ";
+		return jdbc.selectOne(sql, param);
+	}
 	/**O
 	 * @param LIB_NO
 	 * @return 한 도서관에서의 전체 순위 10위
@@ -693,7 +778,6 @@ public class BookDao {
 				"				WHERE ROWNUM<=10";
 		return jdbc.selectList(sql);
 	}
-	
 	
 	/**
 	 * @param LIB_NO, ROWNUM

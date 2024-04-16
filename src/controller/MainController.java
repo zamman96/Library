@@ -17,6 +17,7 @@ public class MainController extends Print {
 	BookRentController bookRentController = BookRentController.getInstance();
 	MemberController memberController = MemberController.getInstance();
 	BookService bookService = BookService.getInstance();
+	PDSController pdsController = PDSController.getInstance();
 	static public Map<String, Object> sessionStorage = new HashMap<>();
 	// 로그인을 위해 MemberService 클래스 호출
 
@@ -25,8 +26,8 @@ public class MainController extends Print {
 	}
 
 	private void start() {
-		View view = View.MAIN;
-//		View view = View.LIBRARY;
+//		View view = View.MAIN;
+		View view = View.PDS_LIST;
 		while (true) {
 			switch (view) {
 			case MAIN:
@@ -76,6 +77,12 @@ public class MainController extends Print {
 			case BOOK_RENT:
 				view = bookRentController.bookRent();
 				break;
+			case BOOK_RENT_LIST:
+				view = bookRentController.bookRentList();	
+				break;
+			case BOOK_RENT_LIST_PAST:
+				view = bookListController.bookRentPastList();
+				break;
 			case BOOK_RESERVATION:
 				view = bookRentController.bookReservation();
 				break;
@@ -96,6 +103,12 @@ public class MainController extends Print {
 				break;
 			case PDS:
 				view = pds();
+				break;
+			case PDS_LIST:
+				view = pdsController.pdsList();
+				break;
+			case PDS_RESERVATION:
+				view = pdsController.pdsReserve();
 				break;
 			default:
 				break;
@@ -186,8 +199,8 @@ public class MainController extends Print {
 			return View.PDS;
 		case 3:
 			return View.LOGIN;
-//		case 4:
-//			return View.PDS;
+		case 4:
+			return View.PDS;
 		case 5:
 			return View.SIGN;
 
@@ -239,12 +252,13 @@ public class MainController extends Print {
 		System.out.println("\t\t1. 모든 도서 조회\t2. 분류별 도서 조회\t3. 도서 검색");
 		if (sessionStorage.containsKey("member")) {
 			System.out.println("\t\t4. 대출\t5. 대출 예약\t6. 연장\t7. 반납");
+			System.out.println("\t8. 현재 대출/예약내역\t9.과거 대출내역");
 		}
 		System.out.println("\t\t\t\t0. 홈");
 		printMenuVar();
 		int sel = ScanUtil.menu();
 		// 회원으로 로그인하지 않으면 메뉴에 들어가지지않음
-		if (!sessionStorage.containsKey("member") && sel >= 4 && sel <= 6) {
+		if (!sessionStorage.containsKey("member") && sel >= 4 && sel <= 8) {
 			return View.BOOK;
 		}
 
@@ -263,6 +277,10 @@ public class MainController extends Print {
 			return View.BOOK_DELAY;
 		case 7:
 			return View.BOOK_RETURN;
+		case 8:
+			return View.BOOK_RENT_LIST;
+		case 9:
+			return View.BOOK_RENT_LIST_PAST;
 		case 0:
 			return mainMenu();
 		default:
@@ -299,16 +317,20 @@ public class MainController extends Print {
 			noticeLibrarySel();
 			return View.LIBRARY;
 		}
+		Map<String, Object> library = (Map<String, Object>) sessionStorage.get("library");
+		String name = (String) library.get("LIB_NAME");
+		printMenuOverVar();
+		System.out.println("\t\t\t\t📖" + name);
 		printMenuVar();
 		System.out.println("\t\t1. 자료실 좌석 조회\t2. 예약 좌석 조회 / 취소");
 		System.out.println("\t\t\t0. 홈");
 		printMenuVar();
 		int sel = ScanUtil.menu();
 		switch (sel) {
-//		case 1:
-//			return View.LIBRARY_LOCAL;
-//		case 2:
-//			return View.LIBRARY_SEARCH;
+		case 1:
+			return View.PDS_LIST;
+		case 2:
+			return View.PDS_RESERVATION;
 		case 0:
 			return mainMenu();
 		default:

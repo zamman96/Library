@@ -24,6 +24,8 @@ public enum View {
 	
 	BOOK_OVERDUE_CHK,
 	BOOK_RENT,				// 대출
+	BOOK_RENT_LIST,
+	BOOK_RENT_LIST_PAST,
 	
 	BOOK_RESERVATION, 		//대출예약
 	BOOK_RESERVATION_LIST,
@@ -39,9 +41,12 @@ public enum View {
 	LIBRARY_LOCAL,
 	LIBRARY_SEARCH,
 	
+	PDS, 
+	PDS_LIST,
+	PDS_RESERVATION,
+	
 	ADMIN,					// 관리자	interface > 연체정보, 회원정보, 책추가, 관리자 추가
 	
-	PDS
 
 	
 	

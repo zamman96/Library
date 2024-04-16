@@ -177,7 +177,7 @@ public class BookRentController extends Print {
 			System.out.println("다시 입력해주세요.");
 
 		}
-		int vol = bookService.memberRentVol(param);	//MEM_NO
+		int vol = bookService.memberRentVol(param); // MEM_NO
 		param.add(bookNo);
 		boolean pass = true;
 		if (MainController.sessionStorage.containsKey("libraryRent")) {
@@ -212,7 +212,7 @@ public class BookRentController extends Print {
 				return View.BOOK_RENT;
 			}
 		}
-		
+
 		// 대출 가능여부
 		boolean bookRentChk = bookService.bookRentChk(bookNo);
 		if (!bookRentChk) {
@@ -275,15 +275,89 @@ public class BookRentController extends Print {
 		}
 	}
 
+	public View bookRentList() {
+		List<Object> param = memberNo();
+		// 책 대출내역
+		printMenuVar();
+		System.out.println("현재 도서 대출 내역");
+		printMenuVar();
+		List<Map<String, Object>> rentList = bookService.bookRentList(param);
+		if (rentList != null) {
+			Date today = new Date();
+			printOverVar();
+			System.out.print("   반납예정일\t");
+			printBookIndex();
+			printMiddleVar();
+			for (Map<String, Object> map : rentList) {
+				Date refDate = new Date(((Timestamp) map.get("RETURN_DATE")).getTime());
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy년 MM월 dd일");
+				if (refDate.before(today)) {
+					System.out.print(RED + "   " + dateFormat.format(refDate) + "\t" + END);
+				} else {
+					System.out.print("   " + dateFormat.format(refDate) + "\t");
+				}
+				printBookList(map);
+			}
+			printUnderVar();
+		} else if (rentList == null) {
+			System.out.println("대출한 내역이 없습니다.");
+		}
+		printMenuVar();
+		System.out.println("현재 도서 대출 예약 내역");
+		printMenuVar();
+		// 책 예약내역
+		List<Map<String, Object>> resList = bookService.bookResList(param);
+		if (resList != null) {
+			printOverVar();
+			System.out.print("    순번\t│예약마감일\t\t");
+			printBookIndex();
+			printMiddleVar();
+			for (Map<String, Object> map : resList) {
+				List<Object> bookparam = memberNo();
+				String bookNo = (String) map.get("BOOK_NO");
+				// 순번
+				int seq = bookService.bookResSeq(bookparam, bookNo);
+				System.out.print("  " + seq + "\t");
+				// 예약마감일이 있다면 (대여가능한것)
+				if (map.get("BOOK_REF_DATE") != null) {
+					Date refDate = new Date(((Timestamp) map.get("BOOK_REF_DATE")).getTime());
+					SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy년 MM월 dd일");
+					System.out.print("   │" + dateFormat.format(refDate) + "\t");
+				} else {
+					System.out.print("│대출 대기 중\t");
+				}
+				printBookList(map);
+			}
+			printUnderVar();
+		} else if (resList == null) {
+			System.out.println("대출 예약 내역이 없습니다.");
+		}
+		printMenuVar();
+		System.out.println("1.대출\t2. 대출 예약\t3.연장\t4.반납");
+		System.out.println("5.도서조회\t 0.홈");
+		int sel = ScanUtil.menu();
+		switch (sel) {
+		case 1:
+			return View.BOOK_RENT;
+		case 2:
+			return View.BOOK_RESERVATION;
+		case 3:
+			return View.BOOK_DELAY;
+		case 4:
+			return View.BOOK_RETURN;
+		case 5:
+			return View.BOOK_RENT_LIST_PAST;
+		case 0:
+			return mainMenu();
+		default:
+			return View.BOOK_RENT_LIST;
+		}
+	}
+
 	/**
 	 * 대출 예약 대출예약은 다른 도서관에 있는 책 예약도 가능하므로 도서관 검사는 하지않음
 	 */
 	public View bookReservation() {
-		// 로그인 여부
-		if (!MainController.sessionStorage.containsKey("member")) {
-			noticeMemberSel();
-			return View.LOGIN;
-		}
 		// 연체 여부
 		if (!MainController.sessionStorage.containsKey("Check")) {
 			MainController.sessionStorage.put("View", View.BOOK_RESERVATION);
@@ -375,7 +449,8 @@ public class BookRentController extends Print {
 		System.out.println("남은 대출 예약 가능 권 수는 " + (vol - 1) + "권 입니다.");
 
 		// 대출 예약 순번을 보여줄 것
-		int seq = bookService.bookMySeq(param, bookNo);
+		List<Object> memparam = memberNo();
+		int seq = bookService.bookMySeq(memparam, bookNo);
 		System.out.println("예약 순번은 " + seq + "번 째입니다");
 
 		System.out.println("1. 대출예약\t\t2.도서 조회\t\t0.홈");
@@ -629,7 +704,7 @@ public class BookRentController extends Print {
 		System.out.print("  반납예정일\t");
 		printBookIndex();
 		printMiddleVar();
-		Map<String,Object> bookNoSave = new HashMap<String, Object>();
+		Map<String, Object> bookNoSave = new HashMap<String, Object>();
 		for (Map<String, Object> map : list) {
 			Date refDate = new Date(((Timestamp) map.get("RETURN_DATE")).getTime());
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy년 MM월 dd일");
@@ -675,9 +750,9 @@ public class BookRentController extends Print {
 		int memNo = ((BigDecimal) member.get("MEM_NO")).intValue();
 		memParam.add(memNo);
 
-		if (MainController.sessionStorage.containsKey("over")) {	
+		if (MainController.sessionStorage.containsKey("over")) {
 			MainController.sessionStorage.remove("over");
-			String overdueDate = bookService.memberOverdueInfo(memNo);	
+			String overdueDate = bookService.memberOverdueInfo(memNo);
 			System.out.println("반납일을 넘어서 반납하셨습니다.");
 			System.out.println(overdueDate + "부터 대출이 가능합니다.");
 		}
@@ -700,7 +775,7 @@ public class BookRentController extends Print {
 			return View.BOOK;
 		}
 		Map<String, String> map = (Map<String, String>) MainController.sessionStorage.remove("return");
-		Map<String, Object> over = (Map<String, Object>) MainController.sessionStorage.remove("over");		//연체된 책 목록
+		Map<String, Object> over = (Map<String, Object>) MainController.sessionStorage.remove("over"); // 연체된 책 목록
 		String bookNo = "";
 		List<Object> param = new ArrayList<>();
 		Map<String, Object> member = (Map<String, Object>) MainController.sessionStorage.get("member");
