@@ -42,10 +42,11 @@ public enum View {
 	LIBRARY_SEARCH,
 	
 	PDS, 
-	PDS_LIST,
 	PDS_RESERVATION,
+	PDS_CANCEL,
 	
-	ADMIN,					// 관리자	interface > 연체정보, 회원정보, 책추가, 관리자 추가
+	ADMIN	 				// 관리자	interface > 연체정보, 회원정보, 책추가, 관리자 추가
+
 	
 
 	

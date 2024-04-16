@@ -46,20 +46,58 @@ public class PDSService {
 	 * @param MEM_NO, HOUR, SEAT_NO
 	 * @param libNo
 	 */
-	public void pdsRent(List<Object> param, int libNo){
-		pdao.pdsRent(param, libNo);
+	public void pdsRent(List<Object> param, int libNo, int seatNo){
+		pdao.pdsRent(param, libNo, seatNo);
 	}
 	
 	// 이미 예약되어있는지 여부 파악하기
 	/**
-	 * @param SEAT_NO, HOUR
+	 * @param SEAT_NAME, HOUR
 	 * @param libNo
 	 * @return true 대출가능, false 불가능
 	 */
-	public boolean pdsRentChk(List<Object> param, int libNo){
-		Map<String, Object> map = pdao.pdsRentChk(param, libNo);
+	public boolean pdsRentChk(List<Object> param, int libNo, int seatNo){
+		Map<String, Object> map = pdao.pdsRentChk(param, libNo, seatNo);
 		if(map==null) {return true;}
 		return false;
 	} 
 	
+	/**
+	 * @param HOUR, MEM_NO
+	 * @return true 예약가능 
+	 */
+	public boolean pdsTimeDupChk(List<Object>param, int libNo){
+		Map<String,Object> map = pdao.pdsTimeDupChk(param, libNo);
+		if(map==null) {return true;}
+		return false;
+	}
+	
+	// 현재 도서관의 전체 취소
+	/**
+	 * @param MEM_NO,libNo
+	 */
+	public void pdsRentCancelAll(List<Object> param){
+		pdao.pdsRentCancelAll(param);
+	}
+	
+	// 부분취소
+	/**
+	 * @param MEM_NO, LIB_NO
+	 * @param seatNo
+	 */
+	public void pdsRentCancel(List<Object> param, int seatNo, int sel) {
+		pdao.pdsRentCancel(param, seatNo, sel);
+	}
+	
+	/**
+	 * @param MEM_NO, LIB_NO
+	 * @param seatNo
+	 * @param sel 2번이면 부분취소이므로 param에 hour도 받아야함
+	 * @return true 취소가능
+	 */
+	public boolean pdsResChk(List<Object>param, int seatNo, int sel){
+		Map<String, Object> map = pdao.pdsResChk(param, seatNo, sel);
+		if(map==null) {return false;}
+		return true;
+	}
 }
