@@ -32,7 +32,7 @@ public class MemberDao {
 
 	// 회원가입
 	public void sign(List<Object> param) {
-		String sql = "  INSERT INTO MEMBER (MEM_NO, MEM_NAME, MEM_ID, MEM_PASS,MEM_TELNO)\r\n"
+		String sql = "  INSERT INTO MEMBER (MEM_NO, MEM_ID, MEM_PASS, MEM_NAME, MEM_TELNO)\r\n"
 				+ " VALUES ((SELECT NVL(MAX(MEM_NO),0)+1 FROM MEMBER), \r\n" + "        ?, ?, ?, ?)";
 		jdbc.update(sql, param);
 
@@ -59,23 +59,14 @@ public class MemberDao {
 	}
 
 	// 비밀번호 찾기
-	public Map<String, Object> findPassword(String id, String name, String tel) {
+	public Map<String, Object> findPassword(List<Object> param) {
 	    String sql = " SELECT MEM_PASS " +
 	    			 " FROM MEMBER " +
 	    			 " WHERE MEM_ID = ? "+
 	    			 " AND MEM_NAME = ? " +
 	    			 " AND MEM_TELNO = ?";
-	    List<Object> param = new ArrayList<>();
-	    param.add(id);
-	    param.add(name);
-	    param.add(tel);
-	    
-//	    Map<String, Object> result = jdbc.selectOne(sql, param);
-//	    if (result != null && result.containsKey("MEM_PASS")) {
-//	        return (String) result.get("MEM_PASS");
-//	    } else {
-//	        return null;
-//	    }
+
+	   
 	    return jdbc.selectOne(sql, param);
 	}
 

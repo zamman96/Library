@@ -66,8 +66,8 @@ public class MemberService {
     }
 
 	// 비번 찾기
-	public Map<String, Object> findPassword(String id, String name, String tel) {
-		return memdao.findPassword(id, name, tel);
+	public Map<String, Object> findPassword(List<Object> param) {
+		return memdao.findPassword(param);
 	}
 	
 	// 탈퇴
