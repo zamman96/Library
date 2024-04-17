@@ -76,8 +76,8 @@ public class MemberController extends Print {
 	public View idfound() {
 		String name = ScanUtil.nextLine(tap + "이름  >  ");
 		System.out.println(var);
-		System.out.println(tap + "전화번호는 숫자만 입력해주세요");
-		System.out.println(tap + "예시 : 01012341234");
+		System.out.println(tap + "\t\t전화번호는 숫자만 입력해주세요");
+		System.out.println(tap + "\t\t예시 : 01012341234");
 		System.out.println(var);
 		System.out.println();
 		String tel = "";
@@ -88,8 +88,8 @@ public class MemberController extends Print {
 			}
 			noticeNotNo();
 		}
-		String num1 = tel.substring(0, 2);
-		String num2 = tel.substring(3, 6);
+		String num1 = tel.substring(0, 3);
+		String num2 = tel.substring(3, 7);
 		String num3 = tel.substring(7);
 		tel = num1 + "-" + num2 + "-" + num3;
 		String id = memberService.findId(name, tel);
@@ -99,9 +99,9 @@ public class MemberController extends Print {
 				System.out.println(tap + "회원님의 아이디는 " + truncatedId + "***" + "입니다.");
 			}
 		} else {
-			System.out.println(RED + var + END);
-			System.out.println(tap + "일치하는 회원 정보가 없습니다.");
-			System.out.println(RED + var + END);
+			System.out.println(RED + "\t" + var + END);
+			System.out.println(tap + "\t\t일치하는 회원 정보가 없습니다.");
+			System.out.println(RED + "\t" + var + END);
 		}
 
 		return mainMenu();
@@ -112,8 +112,8 @@ public class MemberController extends Print {
 		String id = ScanUtil.nextLine(tap + "아이디 >  ");
 		String name = ScanUtil.nextLine(tap + "이름  >  ");
 		System.out.println(var);
-		System.out.println(tap + "전화번호는 숫자만 입력해주세요");
-		System.out.println(tap + "예시 : 01012341234");
+		System.out.println(tap + "\t\t전화번호는 숫자만 입력해주세요");
+		System.out.println(tap + "\t\t예시 : 01012341234");
 		System.out.println(var);
 		System.out.println();
 		String tel = "";
@@ -124,8 +124,8 @@ public class MemberController extends Print {
 			}
 			noticeNotNo();
 		}
-		String num1 = tel.substring(0, 2);
-		String num2 = tel.substring(3, 6);
+		String num1 = tel.substring(0, 3);
+		String num2 = tel.substring(3, 7);
 		String num3 = tel.substring(7);
 		tel = num1 + "-" + num2 + "-" + num3;
 		List<Object> param = new ArrayList<Object>();
@@ -135,9 +135,9 @@ public class MemberController extends Print {
 
 		Map<String, Object> map = memberService.findPassword(param);
 		if (map == null) {
-			System.out.println(RED + var + END);
-			System.out.println(tap + "일치하는 회원 정보가 없습니다");
-			System.out.println(RED + var + END);
+			System.out.println(RED + "\t" + var + END);
+			System.out.println(tap + "\t\t일치하는 회원 정보가 없습니다");
+			System.out.println(RED + "\t" + var + END);
 			return mainMenu();
 		}
 
@@ -146,65 +146,22 @@ public class MemberController extends Print {
 		return View.NEWPW;
 	}
 
-	// 회원가입
-//	public View sign() {
-//
-//		while (true) {
-//			boolean Idchk = true;
-//			String id = "";
-//			do {
-//				id = ScanUtil.nextLine("아이디   > ");
-//				List<Object> idList = new ArrayList<Object>();
-//				idList.add(id);
-//				Idchk = memberService.idcheck(idList);
-//			} while (!Idchk);
-//			String pw = ScanUtil.nextLine(tap + "비밀번호  >");
-//			String nm = ScanUtil.nextLine(tap + "이름  > ");
-//			System.out.println(var);
-//			System.out.println(tap + "전화번호는 숫자만 입력해주세요");
-//			System.out.println(tap + "예시 : 01012341234");
-//			System.out.println(var);
-//			System.out.println();
-//			String tel = "";
-//			while (true) {
-//				tel = ScanUtil.nextLine(tap + "전화번호  > ");
-//				if (tel.matches("\\d+")) {
-//					break;
-//				}
-//				noticeNotNo();
-//			}
-//			String num1 = tel.substring(0, 2);
-//			String num2 = tel.substring(3, 6);
-//			String num3 = tel.substring(7);
-//			tel = num1 + "-" + num2 + "-" + num3;
-//
-//			List<Object> param = new ArrayList<Object>();
-//			param.add(id);
-//			param.add(pw);
-//			boolean loginChk = memberService.login(param); // 세션에 정보저장
-//			param.add(nm);
-//			param.add(tel);
-//			memberService.sign(param);
-//			System.out.println(tap + "회원가입이 완료되었습니다.");
-//			return mainMenu();
-//		}
-//	}
 	
 	public View sign() {
-	    while (true) {
-	        boolean Idchk = true;
-	        String id = "";
-	        id = ScanUtil.nextLine("아이디   > ");
-	        do {
-	            // 아이디 길이 및 형식 검사
-	            if (isValidId(id)) {
-	                List<Object> idList = new ArrayList<Object>();
-	                idList.add(id);
-	                Idchk = memberService.idcheck(idList);
-	            } else {
-	                System.out.println("아이디는 5자 이상 15자 이하여야 합니다.");
-	            }
-	        } while (!Idchk);
+		while (true) {
+		    String id = "";
+		    boolean idCheck = false;
+		    do {
+		        id = ScanUtil.nextLine(tap + "아이디   > ");
+		        // 아이디 길이 및 형식 검사
+		        if (isValidId(id)) {
+		            List<Object> idList = new ArrayList<>();
+		            idList.add(id);
+		            idCheck = memberService.idcheck(idList);
+		        } else {
+		            System.out.println(tap + "아이디는 5자 이상 15자 이하여야 합니다.");
+		        }
+		    } while (!idCheck);
 
 	        String pw = "";
 	        // 비밀번호 길이 검사
@@ -213,7 +170,7 @@ public class MemberController extends Print {
 	            if (isValidPassword(pw)) {
 	                break;
 	            } else {
-	                System.out.println("비밀번호는 5자 이상 15자 이하여야 합니다.");
+	                System.out.println(tap + "비밀번호는 5자 이상 15자 이하여야 합니다.");
 	            }
 	        }
 
@@ -224,13 +181,13 @@ public class MemberController extends Print {
 	            if (isValidName(nm)) {
 	                break;
 	            } else {
-	                System.out.println("이름은 10자 이내의 한글로 입력해야 합니다.");
+	                System.out.println(tap + "이름은 10자 이내의 한글로 입력해야 합니다.");
 	            }
 	        }
 
 	        System.out.println(var);
-	        System.out.println(tap + "전화번호는 숫자만 입력해주세요");
-	        System.out.println(tap + "예시 : 01012341234");
+	        System.out.println(tap + "\t\t전화번호는 숫자만 입력해주세요");
+	        System.out.println(tap + "\t\t예시 : 01012341234");
 	        System.out.println(var);
 	        System.out.println();
 
@@ -241,7 +198,7 @@ public class MemberController extends Print {
 	            if (isValidPhoneNumber(tel)) {
 	                break;
 	            } else {
-	                System.out.println("전화번호 형식이 잘못되었습니다.");
+	                System.out.println(tap + "전화번호 형식이 잘못되었습니다.");
 	            }
 	        }
 	        tel = formatPhoneNumber(tel);
@@ -305,24 +262,25 @@ public class MemberController extends Print {
 				return View.ADMIN;
 			}
 		} else if (!loginchk) {
-			System.out.println("1. 재로그인");
-			System.out.println("2. 홈");
+			System.out.println(tap + "1. 재로그인");
+			System.out.println(tap + "2. 회원가입");
+			System.out.println(tap + "3. 아이디 찾기");
 			int sel = ScanUtil.menu();
 
 			switch (sel) {
 			case 1:
 				return View.LOGIN;
 			case 2:
-				return mainMenu();
+				return View.SIGN;
 			default:
-				return View.LOGIN;
+				return View.IDFOUND;
 			}
 		}
 		List<Object> no = memberNo();
 		// 대출예약 기간 지난 리스트가 있으면 출력
 		boolean bookTimeOverChk = bookService.refTimeOverChk(no);
 		if (bookTimeOverChk) {
-			System.out.println("대출예약기간이 지난 도서가 있습니다");
+			System.out.println(tap + "대출예약기간이 지난 도서가 있습니다");
 			List<Map<String, Object>> list = bookService.refTimeOver(no); // 알림창
 			printOverVar();
 			printBookIndex();
@@ -373,9 +331,9 @@ public class MemberController extends Print {
 
 		// 빌린 도서가 있는 경우 탈퇴 불가 안내 메시지 출력
 		if (rentBooks != null && !rentBooks.isEmpty()) {
-			System.out.println(RED + var + END);
-			System.out.println(tap + "탈퇴할 수 없습니다: 대출 도서가 있습니다.");
-			System.out.println(RED + var + END);
+			System.out.println(RED + "\t" + var + END);
+			System.out.println(tap + "\t\t탈퇴할 수 없습니다: 대출 도서가 있습니다.");
+			System.out.println(RED + "\t" + var + END);
 			return View.MYPAGE;
 			// 탈퇴 불가 시 에러 뷰를 반환하거나, 적절한 처리를 수행합니다.
 		}
@@ -402,7 +360,7 @@ public class MemberController extends Print {
 
 		if (isPasswordCorrect) {
 			System.out.println(var);
-			System.out.println(tap + "비밀번호가 일치합니다.");
+			System.out.println(tap + "\t\t비밀번호가 일치합니다.");
 			System.out.println(var);
 			System.out.println();
 			printMenuVar();
@@ -423,8 +381,8 @@ public class MemberController extends Print {
 			}
 		} else {
 			System.out.println(var);
-			System.out.println(tap + "비밀번호가 일치하지 않습니다.");
-			System.out.println(tap + "마이페이지로 돌아갑니다");
+			System.out.println(tap + "\t\t비밀번호가 일치하지 않습니다.");
+			System.out.println(tap + "\t\t마이페이지로 돌아갑니다");
 			System.out.println(var);
 			if (MainController.sessionStorage.containsKey("member")) {
 				return View.MYPAGE;
@@ -444,10 +402,10 @@ public class MemberController extends Print {
 			if (newPassword.equals(newPassword2)) {
 				break;
 			}
-			System.out.println(RED + var + END);
-			System.out.println("비밀번호가 다릅니다");
-			System.out.println("다시 입력해주세요");
-			System.out.println(RED + var + END);
+			System.out.println(RED + "\t" + var + END);
+			System.out.println("\t\t비밀번호가 다릅니다");
+			System.out.println("\t\t다시 입력해주세요");
+			System.out.println(RED + "\t" + var + END);
 		}
 
 		// 로그인되어있을때
@@ -464,7 +422,7 @@ public class MemberController extends Print {
 			// 회원 정보 업데이트
 			memberService.update(param, 1); // 1은 비밀번호 수정을 의미
 			System.out.println(var);
-			System.out.println(tap + "비밀번호가 성공적으로 수정되었습니다.");
+			System.out.println(tap + "\t\t비밀번호가 성공적으로 수정되었습니다.");
 			System.out.println(var);
 
 			MainController.sessionStorage.remove("member");
@@ -480,7 +438,7 @@ public class MemberController extends Print {
 			found.add(newPassword);
 			found.add(memNo);
 			System.out.println(var);
-			System.out.println(tap + "변경이 완료되었습니다");
+			System.out.println(tap + "\t\t변경이 완료되었습니다");
 			System.out.println(var);
 			return mainMenu();
 		}
@@ -489,8 +447,8 @@ public class MemberController extends Print {
 	public View newPhonenumber() {
 		// 전화번호 수정
 		System.out.println(var);
-		System.out.println(tap + "전화번호는 숫자만 입력해주세요");
-		System.out.println(tap + "예시 : 01012341234");
+		System.out.println(tap + "\t\t전화번호는 숫자만 입력해주세요");
+		System.out.println(tap + "\t\t예시 : 01012341234");
 		System.out.println(var);
 		System.out.println();
 		System.out.println(tap + "새로운 전화번호를 입력하세요:");
@@ -520,7 +478,7 @@ public class MemberController extends Print {
 		// 회원 정보 업데이트
 		memberService.update(param2, 2);
 		System.out.println(var);
-		System.out.println(tap + "전화번호가 수정되었습니다.");
+		System.out.println(tap + "\t\t전화번호가 수정되었습니다.");
 		System.out.println(var);
 		
 		MainController.sessionStorage.remove("member");
@@ -534,7 +492,7 @@ public class MemberController extends Print {
 	public View totalNew() {
 		// 전체 수정
 		System.out.println(var);
-		System.out.print(tap + "새로운 비밀번호를 입력하세요:");
+		System.out.println(tap + "\t\t새로운 비밀번호를 입력하세요:");
 		System.out.println(var);
 		String newPassword = "";
 		while (true) {
@@ -544,18 +502,18 @@ public class MemberController extends Print {
 			if (newPassword.equals(newPassword2)) {
 				break;
 			}
-			System.out.println(RED + var + END);
-			System.out.println("비밀번호가 다릅니다");
-			System.out.println("다시 입력해주세요");
-			System.out.println(RED + var + END);
+			System.out.println(RED + "\t" + var + END);
+			System.out.println("\t\t비밀번호가 다릅니다");
+			System.out.println("\t\t다시 입력해주세요");
+			System.out.println(RED + "\t" + var + END);
 		}
 		System.out.println(var);
-		System.out.println(tap + "전화번호는 숫자만 입력해주세요");
-		System.out.println(tap + "예시 : 01012341234");
+		System.out.println(tap + "\t\t전화번호는 숫자만 입력해주세요");
+		System.out.println(tap + "\t\t예시 : 01012341234");
 		System.out.println(var);
 		System.out.println();
 		System.out.println(var);
-		System.out.println(tap + "새로운 전화번호를 입력하세요:");
+		System.out.println(tap + "\t\t새로운 전화번호를 입력하세요:");
 		System.out.println(var);
 		String newPhoneNumber = "";
 		while (true) {
@@ -583,7 +541,7 @@ public class MemberController extends Print {
 		// 전체 수정 메소드 호출
 		memberService.update(param3, 3); // 3은 전체 수정을 의미
 		System.out.println(var);
-		System.out.println(tap + "비밀번호와 전화번호가 성공적으로 수정되었습니다.");
+		System.out.println(tap + "\t\t비밀번호와 전화번호가 성공적으로 수정되었습니다.");
 		System.out.println(var);
 		MainController.sessionStorage.remove("member");
 		if (MainController.sessionStorage.containsKey("member")) {
