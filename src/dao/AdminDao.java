@@ -22,119 +22,145 @@ public class AdminDao {
 	JDBCUtil jdbc = JDBCUtil.getInstance();
 
 	// 전체 책 검색 폐기된 것도 조회가능
-	/**
-	 * 세션에 sel input값 pageNo pageEnd저장하고 나갈때 삭제할것 
-	 * @param sel 1 : 전체 조회						> ROWNUM	
-	 * @param sel 2 : 책 폐기/사용가능한 것들만 조회			> ROWNUM	'사용가능' / '폐기'
-	 * @param sel 3 : 도서관 선택						> ROWNUM	libraryList
-	 * @param sel 4 : 분류별 선택						> ROWNUM	cate
-	 * @param sel 5 : 이름 검색						> ROWNUM	name
-	 * @param sel 6 : 출판사 검색						> ROWNUM	pub
-	 * @param sel 7 : 발행년도 검색						> ROWNUM	year
-	 * 
-	 */
-	public List<Map<String, Object>> bookAdminList(List<Object> param, int sel, String input){
-		String sql = "SELECT *\r\n" + 
-				"FROM (\r\n" + 
-				"SELECT ROWNUM AS RN,A.BOOK_NO, A.BOOK_NAME, A.BOOK_AUTHOR, A.BOOK_PUB, A.BOOK_PUB_YEAR, B.CATE_NAME, C.LIB_NAME\r\n" + 
-				"FROM BOOK A, BOOK_CATEGORY B, LIBRARY C\r\n" + 
-				"WHERE A.CATE_NO=B.CATE_NO\r\n" + 
-				"AND A.LIB_NO=C.LIB_NO\r\n";
-			if(sel==2) {
-				sql+=" AND A.BOOK_REMARK="+input;
-			}
-			if(sel==3) {
-			sql+="   AND A.LIB_NO="+input;
-			}
-			if(sel==4) {
-				sql+=" AND A.CATE_NO="+input;
-			}
-			if(sel==5) {
-				sql+=" AND A.BOOK_NAME LIKE '%"+input+"%' ";
-			}
-			if(sel==6) {
-				sql+=" AND A.BOOK_PUB LIKE '%"+input+"%' ";
-			}
-			if(sel==7) {
-				sql+=" AND A.BOOK_PUB_DATE LIKE '%"+input+"%' ";
-			}
-				sql+="ORDER BY A.LIB_NO, A.CATE_NO, A.BOOK_NO)\r\n" + 
-				"WHERE RN>=? AND RN<=?";
-				return jdbc.selectList(sql, param);
-	} 
-
 	// 대출된 책 조회/예약된 책 조회/연체된 책조회
 	/**
-	 * @param ROWNUM		세션에 page랑 sel저장
-	 * @param sel = 1 대출 가능	
-	 * @param sel = 2 대출 예약 
-	 * @param sel = 3 대출 불가 (예약한 회원정보도 함께 출력할 것 / 연락처 필수)
-	 * @return String state = bookService.bookRentState(bookNo);으로  상태표현
+	 * 세션에 sel input값 pageNo pageEnd저장하고 나갈때 삭제할것
+	 * 
+	 * @param sel 0 : 전체 조회 > ROWNUM
+	 * @param sel a : 책 폐기/사용가능한 것들만 조회 > ROWNUM '사용가능' / '폐기'
+	 * @param sel b : 도서관 선택 > ROWNUM libraryList
+	 * @param sel c : 분류별 선택 > ROWNUM cate
+	 * @param sel d : 이름 검색 > ROWNUM name
+	 * @param sel e : 출판사 검색 > ROWNUM pub
+	 * @param sel f : 발행년도 검색 > ROWNUM year
+	 * @param sel 1 : 대출 가능
+	 * @param sel 2 : 대출 예약
+	 * @param sel 3 : 대출 불가 (예약한 회원정보도 함께 출력할 것 / 연락처 필수)
+	 * 
 	 */
-	public List<Map<String, Object>> bookAdminStateList(List<Object> param, int sel){
-		String sql = "SELECT *\r\n" + 
-				"FROM(SELECT ROWNUM AS RN, A.BOOK_NO, A.BOOK_NAME, A.BOOK_AUTHOR, A.BOOK_PUB, A.BOOK_PUB_YEAR, \r\n" + 
-				"       B.CATE_NAME, C.LIB_NAME, D.RENT_DATE, D.RETURN_DATE, F.MEM_NAME, F.MEM_TELNO\r\n" + 
-				"FROM BOOK A\r\n" + 
-				"INNER JOIN BOOK_CATEGORY B ON A.CATE_NO = B.CATE_NO\r\n" + 
-				"INNER JOIN LIBRARY C ON A.LIB_NO = C.LIB_NO\r\n" + 
-				"LEFT JOIN BOOK_RENT D ON A.BOOK_NO = D.BOOK_NO\r\n" + 
-				"LEFT JOIN BOOK_REF E ON D.BOOK_REF_NO = E.BOOK_REF_NO\r\n" + 
-				"LEFT JOIN MEMBER F ON D.MEM_NO = F.MEM_NO\r\n";
-				if(sel==3) {
-				sql+="WHERE D.RENT_DATE IS NOT NULL\r\n" + 
-				"AND D.RETURN_YN = 'N'\r\n";
-				}
-				if(sel==2) {
-				sql+="WHERE D.BOOK_REF_CHK=1           \r\n";
-				}
-				if(sel==1) {
-				sql+="WHERE A.BOOK_NO NOT IN(\r\n" + 
-				"    SELECT A.BOOK_NO\r\n" + 
-				"    FROM BOOK A\r\n" + 
-				"    INNER JOIN BOOK_CATEGORY B ON A.CATE_NO = B.CATE_NO\r\n" + 
-				"    INNER JOIN LIBRARY C ON A.LIB_NO = C.LIB_NO\r\n" + 
-				"    LEFT JOIN BOOK_RENT D ON A.BOOK_NO = D.BOOK_NO\r\n" + 
-				"    LEFT JOIN BOOK_REF E ON D.BOOK_REF_NO = E.BOOK_REF_NO\r\n" + 
-				"    LEFT JOIN MEMBER F ON D.MEM_NO = F.MEM_NO\r\n" + 
-				"    WHERE D.RENT_DATE IS NOT NULL     --  대출불가\r\n" + 
-				"    AND D.RETURN_YN = 'N')\r\n" + 
-				"AND A.BOOK_NO NOT IN (\r\n" + 
-				"    SELECT A.BOOK_NO\r\n" + 
-				"    FROM BOOK A\r\n" + 
-				"    INNER JOIN BOOK_CATEGORY B ON A.CATE_NO = B.CATE_NO\r\n" + 
-				"    INNER JOIN LIBRARY C ON A.LIB_NO = C.LIB_NO\r\n" + 
-				"    LEFT JOIN BOOK_RENT D ON A.BOOK_NO = D.BOOK_NO\r\n" + 
-				"    LEFT JOIN BOOK_REF E ON D.BOOK_REF_NO = E.BOOK_REF_NO\r\n" + 
-				"    LEFT JOIN MEMBER F ON D.MEM_NO = F.MEM_NO\r\n" + 
-				"    WHERE D.BOOK_REF_CHK=1 \r\n" + 
-				")\r\n";
-				}
-				sql+=")WHERE RN>=? AND RN<=?";
-			return jdbc.selectList(sql, param);
+	public List<Map<String, Object>> bookAdminList(List<Object> param, String sel) {
+		String sql = "SELECT * \r\n" + "FROM (\r\n" + "\r\n" + "SELECT \r\n" + "    ROWNUM AS RN, \r\n"
+				+ "    A.BOOK_NO, \r\n" + "    A.BOOK_NAME, \r\n" + "    A.BOOK_AUTHOR, A.BOOK_REMARK, \r\n" + "    A.BOOK_PUB, \r\n"
+				+ "    A.BOOK_PUB_YEAR, \r\n" + "    B.CATE_NAME, \r\n" + "    C.LIB_NAME, \r\n"
+				+ "    D.RENT_DATE, \r\n" + "    D.RETURN_DATE, \r\n" + "    F.MEM_NAME, \r\n" + "    F.MEM_TELNO\r\n"
+				+ "FROM \r\n" + "    BOOK A\r\n" + "    INNER JOIN BOOK_CATEGORY B ON A.CATE_NO = B.CATE_NO\r\n"
+				+ "    INNER JOIN LIBRARY C ON A.LIB_NO = C.LIB_NO\r\n"
+				+ "    LEFT JOIN BOOK_RENT D ON A.BOOK_NO = D.BOOK_NO\r\n"
+				+ "    LEFT JOIN BOOK_REF E ON D.BOOK_REF_NO = E.BOOK_REF_NO\r\n"
+				+ "    LEFT JOIN MEMBER F ON D.MEM_NO = F.MEM_NO\r\n" + "WHERE A.BOOK_NO>00000\r\n";
+		if (!sel.contains("0")) {
+			if (sel.contains("a")) {
+				sql += "          AND A.BOOK_REMARK =?\r\n";
+			}
+			if (sel.contains("b")) {
+				sql += "         AND A.LIB_NO = ?\r\n";
+			}
+			if (sel.contains("c")) {
+				sql += "       AND A.CATE_NO = ?\r\n";
+			}
+			if (sel.contains("d")) {
+				sql += "        AND A.BOOK_NAME LIKE '%' || ? || '%'\r\n";
+			}
+			if (sel.contains("e")) {
+				sql += "       AND A.BOOK_PUB LIKE '%' || ? || '%'\r\n";
+			}
+			if (sel.contains("f")) {
+				sql += "       AND A.BOOK_PUB_YEAR LIKE '%' || ? || '%'\r\n";
+			}
+			if (sel.contains("g")) {
+				sql += "       AND A.BOOK_NO = ?\r\n";
+			}
+			if (sel.contains("3")) {
+				sql += "       AND D.RENT_DATE IS NOT NULL\r\n" + "   AND D.RETURN_YN = 'N'\r\n";
+			}
+			if (sel.contains("2")) {
+				sql += "       AND D.BOOK_REF_CHK = 1\r\n";
+			}
+			if (sel.contains("1")) {
+				sql += "        AND A.BOOK_NO NOT IN (\r\n" + "            SELECT A.BOOK_NO\r\n"
+						+ "            FROM \r\n" + "                BOOK A\r\n"
+						+ "                INNER JOIN BOOK_CATEGORY B ON A.CATE_NO = B.CATE_NO\r\n"
+						+ "                INNER JOIN LIBRARY C ON A.LIB_NO = C.LIB_NO\r\n"
+						+ "                LEFT JOIN BOOK_RENT D ON A.BOOK_NO = D.BOOK_NO\r\n"
+						+ "                LEFT JOIN BOOK_REF E ON D.BOOK_REF_NO = E.BOOK_REF_NO\r\n"
+						+ "                LEFT JOIN MEMBER F ON D.MEM_NO = F.MEM_NO\r\n" + "            WHERE \r\n"
+						+ "                D.RENT_DATE IS NOT NULL\r\n" + "                AND D.RETURN_YN = 'N'\r\n"
+						+ "        )\r\n" + "        AND A.BOOK_NO NOT IN (\r\n" + "            SELECT A.BOOK_NO\r\n"
+						+ "            FROM \r\n" + "                BOOK A\r\n"
+						+ "                INNER JOIN BOOK_CATEGORY B ON A.CATE_NO = B.CATE_NO\r\n"
+						+ "                INNER JOIN LIBRARY C ON A.LIB_NO = C.LIB_NO\r\n"
+						+ "                LEFT JOIN BOOK_RENT D ON A.BOOK_NO = D.BOOK_NO\r\n"
+						+ "                LEFT JOIN BOOK_REF E ON D.BOOK_REF_NO = E.BOOK_REF_NO\r\n"
+						+ "                LEFT JOIN MEMBER F ON D.MEM_NO = F.MEM_NO\r\n" + "            WHERE \r\n"
+						+ "                D.BOOK_REF_CHK = 1\r\n" + "        )\r\n";
+			}
+		}
+		sql += ") \r\n" + "WHERE \r\n" + "    RN >= ? AND RN <= ?";
+		return jdbc.selectList(sql, param);
+	}
+	
+	public Map<String, Object> bookAdminListCount (List<Object> param, String sel) {
+		String sql = "SELECT count(*) AS COUNT \r\n" + "FROM (\r\n" + "\r\n" + "SELECT \r\n" + "    ROWNUM AS RN, \r\n"
+				+ "    A.BOOK_NO, \r\n" + "    A.BOOK_NAME, \r\n" + "    A.BOOK_AUTHOR, \r\n" + "    A.BOOK_PUB, \r\n"
+				+ "    A.BOOK_PUB_YEAR, \r\n" + "    B.CATE_NAME, \r\n" + "    C.LIB_NAME, \r\n"
+				+ "    D.RENT_DATE, \r\n" + "    D.RETURN_DATE, \r\n" + "    F.MEM_NAME, \r\n" + "    F.MEM_TELNO\r\n"
+				+ "FROM \r\n" + "    BOOK A\r\n" + "    INNER JOIN BOOK_CATEGORY B ON A.CATE_NO = B.CATE_NO\r\n"
+				+ "    INNER JOIN LIBRARY C ON A.LIB_NO = C.LIB_NO\r\n"
+				+ "    LEFT JOIN BOOK_RENT D ON A.BOOK_NO = D.BOOK_NO\r\n"
+				+ "    LEFT JOIN BOOK_REF E ON D.BOOK_REF_NO = E.BOOK_REF_NO\r\n"
+				+ "    LEFT JOIN MEMBER F ON D.MEM_NO = F.MEM_NO\r\n" + "WHERE A.BOOK_NO>00000\r\n";
+		if (!sel.contains("0")) {
+			if (sel.contains("a")) {
+				sql += "          AND A.BOOK_REMARK =?\r\n";
+			}
+			if (sel.contains("b")) {
+				sql += "         AND A.LIB_NO = ?\r\n";
+			}
+			if (sel.contains("c")) {
+				sql += "       AND A.CATE_NO = ?\r\n";
+			}
+			if (sel.contains("d")) {
+				sql += "        AND A.BOOK_NAME LIKE '%' || ? || '%'\r\n";
+			}
+			if (sel.contains("e")) {
+				sql += "       AND A.BOOK_PUB LIKE '%' || ? || '%'\r\n";
+			}
+			if (sel.contains("f")) {
+				sql += "       AND A.BOOK_PUB_YEAR LIKE '%' || ? || '%'\r\n";
+			}
+			if (sel.contains("g")) {
+				sql += "       AND A.BOOK_NO = ?\r\n";
+			}
+			if (sel.contains("3")) {
+				sql += "       AND D.RENT_DATE IS NOT NULL\r\n" + "   AND D.RETURN_YN = 'N'\r\n";
+			}
+			if (sel.contains("2")) {
+				sql += "       AND D.BOOK_REF_CHK = 1\r\n";
+			}
+			if (sel.contains("1")) {
+				sql += "        AND A.BOOK_NO NOT IN (\r\n" + "            SELECT A.BOOK_NO\r\n"
+						+ "            FROM \r\n" + "                BOOK A\r\n"
+						+ "                INNER JOIN BOOK_CATEGORY B ON A.CATE_NO = B.CATE_NO\r\n"
+						+ "                INNER JOIN LIBRARY C ON A.LIB_NO = C.LIB_NO\r\n"
+						+ "                LEFT JOIN BOOK_RENT D ON A.BOOK_NO = D.BOOK_NO\r\n"
+						+ "                LEFT JOIN BOOK_REF E ON D.BOOK_REF_NO = E.BOOK_REF_NO\r\n"
+						+ "                LEFT JOIN MEMBER F ON D.MEM_NO = F.MEM_NO\r\n" + "            WHERE \r\n"
+						+ "                D.RENT_DATE IS NOT NULL\r\n" + "                AND D.RETURN_YN = 'N'\r\n"
+						+ "        )\r\n" + "        AND A.BOOK_NO NOT IN (\r\n" + "            SELECT A.BOOK_NO\r\n"
+						+ "            FROM \r\n" + "                BOOK A\r\n"
+						+ "                INNER JOIN BOOK_CATEGORY B ON A.CATE_NO = B.CATE_NO\r\n"
+						+ "                INNER JOIN LIBRARY C ON A.LIB_NO = C.LIB_NO\r\n"
+						+ "                LEFT JOIN BOOK_RENT D ON A.BOOK_NO = D.BOOK_NO\r\n"
+						+ "                LEFT JOIN BOOK_REF E ON D.BOOK_REF_NO = E.BOOK_REF_NO\r\n"
+						+ "                LEFT JOIN MEMBER F ON D.MEM_NO = F.MEM_NO\r\n" + "            WHERE \r\n"
+						+ "                D.BOOK_REF_CHK = 1\r\n" + "        )\r\n";
+			}
+		}
+		sql += ") \r\n";
+		return jdbc.selectOne(sql, param);
 	}
 	
 
-	// 이관 폐기 (도서관변경, 이관/폐기) (도서관 변경은 대출가능시에만 이동가능)
-	/**
-	 * @param sel = 1(도서이관)	> LIB_NO, BOOK_NO 
-	 * @param sel = 2(폐기)		> BOOK_NO                       
-	 * @param sel = 3(사용가능)	> BOOK_NO
-	 */
-	public void bookUpdate(List<Object> param, int sel) {
-		String sql = "UPDATE BOOK\r\n";
-		if (sel == 1) {
-			sql += "SET LIB_NO=?\r\n";
-		}
-		if (sel == 2) {
-			sql += "SET BOOK_REMARK='폐기'\r\n";
-		}
-		if (sel == 3) {
-			sql += "SET BOOK_REMARK='사용가능'\r\n";
-		}
-		sql += "WHERE BOOK_NO = ?";
-		jdbc.update(sql, param);
-	}
 
 	// 책 추가
 
@@ -146,17 +172,52 @@ public class AdminDao {
 	 * 
 	 */
 	/**
-	 * 모든 정보를 추가한 후 확인절차를 마친 뒤 저장하기 (while 문 break)
-	 * 책 내용은 이후 수정할 수 없습니다
-	 * 정확히 작성하고 저장해주세요
+	 * 모든 정보를 추가한 후 확인절차를 마친 뒤 저장하기 (while 문 break) 책 내용은 이후 수정할 수 없습니다 정확히 작성하고
+	 * 저장해주세요
 	 * 
 	 * @param BOOK_NAME, BOOK_AUTHOR, BOOK_PUB, BOOK_PUB_YEAR, LIB_NO
 	 * @param cateNo
 	 */
 	public void bookInsert(List<Object> param, int cateNo) {
-		String sql = "INSERT INTO BOOK (BOOK_NO, BOOK_NAME. BOOK_AUTHOR, BOOK_PUB, BOOK_PUB_YEAR, CATE_NO, LIB_NO)\r\n"
-				+ "SELECT MAX(BOOK_NO)+1,?, ?, ?, ?, " + cateNo + ", ?\r\n" + "FROM BOOK\r\n" + "WHERE CATE_NO="
+		String sql = "INSERT INTO BOOK (BOOK_NO, BOOK_NAME, BOOK_AUTHOR, BOOK_PUB, BOOK_PUB_YEAR, CATE_NO, LIB_NO)\r\n"
+				+ "SELECT MAX(BOOK_NO)+1,"
+				+ "?, ?, ?, ?, " + cateNo + ", ?\r\n" + "FROM BOOK\r\n" + "WHERE CATE_NO="
 				+ cateNo;
 		jdbc.update(sql, param);
+	}
+	
+	/**책 이관
+	 * @param LIB_NO BOOK_NO
+	 */
+	public void bookEscalation(List<Object> param) {
+		String sql = "UPDATE BOOK\r\n" + 
+				"SET LIB_NO=?\r\n" + 
+				"WHERE BOOK_NO=?";
+		jdbc.update(sql, param);
+	}
+	
+
+	/**책 상태 변경
+	 * @param BOOK_REMARK, BOOK_NO
+	 */
+	public void bookStateUpdate(List<Object> param) {
+		String sql = "UPDATE BOOK\r\n" + 
+				"SET BOOK_REMARK=?\r\n" + 
+				"WHERE BOOK_NO=?";
+		jdbc.update(sql, param);
+	}
+
+	public Map<String, Object> CateName(int cateNo){
+		String sql="SELECT CATE_NAME\r\n" + 
+				"FROM BOOK_CATEGORY\r\n" + 
+				"WHERE CATE_NO="+cateNo;
+		return jdbc.selectOne(sql);
+	}
+	
+	public Map<String,Object> libName (int libNo){
+		String sql = "SELECT LIB_NAME\r\n" + 
+				"FROM LIBRARY\r\n" + 
+				"WHERE LIB_NO="+libNo;
+		return jdbc.selectOne(sql);
 	}
 }

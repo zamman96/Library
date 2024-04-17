@@ -234,6 +234,7 @@ public class BookRentController extends Print {
 		}
 
 		// 업데이트 하기전에 책이 맞는 지 여부 확인
+		System.out.println("분류명 : " + bookInfo.get("CATE_NAME"));
 		System.out.println("도서명 : " + bookInfo.get("BOOK_NAME"));
 		System.out.println("작가명 : " + bookInfo.get("BOOK_AUTHOR"));
 		System.out.println("출판사 : " + bookInfo.get("BOOK_PUB"));
