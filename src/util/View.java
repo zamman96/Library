@@ -13,9 +13,6 @@ public enum View {
 	FOUND,					// 아이디 비밀번호 찾기
 	IDFOUND,
 	PWFOUND,
-	NEWPW,
-	NEWPHONE,
-	TOTALNEW,
 	MYPAGE,
 	UPDATE,
 	DELETE,

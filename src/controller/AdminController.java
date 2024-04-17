@@ -74,7 +74,7 @@ public class AdminController extends Print {
 					String state = "";
 					while (true) {
 						System.out.println(var);
-						int input = ScanUtil.nextInt(tap+"1.사용가능\t\t2.폐기");
+						int input = ScanUtil.nextInt(notice+"\t1.사용가능\t\t2.폐기");
 						System.out.println(var);
 						if (input == 1) {
 							state = "사용가능";

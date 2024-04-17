@@ -72,7 +72,8 @@ public class MemberDao {
 
 	// 탈퇴
 	public void delete(List<Object> param) {
-		String sql = " UPDATE MEMBER" + " SET DEL_YN ='Y'\r\n" + " WHERE MEM_NO =?";
+		String sql = " UPDATE MEMBER" + " SET DEL_YN ='Y', "
+				+ "MEM_NAME='(탈퇴)', MEM_ID='(탈퇴)', MEM_PASS='(탈퇴)', MEM_TELNO='(탈퇴)' \r\n" + " WHERE MEM_NO =?";
 
 		jdbc.update(sql, param);
 

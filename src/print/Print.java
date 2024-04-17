@@ -126,7 +126,7 @@ public class Print extends Notice {
 	
 	public void printCateName(List<Map<String, Object>> cate) {
 		printMenuVar();
-//		System.out.print(t);
+		System.out.print(t);
 		for(Map<String, Object> map : cate) {
 			System.out.print("\t"+map.get("CATE_NO")+" : "+map.get("CATE_NAME")+" ");
 			if(((BigDecimal)map.get("CATE_NO")).intValue()==4) {
@@ -134,6 +134,7 @@ public class Print extends Notice {
 				System.out.print(t);
 			}
 		}
+		System.out.println();
 		printMenuVar();
 	}
 	

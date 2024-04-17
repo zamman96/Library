@@ -85,8 +85,8 @@ public class PDSService {
 	 * @param MEM_NO, LIB_NO
 	 * @param seatNo
 	 */
-	public void pdsRentCancel(List<Object> param, int seatNo, int sel) {
-		pdao.pdsRentCancel(param, seatNo, sel);
+	public void pdsRentCancel(List<Object> param, int sel) {
+		pdao.pdsRentCancel(param, sel);
 	}
 	
 	/**
@@ -95,8 +95,8 @@ public class PDSService {
 	 * @param sel 2번이면 부분취소이므로 param에 hour도 받아야함
 	 * @return true 취소가능
 	 */
-	public boolean pdsResChk(List<Object>param, int seatNo, int sel){
-		Map<String, Object> map = pdao.pdsResChk(param, seatNo, sel);
+	public boolean pdsResChk(List<Object>param, int sel){
+		Map<String, Object> map = pdao.pdsResChk(param, sel);
 		if(map==null) {return false;}
 		return true;
 	}

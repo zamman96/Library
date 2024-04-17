@@ -70,15 +70,6 @@ public class MainController extends Print {
 			case PWFOUND:
 				view = memberController.pwfound();
 				break;
-			case NEWPW:
-				view = memberController.newPassword();
-				break;
-			case NEWPHONE:
-				view = memberController.newPhonenumber();
-				break;
-			case TOTALNEW:
-				view = memberController.totalNew();
-				break;
 			case LIBRARY:
 				view = library();
 				break;
@@ -204,24 +195,24 @@ public class MainController extends Print {
 		System.out.println();
 		System.out.println();
 		printMenuVar();
-		System.out.println(tap+"1. 도서관 선택\t2. 도서 조회\t3. 자료실 좌석 조회\t\t");
-		System.out.println(tap+"4. 로그인\t\t5. 아이디/비밀번호 찾기\t6. 회원가입");
+		System.out.println(tap+"1. 로그인\t\t2. 아이디/비밀번호 찾기\t3. 회원가입");
+		System.out.println(tap+"4. 도서관 선택\t5. 도서 조회\t6. 자료실 좌석 조회\t\t");
 		printMenuVar();
 
 		int sel = ScanUtil.menu();
 		switch (sel) {
 		case 1:
-			return View.LIBRARY;
-		case 2:
-			return View.BOOK;
-		case 3:
-			return View.PDS;
-		case 4:
 			return View.LOGIN;
-		case 5:
+		case 2:
 			return View.FOUND;
-		case 6:
+		case 3:
 			return View.SIGN;
+		case 4:
+			return View.LIBRARY;
+		case 5:
+			return View.BOOK;
+		case 6:
+			return View.PDS;
 
 		default:
 			return View.MAIN;
@@ -229,6 +220,9 @@ public class MainController extends Print {
 	}
 
 	private View home_member() {
+		Map<String, Object> map = (Map<String, Object>) sessionStorage.get("member");
+		String mname = (String) map.get("MEM_NAME");
+		System.out.println(tap+tap+"\t\t\t👤 "+mname+"님");
 		printMenuVar();
 		System.out.println(tap+"1. 마이페이지\t2. 도서관 선택\t3. 도서 조회 ");
 		System.out.println(tap+"4. 자료실 좌석 조회\t5. 로그아웃");
@@ -251,6 +245,15 @@ public class MainController extends Print {
 		}
 	}
 	private View home_mypage() {
+		Map<String, Object> map = (Map<String, Object>) sessionStorage.get("member");
+		String name = (String) map.get("MEM_NAME");
+		String tel = (String) map.get("MEM_TELNO");
+		printMenuOverVar();
+		System.out.println(tap+name+"님의 페이지");
+		System.out.println();
+		System.out.println(tap+"ℹ️ 정보");
+		System.out.println();
+		System.out.println(tap+"전화번호 : "+tel);
 		printMenuVar();
 		System.out.println(tap + "1. 회원 정보 수정\t2. 빌렸던 책 내용 \t3. 탈퇴 \t4. 로그아웃  ");
 		printMenuVar();
@@ -275,47 +278,54 @@ public class MainController extends Print {
 		Map<String, Object> library = (Map<String, Object>) sessionStorage.get("library");
 		String name = (String) library.get("LIB_NAME");
 		printMenuOverVar();
-		System.out.println(tap+"📖" + name);
+		System.out.println(tap+"\t\t\t\t📖" + name);
 		printMenuVar();
-		System.out.println(tap+"1. 도서 조회\t\t2. 자료실 좌석 조회");
-		System.out.println(tap+"3. 로그인\t\t4. 아이디/비밀번호 찾기\t5. 회원가입");
+		System.out.println(tap+"1. 로그인\t\t2. 아이디/비밀번호 찾기\t\t3. 회원가입");
+		System.out.println(tap+"4. 도서관 이동\t\t5.도서 조회\t\t6. 자료실 좌석 조회");
 		printMenuVar();
 		int sel = ScanUtil.menu();
 		switch (sel) {
 		case 1:
-			return View.BOOK;
-		case 2:
-			return View.PDS;
-		case 3:
 			return View.LOGIN;
-		case 4:
+		case 2:
 			return View.FOUND;
-		case 5:
+		case 3:
 			return View.SIGN;
-
+		case 4:
+			return View.LIBRARY;
+		case 5:
+			return View.BOOK;
+		case 6:
+			return View.PDS;
 		default:
 			return View.MAIN_LIBRARY;
 		}
 	}
 
 	private View home_all() {
+		Map<String, Object> map = (Map<String, Object>) sessionStorage.get("member");
+		String mname = (String) map.get("MEM_NAME");
 		Map<String, Object> library = (Map<String, Object>) sessionStorage.get("library");
 		String name = (String) library.get("LIB_NAME");
 		printMenuOverVar();
-		System.out.println("\t\t\t\t📖" + name);
+		System.out.println(tap+"\t\t\t\t📖" + name);
+		System.out.println(tap+tap+"\t\t\t👤 "+mname+"님");
 		printMenuVar();
-		printMenuVar();
-		System.out.println("\t\t1. 마이페이지\t2. 도서 조회 ");
-		System.out.println("\t\t3. 자료실 좌석 조회\t4. 로그아웃");
+		System.out.println(tap+"1. 마이페이지\t2.도서관 이동 3.도서 조회 ");
+		System.out.println(tap+"4. 자료실 좌석 조회\t5. 로그아웃");
 		printMenuVar();
 		int sel = ScanUtil.menu();
 		switch (sel) {
-//		case 1:
-//			return View.LIBRARY;
+		case 1:
+			return View.MYPAGE;
 		case 2:
-			return View.BOOK;
+			return View.LIBRARY;
 		case 3:
+			return View.BOOK;
+		case 4:
 			return View.PDS;
+		case 5:
+			return View.LOGOUT;
 
 		default:
 			return View.MAIN_ALL;
@@ -391,11 +401,7 @@ public class MainController extends Print {
 		case 3:
 			return View.LIBRARY_LIST;
 		case 0:
-			View view = View.MAIN;
-			if (sessionStorage.containsKey("MAIN")) {
-				view = (View) sessionStorage.get("MAIN");
-			}
-			return view;
+			return mainMenu();
 		default:
 			return View.LIBRARY;
 		}
@@ -418,7 +424,7 @@ public class MainController extends Print {
 
 	private View admin() {
 		printMenuVar();
-		System.out.println(tap+"1.도서 관리\t\t2.회원 관리\t\t3.로그아웃");
+		System.out.println(tap+"1.도서 관리\t\t2.회원 관리\t\t3.마이페이지\t\t4.로그아웃");
 		printMenuVar();
 		int sel = ScanUtil.menu();
 		switch (sel) {
@@ -427,8 +433,11 @@ public class MainController extends Print {
 		case 2:
 			return View.ADMIN_MEMBER;
 		case 3:
+			return View.ADMIN_PAGE;
+		case 4:
 			sessionStorage.remove("admin");
 			sessionStorage.remove("manager");
+			sessionStorage.remove("member");
 			return View.MAIN;
 		default:
 			return View.ADMIN;
@@ -455,7 +464,7 @@ public class MainController extends Print {
 
 	private View adminMember() {
 		printMenuVar();
-		System.out.println(tap+"1.회원 검색\t\t2.연체된 책 별 회원 정보");
+		System.out.println(tap+"1.회원 검색\t\t2.연체된 책 별 회원 정보\t\t0.홈");
 		if(sessionStorage.containsKey("manager")) {
 		System.out.println(tap+"3. 관리자 변경");
 		}
@@ -471,6 +480,8 @@ public class MainController extends Print {
 			return View.ADMIN_APPOINT;
 			}
 			return View.ADMIN_MEMBER;
+		case 0:
+			return View.ADMIN;
 		default:
 			return View.ADMIN_MEMBER;
 		}
@@ -478,6 +489,15 @@ public class MainController extends Print {
 	
 
 	private View adminPage() {
+		Map<String, Object> map = (Map<String, Object>) sessionStorage.get("member");
+		String name = (String) map.get("MEM_NAME");
+		String tel = (String) map.get("MEM_TELNO");
+		printMenuOverVar();
+		System.out.println(tap+name+"님의 페이지");
+		System.out.println();
+		System.out.println(tap+"ℹ️ 정보");
+		System.out.println();
+		System.out.println(tap+"전화번호 : "+tel);
 		printMenuVar();
 		System.out.println(tap+"1.회원정보수정\t\t2.탈퇴\t\t0.홈");
 		printMenuVar();

@@ -124,7 +124,7 @@ public class PDSDao {
 	 * @param MEM_NO, LIB_NO
 	 * @param seatNo
 	 */
-	public void pdsRentCancel(List<Object> param, int seatNo, int sel) {
+	public void pdsRentCancel(List<Object> param, int sel) {
 		String sql = "UPDATE PDS_REF\r\n" + 
 				"SET SEAT_REF_YN='Y'\r\n" + 
 				"WHERE MEM_NO=?\r\n" + 
@@ -133,8 +133,9 @@ public class PDSDao {
 				"AND SEAT_NO IN (\r\n" + 
 				"SELECT SEAT_NO\r\n" + 
 				"FROM PDS_SEAT\r\n" + 
-				"WHERE LIB_NO=?\r\n" + 
-				"AND SEAT_NAME='PC"+seatNo+"')";
+				"WHERE LIB_NO=?\r\n";
+		if(sel==1) {
+				sql+="AND SEAT_NAME='PC'||? )";}
 		if(sel==2) {
 			sql+="  AND SEAT_REF_HOUR=?  ";
 		}
@@ -147,13 +148,15 @@ public class PDSDao {
 	 * @param sel 2번이면 부분취소이므로 param에 hour도 받아야함
 	 * @return
 	 */
-	public Map<String,Object> pdsResChk(List<Object>param, int seatNo, int sel){
+	public Map<String,Object> pdsResChk(List<Object>param, int sel){
 		String sql= "SELECT *\r\n" + 
 				"FROM PDS_REF A, PDS_SEAT B\r\n" + 
 				"WHERE A.SEAT_NO=B.SEAT_NO\r\n" + 
 				"AND A.MEM_NO=?\r\n" + 
-				"AND B.LIB_NO=?\r\n" + 
-				"AND B.SEAT_NAME='PC"+seatNo+"'\r\n";
+				"AND B.LIB_NO=?\r\n";
+		if(sel==1) {
+				sql+="AND B.SEAT_NAME='PC'||?\r\n";
+		}
 		if(sel==2) {
 				sql+="AND A.SEAT_REF_HOUR=?\r\n";}
 				sql+="AND A.SEAT_REF_HOUR >= TO_CHAR(SYSDATE, 'HH24')";

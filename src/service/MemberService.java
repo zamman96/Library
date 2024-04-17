@@ -1,16 +1,13 @@
 package service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ArrayBlockingQueue;
 
 import controller.MainController;
-import controller.MemberController;
 import dao.MemberDao;
-import util.ScanUtil;
+import print.Print;
 
-public class MemberService {
+public class MemberService extends Print{
 	private static MemberService instance;
 
 
@@ -39,6 +36,11 @@ public class MemberService {
 		return true;
 	}
 	
+	public void save(List<Object> param) {
+		Map<String, Object> member = memdao.login(param);
+		MainController.sessionStorage.put("member", member);
+	}
+	
 	// 회원가입
 	public void sign(List<Object>param) {
 		memdao.sign(param);
@@ -48,7 +50,9 @@ public class MemberService {
     public boolean idcheck(List<Object> param) {
     	Map<String, Object> result = memdao.idcheck(param);
     	if (result != null && !result.isEmpty()) {
-            System.out.println("중복된 아이디입니다. 다시 시도해주세요" );
+    		System.out.println(RED+var+END);
+            System.out.println(notice+"\t중복된 아이디입니다. 다시 시도해주세요" );
+            System.out.println(RED+var+END);
             return false; // 중복된 아이디가 있음을 나타내는 값을 반환
         }
         return true;
@@ -57,7 +61,9 @@ public class MemberService {
     // 로그아웃
 	public void logout() {
 		MainController.sessionStorage.remove("member");
-		System.out.println("로그아웃 되었습니다.");
+		System.out.println(var);
+		System.out.println(notice+"\t로그아웃 되었습니다.");
+		System.out.println(var);
 	}
     
     // 아이디 찾기
@@ -79,7 +85,9 @@ public class MemberService {
 	    } else {
 	        // 빌린 도서가 없는 경우 회원 삭제
 	        memdao.delete(param);
-	        System.out.println("탈퇴되었습니다.");
+	        System.out.println(var);
+	        System.out.println(notice+"\t탈퇴되었습니다.");
+	        System.out.println(var);
 	    }
 	}
 	

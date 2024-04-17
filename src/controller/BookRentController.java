@@ -207,7 +207,6 @@ public class BookRentController extends Print {
 			case 1:
 				return View.BOOK_RENT;
 			case 2:
-				MainController.sessionStorage.remove("library");
 				return View.LIBRARY;
 			case 3:
 				return mainMenu();
@@ -541,7 +540,6 @@ public class BookRentController extends Print {
 			case 1:
 				return View.BOOK_RENT;
 			case 2:
-				MainController.sessionStorage.remove("library");
 				return View.LIBRARY;
 			case 0:
 				return mainMenu();

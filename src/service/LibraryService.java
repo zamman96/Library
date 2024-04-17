@@ -49,6 +49,7 @@ public class LibraryService {
 	 */
 	public void librarySel(int libNo){
 		Map<String, Object> library = libdao.librarySel(libNo);
+		MainController.sessionStorage.remove("library");
 		MainController.sessionStorage.put("library", library);
 	}
 	
