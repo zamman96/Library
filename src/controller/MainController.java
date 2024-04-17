@@ -18,6 +18,7 @@ public class MainController extends Print {
 	MemberController memberController = MemberController.getInstance();
 	BookService bookService = BookService.getInstance();
 	PDSController pdsController = PDSController.getInstance();
+	AdminController adminController = AdminController.getInstance();
 	static public Map<String, Object> sessionStorage = new HashMap<>();
 	// 로그인을 위해 MemberService 클래스 호출
 
@@ -26,7 +27,7 @@ public class MainController extends Print {
 	}
 
 	private void start() {
-		View view = View.MAIN;
+		View view = View.ADMIN;
 //		View view = View.PDS_LIST;
 		while (true) {
 			switch (view) {
@@ -125,6 +126,21 @@ public class MainController extends Print {
 				break;
 			case PDS_CANCEL:
 				view = pdsController.pdsCancel();
+				break;
+			case ADMIN:
+				view = admin();
+				break;
+			case ADMIN_BOOK:
+				view = adminBook();
+				break;
+			case ADMIN_BOOK_LIST:
+				view = adminController.adminBook();
+				break;
+			case ADMIN_BOOK_INSERT:
+				view = adminController.insertBook();
+				break;
+			case ADMIN_BOOK_UPDATE:
+				view = adminController.updateBook();
 				break;
 			default:
 				break;
@@ -344,4 +360,37 @@ public class MainController extends Print {
 		}
 	}
 	
+	private View admin() {
+		System.out.println("1.도서 관리\t\t2.회원 관리");
+		System.out.println("3.로그아웃");
+		int sel = ScanUtil.menu();
+		switch (sel) {
+		case 1:
+			return View.ADMIN_BOOK;
+		case 2:
+			return View.ADMIN_MEMBER;
+		case 3:
+			sessionStorage.remove("admin");
+			return View.MAIN;
+		default:
+			return View.ADMIN;
+		}
+	}
+	
+	private View adminBook() {
+		System.out.println("1.도서 검색\t\t2.도서 상태 수정\t\t3.도서 추가");
+		System.out.println("0.홈");
+		int sel = ScanUtil.menu();
+		switch (sel) {
+		case 1:
+			return View.ADMIN_BOOK_LIST;
+		case 2:
+			return View.ADMIN_BOOK_UPDATE;
+		case 3:
+			return View.ADMIN_BOOK_INSERT;
+		default:
+			return View.ADMIN;
+		}
+	}
+
 }

@@ -46,10 +46,13 @@ public enum View {
 	PDS_RESERVATION,
 	PDS_CANCEL,
 	
-	ADMIN	 				// 관리자	interface > 연체정보, 회원정보, 책추가, 관리자 추가
+	ADMIN,	 				// 관리자	interface > 연체정보, 회원정보, 책추가, 관리자 추가
+	ADMIN_BOOK,
+	ADMIN_BOOK_LIST,
+	ADMIN_BOOK_INSERT,
+	ADMIN_BOOK_UPDATE,
 
-	
-
+	ADMIN_MEMBER
 	
 	
 }
