@@ -26,7 +26,7 @@ public class MemberController extends Print {
 		return instance;
 	}
 
-	static public Map<String, Object> sessionStorage = new HashMap<>();
+	static public Map<String, Object> sessionStorage;
 	MemberService memberService = MemberService.getInstance();
 	BookService bookService = BookService.getInstance();
 
@@ -201,18 +201,59 @@ public class MemberController extends Print {
 //    }
 //    }
 	
+	
 
+//	public View delete() {
+//		Map<String,Object> 	member = (Map<String,Object>) MainController.sessionStorage.get("member");
+//		
+//		
+//		
+//		BigDecimal no = (BigDecimal) member.get("MEM_NO");
+//		int num = no.intValue();
+//		List<Object> param = new ArrayList();
+//		param.add(num);
+//		
+//		memberService.delete(param);
+//		sessionStorage.clear();
+//		
+//		return View.MAIN;
+//	}
+	
 	public View delete() {
-		Map<String,Object> 	member = (Map<String,Object>) sessionStorage.get("memveb");
-		BigDecimal no = (BigDecimal) member.get("NO");
-		int num = no.intValue();
-		List<Object> param = new ArrayList();
-		param.add(num);
+	    // 세션에서 회원 정보 가져오기
+	    Map<String, Object> member = (Map<String, Object>) MainController.sessionStorage.get("member");
+	    
+	    // 회원 번호 가져오기
+	    BigDecimal no = (BigDecimal) member.get("MEM_NO");
+	    int num = no.intValue();
+	    
+	    // 회원이 빌린 도서가 있는지 확인
+	    List<Object> param = new ArrayList<>();
+	    param.add(num);
+	    List<Map<String, Object>> rentBooks = memberService.mem_book_rent(param);
+	    
+	    // 빌린 도서가 있는 경우 탈퇴 불가 안내 메시지 출력
+	    if (rentBooks != null && !rentBooks.isEmpty()) {
+	        System.out.println("탈퇴할 수 없습니다: 대출 도서가 있습니다.");
+	        return View.MYPAGE;
+	        // 탈퇴 불가 시 에러 뷰를 반환하거나, 적절한 처리를 수행합니다.
+	    }
+	    
+	    // 빌린 도서가 없는 경우 회원 삭제
+	    memberService.delete(param);
+	    
+	    // 세션 클리어
+	    MainController.sessionStorage.clear();
+	    
+	    return View.MAIN;
+	}
+
+	public View update() {
 		
-		memberService.delete(param);
-		sessionStorage.clear();
 		
-		return View.MAIN;
+		
+		
+		return null;
 	}
 	
 

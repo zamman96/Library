@@ -83,25 +83,37 @@ public class MemberDao {
 
 	// 탈퇴
 	public void delete(List<Object> param) {
-		String sql = " SELECT *\r\n" + 
-					 "   FROM MEMBER M, BOOK_RENT R \r\n" + 
-					 " WHERE M.MEM_NO=R.MEM_NO\r\n" + 
-					 " AND R.RETURN_YN='N'\r\n" + 
-					 " AND M.MEM_NO=?";
+		String sql = " UPDATE MEMBER"+
+					 " SET DEL_YN ='Y'\r\n"+
+					 " WHERE MEM_NO =?";
 
 		jdbc.update(sql, param);
 
 	}
 	
+	// 탈퇴 시 빌린 도서가 있으면 탈퇴 불가
+	public List<Map<String, Object>> mem_book_rent (List<Object> param) {
+		String sql = " SELECT *\r\n" + 
+				 	 "   FROM MEMBER M, BOOK_RENT R \r\n" + 
+				 	 " WHERE M.MEM_NO=R.MEM_NO\r\n" + 
+				 	 " AND R.RETURN_YN='N'\r\n" + 
+				 	 " AND M.MEM_NO=?";
+		return jdbc.selectList(sql, param);
+	}
+	
+	// 정보 수정 업데이트
 	public void update(List<Object> param) {
 		
 		String sql = " UPDATE MEMBER\r\n" + 
-					 " SET DELYN ='Y'\r\n" + 
+					 " SET PASSWORD = ?, PHONE_NUMBER = ?'\r\n" + 
 					 " WHERE NO =?";
 
 		jdbc.update(sql, param);
 
 	}
+
+//	public void update(String newPassword, String newPhoneNumber, int memberNo) {
+	 
 	
 	
 	

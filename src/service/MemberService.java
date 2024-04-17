@@ -72,10 +72,28 @@ public class MemberService {
 	
 	// 탈퇴
 	public void delete(List<Object> param) {
-		memdao.delete(param);
+	    // 탈퇴 불가능한 상태인지 확인
+	    List<Map<String, Object>> rentBooks = memdao.mem_book_rent(param);
+	    if (rentBooks != null && !rentBooks.isEmpty()) {
+	        // 빌린 도서가 있는 경우 탈퇴 불가능
+	    } else {
+	        // 빌린 도서가 없는 경우 회원 삭제
+	        memdao.delete(param);
+	        System.out.println("탈퇴되었습니다.");
+	    }
+	}
+	
+	public List<Map<String, Object>> mem_book_rent (List<Object> param) {
 		
+		return memdao.mem_book_rent(param);
 		
 	}
+	
+	// 회원 정보 수정
+	public void update(List<Object> param) {
+        memdao.update(param);
+    }
+	
 	
 	// 비번 체크 (회원정보 수정 / 탈퇴 시 확인)
 	public boolean checkPw(String id, String password) {
