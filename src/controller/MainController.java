@@ -457,7 +457,7 @@ public class MainController extends Print {
 		printMenuVar();
 		System.out.println(tap+"1.회원 검색\t\t2.연체된 책 별 회원 정보");
 		if(sessionStorage.containsKey("manager")) {
-		System.out.println(tap+"3. 관리자 임명");
+		System.out.println(tap+"3. 관리자 변경");
 		}
 		printMenuVar();
 		int sel = ScanUtil.menu();

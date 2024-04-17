@@ -164,7 +164,7 @@ public class PDSController extends Print {
 		int startTime = 0;
 		int endTime = 0;
 		System.out.println(var);
-		System.out.println("예약할 좌석의 번호를 입력 해주세요");
+		System.out.println(notice+"\t예약할 좌석의 번호를 입력 해주세요");
 		System.out.println(var);
 		while (true) {
 			seatNo = ScanUtil.nextInt("번호 입력 : ");
@@ -185,11 +185,11 @@ public class PDSController extends Print {
 				break;
 			} else if (startTime >= 9 && startTime < now) {
 				System.out.println(RED+var+END);
-				System.out.println(tap+"지난 시간은 예약이 불가능 합니다");
+				System.out.println(notice+"\t지난 시간은 예약이 불가능 합니다");
 				System.out.println(RED+var+END);
 			} else {
 				System.out.println(RED+var+END);
-				System.out.println(tap+now + "시~21시 사이의 시간을 입력해주세요");
+				System.out.println(notice+"\t"+now + "시~21시 사이의 시간을 입력해주세요");
 				System.out.println(RED+var+END);
 			}
 		}
@@ -224,15 +224,15 @@ public class PDSController extends Print {
 			pdsTimeDupChk = pdsService.pdsTimeDupChk(dup, libNo);
 			if (!pdsRentChk) {
 				System.out.println(RED+var+END);
-				System.out.println(tap+"이미 예약된 좌석입니다.");
-				System.out.println(tap+"확인하고 다시 시도해주세요");
+				System.out.println(notice+"\t이미 예약된 좌석입니다.");
+				System.out.println(notice+"\t확인하고 다시 시도해주세요");
 				System.out.println(RED+var+END);
 				return View.PDS;
 			}
 			if (!pdsTimeDupChk) {
 				System.out.println(RED+var+END);
-				System.out.println(tap+"같은 시간에 예약한 좌석이 있습니다");
-				System.out.println(tap+"확인하고 다시 시도해주세요");
+				System.out.println(notice+"\t같은 시간에 예약한 좌석이 있습니다");
+				System.out.println(notice+"\t확인하고 다시 시도해주세요");
 				System.out.println(RED+var+END);
 				return View.PDS;
 			}
@@ -248,7 +248,7 @@ public class PDSController extends Print {
 			pdsService.pdsRent(param, libNo, seatNo);
 		}
 		System.out.println(var);
-		System.out.println(tap+"예약이 완료되었습니다.");
+		System.out.println(notice+"\t예약이 완료되었습니다.");
 		System.out.println(var);
 		return View.PDS;
 	}
@@ -268,8 +268,8 @@ public class PDSController extends Print {
 		// 전체 취소인 경우
 		if (!MainController.sessionStorage.containsKey("part")) {
 			System.out.println(RED+var+END);
-			System.out.println(tap+"모든 좌석의 시간대의 예약이 취소됩니다.");
-			System.out.println(tap+"정말 모두 취소하시겠습니까?");
+			System.out.println(notice+"\t모든 좌석의 시간대의 예약이 취소됩니다.");
+			System.out.println(notice+"\t정말 모두 취소하시겠습니까?");
 			System.out.println(RED+var+END);
 			while (true) {
 				String answer = ScanUtil.nextLine(" Y / N \t");
@@ -298,14 +298,14 @@ public class PDSController extends Print {
 			pdsResChk = pdsService.pdsResChk(param, seatNo, sel);
 			if(pdsResChk) {
 				System.out.println(var);
-				System.out.println("PC "+seatNo+" 좌석의 현재 시간 이후의 예약이 취소되었습니다.");
+				System.out.println(notice+"\tPC "+seatNo+" 좌석의 현재 시간 이후의 예약이 취소되었습니다.");
 				System.out.println(var);
 				pdsService.pdsRentCancel(param, seatNo, sel);
 				return View.PDS;
 			} else {
 				System.out.println(RED+var+END);
-				System.out.println(tap+"예약한 정보가 없습니다");
-				System.out.println(tap+"다시 확인하고 시도해주세요");
+				System.out.println(notice+"\t예약한 정보가 없습니다");
+				System.out.println(notice+"\t다시 확인하고 시도해주세요");
 				System.out.println(RED+var+END);
 				return View.PDS;
 			}
@@ -323,7 +323,7 @@ public class PDSController extends Print {
 				break;
 				}
 			System.out.println(RED+var+END);
-			System.out.println(tap+now + "시~21시 사이의 시간을 입력해주세요");
+			System.out.println(notice+"\t"+now + "시~21시 사이의 시간을 입력해주세요");
 			System.out.println(RED+var+END);
 			}
 			List<Object> param2 = new ArrayList<Object>();
@@ -333,14 +333,14 @@ public class PDSController extends Print {
 			pdsResChk = pdsService.pdsResChk(param2, seatNo2, sel);
 			if(pdsResChk) {
 				System.out.println(var);
-				System.out.println(tap+"PC "+seatNo2+" 좌석의 "+hour+"시의 예약이 취소되었습니다.");
+				System.out.println(notice+"\tPC "+seatNo2+" 좌석의 "+hour+"시의 예약이 취소되었습니다.");
 				System.out.println(var);
 				pdsService.pdsRentCancel(param2, seatNo2, sel);
 				return View.PDS;
 			} else {
 				System.out.println(RED+var+END);
-				System.out.println("예약한 정보가 없습니다");
-				System.out.println("다시 확인하고 시도해주세요");
+				System.out.println(notice+"\t예약한 정보가 없습니다");
+				System.out.println(notice+"\t다시 확인하고 시도해주세요");
 				System.out.println(RED+var+END);
 				return View.PDS;
 			}

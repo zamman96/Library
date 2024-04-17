@@ -301,7 +301,7 @@ public class AdminController extends Print {
 				lib.add(bookNo);
 				adminService.bookEscalation(lib);
 				System.out.println(var);
-				System.out.println(tap+"이관이 완료되었습니다.");
+				System.out.println(notice+"\t이관이 완료되었습니다.");
 				System.out.println(var);
 				return View.ADMIN_BOOK;
 			} else {
@@ -316,7 +316,7 @@ public class AdminController extends Print {
 				String state = "";
 				while (true) {
 					System.out.println(var);
-					int input = ScanUtil.nextInt(tap+"1.사용가능\t\t2.폐기");
+					int input = ScanUtil.nextInt(notice+"\t1.사용가능\t\t2.폐기");
 					System.out.println(var);
 					if (input == 1) {
 						state = "사용가능";
@@ -331,7 +331,7 @@ public class AdminController extends Print {
 				remark.add(bookNo);
 				adminService.bookStateUpdate(remark);
 				System.out.println(var);
-				System.out.println(tap+"변경이 완료되었습니다");
+				System.out.println(notice+"\t변경이 완료되었습니다");
 				System.out.println(var);
 				return View.ADMIN_BOOK;
 			} else {
@@ -392,7 +392,7 @@ public class AdminController extends Print {
 		printMenuVar();
 		while (true) {
 			String sel = ScanUtil.nextLine(tap+"Y / N");
-			if (sel.equalsIgnoreCase("Y")) {
+			if (sel.equalsIgnoreCase("Y")||sel.equals("<")) {
 				List<Object> paraminsert = new ArrayList<Object>();
 				paraminsert.add(name);
 				paraminsert.add(author);
@@ -401,12 +401,12 @@ public class AdminController extends Print {
 				paraminsert.add(libNo);
 				adminService.bookInsert(paraminsert, cateNo);
 				System.out.println(var);
-				System.out.println(tap+"도서가 추가되었습니다.");
+				System.out.println(notice+"\t도서가 추가되었습니다.");
 				System.out.println(var);
 				return View.ADMIN_BOOK;
-			} else if (sel.equalsIgnoreCase("N")) {
+			} else if (sel.equalsIgnoreCase("N")||sel.equals(">")) {
 				System.out.println(var);
-				System.out.println(tap+"도서 추가를 취소했습니다.");
+				System.out.println(notice+"\t도서 추가를 취소했습니다.");
 				System.out.println(var);
 				System.out.println();
 				printMenuVar();
@@ -518,7 +518,7 @@ public class AdminController extends Print {
 		printUnderVar();
 		System.out.print(tap+"1. 페이지 번호 입력\t\t2. 재 검색\t\t3. 회원관리");
 		if (MainController.sessionStorage.containsKey("manager")) {
-			System.out.println("\t\t4. 관리자 임명");
+			System.out.print(tap+"4. 관리자 변경");
 		} else {System.out.println();}
 		System.out.println(tap+"\t\t0. 홈");
 		String select = ScanUtil.menuStr();
@@ -598,24 +598,25 @@ public class AdminController extends Print {
 		} else if (no == 2) {
 			admin = "관리자";
 		}
-
-		System.out.println("회원명" + map.get("MEM_NAME"));
-		System.out.println("아이디" + id);
-		System.out.println("전화번호" + map.get("MEM_TELNO"));
-		System.out.println("관리자 여부" + admin);
+		System.out.println(menuU);
+		System.out.println(tap+"회원명 : " + map.get("MEM_NAME"));
+		System.out.println(tap+"아이디 : " + id);
+		System.out.println(tap+"전화번호 : " + map.get("MEM_TELNO"));
+		System.out.println(tap+"관리자 여부 : " + admin);
+		System.out.println(menuD);
 
 		if (no == 1) {
 			System.out.println(var);
-			System.out.println(tap+"관리자로 임명하시겠습니까?");
+			System.out.println(notice+"\t관리자로 변경하시겠습니까?");
 			System.out.println(var);
 			String select = ScanUtil.nextLine("Y / N");
-			if (select.equalsIgnoreCase("Y")) {
+			if (select.equalsIgnoreCase("Y")||select.equals("<")) {
 				List<Object> app = new ArrayList<Object>();
 				app.add(2);
 				app.add(memNo);
 				adminService.adminUpdate(app);
 				System.out.println(var);
-				System.out.println(tap+"관리자로 임명되었습니다.");
+				System.out.println(notice+"\t관리자로 변경되었습니다.");
 				System.out.println(var);
 				return View.ADMIN_MEMBER;
 			}
@@ -623,21 +624,21 @@ public class AdminController extends Print {
 			return View.ADMIN_MEMBER;
 		} else {
 			System.out.println(var);
-			System.out.println(tap+"관리자를 삭제하시겠습니까?");
+			System.out.println(notice+"\t관리자를 삭제하시겠습니까?");
 			System.out.println(var);
 			String select = ScanUtil.nextLine("Y / N");
-			if (select.equalsIgnoreCase("Y")) {
+			if (select.equalsIgnoreCase("Y")||select.equals("<")) {
 				List<Object> app = new ArrayList<Object>();
 				app.add(1);
 				app.add(memNo);
 				adminService.adminUpdate(app);
 				System.out.println(var);
-				System.out.println("선택한 회원이 일반회원으로 전환 되었습니다.");
+				System.out.println(notice+"\t선택한 회원이 일반회원으로 전환 되었습니다.");
 				System.out.println(var);
 				return View.ADMIN_MEMBER;
 			}
 			System.out.println(var);
-			System.out.println(tap+"취소되었습니다 회원관리 페이지로 돌아갑니다");
+			System.out.println(notice+"\t취소되었습니다 회원관리 페이지로 돌아갑니다");
 			System.out.println(var);
 			return View.ADMIN_MEMBER;
 		}
@@ -722,7 +723,7 @@ public class AdminController extends Print {
 		case "1":
 			int no = 0;
 			do {
-				no = ScanUtil.nextInt("번호 입력 : ");
+				no = ScanUtil.menu();
 				if (no >= 1 && no <= pageEnd) {
 					MainController.sessionStorage.put("pageNo", no);
 					return View.ADMIN_OVERDUE_LIST;
@@ -739,7 +740,7 @@ public class AdminController extends Print {
 			return View.ADMIN;
 		default:
 			MainController.sessionStorage.put("pageNo", pageNo);
-			System.out.println("잘못된 입력입니다.");
+			noticeNotNo();
 			return View.ADMIN_OVERDUE_LIST;
 		}
 	}

@@ -69,6 +69,7 @@ public class LibraryController extends Print {
 		}
 		Map<Integer, Integer> num = printLibraryList(list);
 		System.out.println(tap+"0. 이전 화면");
+		printMenuVar();
 		do {
 			int libNo = ScanUtil.menu();
 			if (libNo == 0) {
@@ -95,6 +96,7 @@ public class LibraryController extends Print {
 		}
 		Map<Integer, Integer> map = printLibraryList(list);
 		System.out.println(tap+"0. 이전 화면");
+		printMenuVar();
 		do {
 			int libNo = ScanUtil.menu();
 			if (libNo == 0) {

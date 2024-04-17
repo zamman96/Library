@@ -296,8 +296,8 @@ public class AdminDao {
 	public Map<String, Object> memberInfo(int memNo){
 		String sql = "SELECT * "
 				+ " FROM MEMBER  "
-				+ "  WHERE = DEL_YN = 'N' "
-				+ " AND= MEM_NO"+memNo;
+				+ "  WHERE DEL_YN = 'N' "
+				+ " AND MEM_NO="+memNo;
 		return jdbc.selectOne(sql);
 	}
 	
