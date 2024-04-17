@@ -26,7 +26,7 @@ public class ScanUtil extends Print   {
 		return BookNo();
 	}
 	
-	private static String nextLine() {
+	public static String nextLine() {
 		return sc.nextLine();
 	}
 	

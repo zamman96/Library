@@ -43,19 +43,41 @@ public class MainController extends Print {
 			case MAIN_ALL:
 				view = home_all();
 				break;
+			case MYPAGE:
+				view = home_mypage();
+				break;
 			case LOGIN:
 				view = memberController.login();
 				break;
 			case SIGN:
 				view = memberController.sign();
+				break;
+			case LOGOUT:
+				view = memberController.logout();
+				break;
+			case UPDATE:
+				view = memberController.update();
+				break;
 			case FOUND:
 				view = found();
+				break;
+			case DELETE:
+				view = memberController.delete();
 				break;
 			case IDFOUND:
 				view = memberController.idfound();
 				break;
 			case PWFOUND:
 				view = memberController.pwfound();
+				break;
+			case NEWPW:
+				view = memberController.newPassword();
+				break;
+			case NEWPHONE:
+				view = memberController.newPhonenumber();
+				break;
+			case TOTALNEW:
+				view = memberController.totalNew();
 				break;
 			case LIBRARY:
 				view = library();
@@ -156,6 +178,8 @@ public class MainController extends Print {
 		}
 	}
 
+	
+
 	public View mainMenu() {
 		if (sessionStorage.containsKey("member") && sessionStorage.containsKey("library")) {
 			return View.MAIN_ALL;
@@ -208,18 +232,40 @@ public class MainController extends Print {
 		printMenuVar();
 		int sel = ScanUtil.menu();
 		switch (sel) {
-//		case 1:
-//			return View.LIBRARY;
+		case 1:
+			return View.MYPAGE;
 		case 2:
 			return View.LIBRARY;
 		case 3:
 			return View.BOOK;
 		case 4:
 			return View.PDS;
+		case 5:
+			return View.LOGOUT;
 
 		default:
 			return View.MAIN_MEMBER;
 		}
+	}
+	private View home_mypage() {
+		printMenuVar();
+		System.out.println("\t\t1. 회원 정보 수정\t2. 빌렸던 책 내용 \t3. 탈퇴 \t4. 로그아웃  ");
+		printMenuVar();
+		int sel = ScanUtil.menu();
+		switch (sel) {
+		case 1:
+			return View.UPDATE;
+		case 2:
+			return View.BOOK_RENT_LIST_PAST;
+		case 3:
+			return View.DELETE;
+		case 4:
+			return View.LOGOUT;
+
+		default:
+			return View.MAIN_MEMBER;
+		}
+		
 	}
 
 	private View home_library() {
