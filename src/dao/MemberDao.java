@@ -81,8 +81,20 @@ public class MemberDao {
         }
     }
 
-
+	// 탈퇴
 	public void delete(List<Object> param) {
+		String sql = " SELECT *\r\n" + 
+					 "   FROM MEMBER M, BOOK_RENT R \r\n" + 
+					 " WHERE M.MEM_NO=R.MEM_NO\r\n" + 
+					 " AND R.RETURN_YN='N'\r\n" + 
+					 " AND M.MEM_NO=?";
+
+		jdbc.update(sql, param);
+
+	}
+	
+	public void update(List<Object> param) {
+		
 		String sql = " UPDATE MEMBER\r\n" + 
 					 " SET DELYN ='Y'\r\n" + 
 					 " WHERE NO =?";

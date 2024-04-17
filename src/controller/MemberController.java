@@ -185,6 +185,7 @@ public class MemberController extends Print {
     }
 	
 	
+	
 //	 public void updateUserInfo(String id, String password, String nickname, String phoneNumber) {
 //    boolean isPasswordCorrect = mypageService.checkPw(id, password);
 //    
@@ -196,8 +197,9 @@ public class MemberController extends Print {
 //    }
 //    }
 	
-	public View iddelete() {
-		Map<String,Object> 	member = (Map<String,Object>) sessionStorage.get("memneb");
+
+	public View delete() {
+		Map<String,Object> 	member = (Map<String,Object>) sessionStorage.get("memveb");
 		BigDecimal no = (BigDecimal) member.get("NO");
 		int num = no.intValue();
 		List<Object> param = new ArrayList();
@@ -205,8 +207,6 @@ public class MemberController extends Print {
 		
 		memberService.delete(param);
 		sessionStorage.clear();
-		
-		
 		
 		return View.MAIN;
 	}

@@ -54,8 +54,8 @@ public class MainController extends Print {
 			case FOUND:
 				view = found();
 				break;
-			case IDDELETE:
-				view = memberController.iddelete();
+			case DELETE:
+				view = memberController.delete();
 				break;
 			case IDFOUND:
 				view = memberController.idfound();	
