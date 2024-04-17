@@ -2,12 +2,18 @@ package util;
 
 import java.util.Scanner;
 
-public class ScanUtil   {
+import print.Print;
+
+public class ScanUtil extends Print   {
 	// 스캐너를 손쉽게 사용할 수 있는 static 메서드를 가지고있음
 	static Scanner sc = new Scanner(System.in);
 	
 	public static int menu() {
-		return nextInt("메뉴 : ");
+		return nextInt(tap+"입력    >  ");
+	}
+	
+	public static String menuStr() {
+		return nextLine(tap+"입력    >  ");
 	}
 	
 	public static String nextLine(String print) {
@@ -16,7 +22,7 @@ public class ScanUtil   {
 	}
 	
 	public static String bookNo() {
-		System.out.print("도서 번호 입력 : ");
+		System.out.print(tap+"도서 번호    > ");
 		return BookNo();
 	}
 	

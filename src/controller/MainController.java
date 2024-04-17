@@ -52,7 +52,7 @@ public class MainController extends Print {
 				view = found();
 				break;
 			case IDFOUND:
-				view = memberController.idfound();	
+				view = memberController.idfound();
 				break;
 			case PWFOUND:
 				view = memberController.pwfound();
@@ -88,7 +88,7 @@ public class MainController extends Print {
 				view = bookRentController.bookRent();
 				break;
 			case BOOK_RENT_LIST:
-				view = bookRentController.bookRentList();	
+				view = bookRentController.bookRentList();
 				break;
 			case BOOK_RENT_LIST_PAST:
 				view = bookListController.bookRentPastList();
@@ -138,6 +138,18 @@ public class MainController extends Print {
 			case ADMIN_BOOK_UPDATE:
 				view = adminController.updateBook();
 				break;
+			case ADMIN_MEMBER:
+				view = adminMember();
+				break;
+			case ADMIN_MEMBER_SEARCH:
+				view = adminController.memberList();
+				break;
+			case ADMIN_APPOINT:
+				view = adminController.appoint();
+				break;
+			case ADMIN_OVERDUE_LIST:
+				view = adminController.overdueList();
+				break;
 			default:
 				break;
 			}
@@ -158,15 +170,15 @@ public class MainController extends Print {
 	}
 
 	private View home() {
-		//시작전에 대출 예약 마감일이 지난 회원들의 상태를 변경해주고
-		//다음순번의 사람이 예약기회를 얻음
+		// 시작전에 대출 예약 마감일이 지난 회원들의 상태를 변경해주고
+		// 다음순번의 사람이 예약기회를 얻음
 		bookService.timeOver();
 		title();
 		System.out.println();
 		System.out.println();
 		printMenuVar();
-		System.out.println("\t\t1. 도서관 선택\t2. 도서 조회\t3. 자료실 좌석 조회\t\t");
-		System.out.println("\t\t4. 로그인\t\t5. 아이디/비밀번호 찾기\t6. 회원가입");
+		System.out.println(tap+"1. 도서관 선택\t2. 도서 조회\t3. 자료실 좌석 조회\t\t");
+		System.out.println(tap+"4. 로그인\t\t5. 아이디/비밀번호 찾기\t6. 회원가입");
 		printMenuVar();
 
 		int sel = ScanUtil.menu();
@@ -191,8 +203,8 @@ public class MainController extends Print {
 
 	private View home_member() {
 		printMenuVar();
-		System.out.println("\t\t1. 마이페이지\t2. 도서관 선택\t3. 도서 조회 ");
-		System.out.println("\t\t4. 자료실 좌석 조회\t5. 로그아웃");
+		System.out.println(tap+"1. 마이페이지\t2. 도서관 선택\t3. 도서 조회 ");
+		System.out.println(tap+"4. 자료실 좌석 조회\t5. 로그아웃");
 		printMenuVar();
 		int sel = ScanUtil.menu();
 		switch (sel) {
@@ -214,10 +226,10 @@ public class MainController extends Print {
 		Map<String, Object> library = (Map<String, Object>) sessionStorage.get("library");
 		String name = (String) library.get("LIB_NAME");
 		printMenuOverVar();
-		System.out.println("\t\t\t\t📖" + name);
+		System.out.println(tap+"📖" + name);
 		printMenuVar();
-		System.out.println("\t\t1. 도서 조회\t2. 자료실 좌석 조회");
-		System.out.println("\t\t3. 로그인\t4. 아이디/비밀번호 찾기\t5. 회원가입");
+		System.out.println(tap+"1. 도서 조회\t\t2. 자료실 좌석 조회");
+		System.out.println(tap+"3. 로그인\t\t4. 아이디/비밀번호 찾기\t5. 회원가입");
 		printMenuVar();
 		int sel = ScanUtil.menu();
 		switch (sel) {
@@ -265,24 +277,24 @@ public class MainController extends Print {
 		if (!sessionStorage.containsKey("library")) {
 			noticeLibraryNoSel();
 			printMenuOverVar();
-			System.out.println("\t\t\t📖인기 도서 순위");
+			System.out.println(tap+"\t\t\t\t📖인기 도서 순위");
 			printMenuVar();
 
 		} else {
 			Map<String, Object> library = (Map<String, Object>) sessionStorage.get("library");
 			String name = (String) library.get("LIB_NAME");
 			printMenuOverVar();
-			System.out.println("\t\t\t📖" + name + "의 인기 도서 순위");
+			System.out.println(tap+"\t\t\t\t📖" + name + "의 인기 도서 순위");
 			printMenuVar();
 		}
 		bookListController.bookTopList();
 		printMenuVar();
-		System.out.println("\t\t1. 모든 도서 조회\t2. 분류별 도서 조회\t3. 도서 검색");
+		System.out.println(tap+"1. 모든 도서 조회\t2. 분류별 도서 조회\t\t3. 도서 검색");
 		if (sessionStorage.containsKey("member")) {
-			System.out.println("\t\t4. 대출\t5. 대출 예약\t6. 연장\t7. 반납");
-			System.out.println("\t8. 현재 대출/예약내역\t9.과거 대출내역");
+			System.out.println(tap+"4. 대출\t5. 대출 예약\t6. 연장\t7. 반납");
+			System.out.println(tap+"8. 현재 대출/예약내역\t\t9.과거 대출내역");
 		}
-		System.out.println("\t\t\t\t0. 홈");
+		System.out.println(tap+"\t\t0. 홈");
 		printMenuVar();
 		int sel = ScanUtil.menu();
 		// 회원으로 로그인하지 않으면 메뉴에 들어가지지않음
@@ -318,8 +330,8 @@ public class MainController extends Print {
 
 	private View library() {
 		printMenuVar();
-		System.out.println("\t\t1. 지역구 선택\t2. 도서관 이름 검색\t3. 전체 도서관 리스트");
-		System.out.println("\t\t\t\t0. 홈");
+		System.out.println(tap+"1. 지역구 선택\t\t2. 도서관 이름 검색\t\t3. 전체 도서관 리스트");
+		System.out.println(tap+"\t\t0. 홈");
 		printMenuVar();
 		int sel = ScanUtil.menu();
 		switch (sel) {
@@ -339,24 +351,26 @@ public class MainController extends Print {
 			return View.LIBRARY;
 		}
 	}
-	
+
 	private View found() {
-		System.out.println("1. ID 찾기");
-		System.out.println("2. PASSWORD 찾기");
+		printMenuVar();
+		System.out.println(tap+"1. ID 찾기\t\t2. PASSWORD 찾기");
+		printMenuVar();
 		int sel = ScanUtil.menu();
 		switch (sel) {
-			case 1:
-				return View.IDFOUND;
-			case 2:
-				return View.PWFOUND;
-			default:
-				return View.FOUND;
+		case 1:
+			return View.IDFOUND;
+		case 2:
+			return View.PWFOUND;
+		default:
+			return View.FOUND;
 		}
 	}
-	
+
 	private View admin() {
-		System.out.println("1.도서 관리\t\t2.회원 관리");
-		System.out.println("3.로그아웃");
+		printMenuVar();
+		System.out.println(tap+"1.도서 관리\t\t2.회원 관리\t\t3.로그아웃");
+		printMenuVar();
 		int sel = ScanUtil.menu();
 		switch (sel) {
 		case 1:
@@ -365,15 +379,18 @@ public class MainController extends Print {
 			return View.ADMIN_MEMBER;
 		case 3:
 			sessionStorage.remove("admin");
+			sessionStorage.remove("manager");
 			return View.MAIN;
 		default:
 			return View.ADMIN;
 		}
 	}
-	
+
 	private View adminBook() {
-		System.out.println("1.도서 검색\t\t2.도서 상태 수정\t\t3.도서 추가");
-		System.out.println("0.홈");
+		printMenuVar();
+		System.out.println(tap+"1.도서 검색\t\t2.도서 상태 수정\t\t3.도서 추가");
+		System.out.println(tap+"0.홈");
+		printMenuVar();
 		int sel = ScanUtil.menu();
 		switch (sel) {
 		case 1:
@@ -384,6 +401,29 @@ public class MainController extends Print {
 			return View.ADMIN_BOOK_INSERT;
 		default:
 			return View.ADMIN;
+		}
+	}
+
+	private View adminMember() {
+		printMenuVar();
+		System.out.println(tap+"1.회원 검색\t\t2.연체된 책 별 회원 정보");
+		if(sessionStorage.containsKey("manager")) {
+		System.out.println(tap+"3. 관리자 임명");
+		}
+		printMenuVar();
+		int sel = ScanUtil.menu();
+		switch (sel) {
+		case 1:
+			return View.ADMIN_MEMBER_SEARCH;
+		case 2:
+			return View.ADMIN_OVERDUE_LIST;
+		case 3:
+			if(sessionStorage.containsKey("manager")) {
+			return View.ADMIN_APPOINT;
+			}
+			return View.ADMIN_MEMBER;
+		default:
+			return View.ADMIN_MEMBER;
 		}
 	}
 

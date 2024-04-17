@@ -1,6 +1,9 @@
 package print;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,54 +16,54 @@ public class Print extends Notice {
 
 	public void title() {
 		System.out.println(YELLOW);
-		System.out.println("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀	");
-		System.out.println("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠁⠀⠀⠐⠄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀	");	
-		System.out.println("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠌⡑⠀⠀⠀⠀⠀⠀⠐⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀");
-		System.out.println("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡔⢁⠊⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⠠⠀⠐⠂⢉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀");
-		System.out.println("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⠌⡠⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢀⠀⠀⠀⠀⡀⠄⠂⠁⠀⠀⠀⠀⠀⡌⢀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀");
-		System.out.println("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡰⠁⠀⠢⠄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡄⢀⠀⠊⠀⠀⠀⠀⠀⠀⠀⠀⡰⠀⠀⡆⡱⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀");
-		System.out.println("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠜⠀⠀⠀⠀⠀⠈⠢⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡰⠂⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⠁⠀⢸⢰⠡⡌⣱⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀");
-		System.out.println("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢈⠑⠒⠤⢄⡀⠀⠀⠡⠘⢢⠀⠀⠀⠀⠀⠀⠀⠀⣸⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠃⠀⢀⡏⠆⡳⢠⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀");
-		System.out.println("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⠂⠀⠀⠀⠀⠈⢉⠒⢥⡈⠄⠣⡀⠀⠀⠀⠀⠀⣼⠃⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⠰⠀⠀⡼⢀⢃⡗⢼⢧⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀");
-		System.out.println("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡰⢁⣀⣀⣄⣂⣀⡁⢂⠠⢀⠘⠢⣅⠱⡀⠀⠀⠀⡼⠁⠀⠀⣀⠤⠒⠂⠘⠈⠁⠀⠀⠀⠀⢰⠁⠌⡘⢤⣻⢯⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀");
-		System.out.println("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡴⠋⠒⡐⣂⣒⣘⣢⡝⣭⣒⡆⢦⣀⠈⠲⣡⠀⠀⡴⠃⡤⠊⢉⣀⣐⠤⠤⠆⠴⠠⠆⠴⠤⢄⡘⢀⠂⢡⡞⣧⢿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀");
-		System.out.println("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠞⠡⡉⠍⠱⠀⠦⠰⢄⠶⣠⢆⡬⡑⢊⠗⢦⡑⡇⢰⡥⢫⠔⢋⡉⡄⢂⠢⡐⣌⣐⡒⣌⢢⠐⠤⠘⠢⢌⡰⣼⠿⡍⠀⠀⠀⠀⠀⠀⠀⠀");
-		System.out.println("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣶⣯⣤⣧⣴⠾⡶⠿⠾⢿⢻⡟⣷⡾⣶⣟⣦⣮⣄⣥⣧⣏⡬⣑⣪⡵⣶⣚⣯⢿⣭⣭⣭⢿⣭⣟⡿⣽⣭⢷⣦⣥⢿⡻⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀");
-		System.out.println("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢩⣛⠚⠛⠛⠓⠉⠙⠙⠛⠛⠿⠾⣽⢯⣟⡾⣝⣻⢳⢯⣛⡶⣭⢷⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀");
-		System.out.println("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠙⠋⠛⠽⠫⢷⢻⣞⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀");
-		System.out.println("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀");
-		System.out.println("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀");
-		System.out.println("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"+END);
-		String art = "`7MMF'      `7MMF'`7MM\"\"\"Yp, `7MM\"\"\"Mq.        db      `7MM\"\"\"Mq.`YMM'   `MM'\n" +
-                "  MM          MM    MM    Yb   MM   `MM.      ;MM:       MM   `MM. VMA   ,V  \n" +
-                "  MM          MM    MM    dP   MM   ,M9      ,V^MM.      MM   ,M9   VMA ,V   \n" +
-                "  MM          MM    MM\"\"\"bg.   MMmmdM9      ,M  `MM      MMmmdM9     VMMP    \n" +
-                "  MM      ,   MM    MM    `Y   MM  YM.      AbmmmqMA     MM  YM.      MM     \n" +
-                "  MM     ,M   MM    MM    ,9   MM   `Mb.   A'     VML    MM   `Mb.    MM     \n" +
-                ".JMMmmmmMMM .JMML..JMMmmmd9  .JMML. .JMM..AMA.   .AMMA..JMML. .JMM. .JMML.   \n";
+		System.out.println(t+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀	");
+		System.out.println(t+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠁⠀⠀⠐⠄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀	");	
+		System.out.println(t+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠌⡑⠀⠀⠀⠀⠀⠀⠐⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀");
+		System.out.println(t+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡔⢁⠊⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⠠⠀⠐⠂⢉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀");
+		System.out.println(t+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⠌⡠⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢀⠀⠀⠀⠀⡀⠄⠂⠁⠀⠀⠀⠀⠀⡌⢀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀");
+		System.out.println(t+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡰⠁⠀⠢⠄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡄⢀⠀⠊⠀⠀⠀⠀⠀⠀⠀⠀⡰⠀⠀⡆⡱⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀");
+		System.out.println(t+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠜⠀⠀⠀⠀⠀⠈⠢⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡰⠂⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⠁⠀⢸⢰⠡⡌⣱⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀");
+		System.out.println(t+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢈⠑⠒⠤⢄⡀⠀⠀⠡⠘⢢⠀⠀⠀⠀⠀⠀⠀⠀⣸⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠃⠀⢀⡏⠆⡳⢠⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀");
+		System.out.println(t+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⠂⠀⠀⠀⠀⠈⢉⠒⢥⡈⠄⠣⡀⠀⠀⠀⠀⠀⣼⠃⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⠰⠀⠀⡼⢀⢃⡗⢼⢧⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀");
+		System.out.println(t+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡰⢁⣀⣀⣄⣂⣀⡁⢂⠠⢀⠘⠢⣅⠱⡀⠀⠀⠀⡼⠁⠀⠀⣀⠤⠒⠂⠘⠈⠁⠀⠀⠀⠀⢰⠁⠌⡘⢤⣻⢯⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀");
+		System.out.println(t+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡴⠋⠒⡐⣂⣒⣘⣢⡝⣭⣒⡆⢦⣀⠈⠲⣡⠀⠀⡴⠃⡤⠊⢉⣀⣐⠤⠤⠆⠴⠠⠆⠴⠤⢄⡘⢀⠂⢡⡞⣧⢿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀");
+		System.out.println(t+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠞⠡⡉⠍⠱⠀⠦⠰⢄⠶⣠⢆⡬⡑⢊⠗⢦⡑⡇⢰⡥⢫⠔⢋⡉⡄⢂⠢⡐⣌⣐⡒⣌⢢⠐⠤⠘⠢⢌⡰⣼⠿⡍⠀⠀⠀⠀⠀⠀⠀⠀");
+		System.out.println(t+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣶⣯⣤⣧⣴⠾⡶⠿⠾⢿⢻⡟⣷⡾⣶⣟⣦⣮⣄⣥⣧⣏⡬⣑⣪⡵⣶⣚⣯⢿⣭⣭⣭⢿⣭⣟⡿⣽⣭⢷⣦⣥⢿⡻⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀");
+		System.out.println(t+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢩⣛⠚⠛⠛⠓⠉⠙⠙⠛⠛⠿⠾⣽⢯⣟⡾⣝⣻⢳⢯⣛⡶⣭⢷⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀");
+		System.out.println(t+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠙⠋⠛⠽⠫⢷⢻⣞⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀");
+		System.out.println(t+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀");
+		System.out.println(t+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀");
+		System.out.println(t+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"+END);
+		String art = t+"`7MMF'      `7MMF'`7MM\"\"\"Yp, `7MM\"\"\"Mq.        db      `7MM\"\"\"Mq.`YMM'   `MM'\n" +
+                t+"  MM          MM    MM    Yb   MM   `MM.      ;MM:       MM   `MM. VMA   ,V  \n" +
+                t+"  MM          MM    MM    dP   MM   ,M9      ,V^MM.      MM   ,M9   VMA ,V   \n" +
+                t+"  MM          MM    MM\"\"\"bg.   MMmmdM9      ,M  `MM      MMmmdM9     VMMP    \n" +
+                t+"  MM      ,   MM    MM    `Y   MM  YM.      AbmmmqMA     MM  YM.      MM     \n" +
+                t+"  MM     ,M   MM    MM    ,9   MM   `Mb.   A'     VML    MM   `Mb.    MM     \n" +
+                t+".JMMmmmmMMM .JMML..JMMmmmd9  .JMML. .JMM..AMA.   .AMMA..JMML. .JMM. .JMML.   \n";
    System.out.println(art);
 	}
 
 	public void printOverVar() {
 		System.out.println(
-				"╔════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗");
+				"╔═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗");
 	}
 
 	public void printMiddleVar() {
 		System.out.println(
-				"╠════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣");
+				"╠═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣");
 	}
 
 	public void printUnderVar() {
 		System.out.println(
-				"╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝");
+				"╚═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝");
 	}
 	
 	public void printMenuVar() {
-		System.out.println("===============================================================================");
+		System.out.println("===========================================================================================================================================================================");
 	}
 	public void printMenuOverVar() {
-		System.out.println("╔══════════════════════════════════════════════════════════════════════════════╗");
+		System.out.println("╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗");
 	}
 	public void printBookIndex() {
 		System.out.println("│도서관이름\t\t│도서 상태\t│도서 번호\t│분류\t│제목\t\t\t\t│작가\t\t\t│출판사\t\t│출판년도");
@@ -118,18 +121,19 @@ public class Print extends Notice {
 			System.out.print("\t");
 		}
 		System.out.println("│"+map.get("BOOK_PUB_YEAR"));
-		System.out.println("──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────");
-	}
+		System.out.println("───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────");
+	}								
 	
 	public void printCateName(List<Map<String, Object>> cate) {
 		printMenuVar();
+//		System.out.print(t);
 		for(Map<String, Object> map : cate) {
 			System.out.print("\t"+map.get("CATE_NO")+" : "+map.get("CATE_NAME")+" ");
 			if(((BigDecimal)map.get("CATE_NO")).intValue()==4) {
 				System.out.println();
+				System.out.print(t);
 			}
 		}
-		System.out.println();
 		printMenuVar();
 	}
 	
@@ -137,30 +141,58 @@ public class Print extends Notice {
 	public Map<Integer, Integer> printLibraryList(List<Map<String, Object>> list) {
 		Map<Integer, Integer> num = new HashMap<Integer, Integer>();
 		int count = 0;
+		System.out.print(t);
 		for (Map<String, Object> map : list) {
 			num.put(((BigDecimal) map.get("LIB_NO")).intValue(), ((BigDecimal) map.get("LIB_NO")).intValue());
 			System.out.print(map.get("LIB_NO"));
 			if (((BigDecimal) map.get("LIB_NO")).intValue() < 10)
 				System.out.print(" ");
 			System.out.print(" : " + map.get("LIB_NAME") + "\t");
-			if (((String) map.get("LIB_NAME")).length() <= 7) {
 				System.out.print("\t");
-			}
+			
 			count++;
-			if (count % 4 == 0 && count != 20)
+			if (count % 4 == 0 && count != 20) {
 				System.out.println();
+				System.out.print(t);
+			}
 		}
 		System.out.println();
 		return num;
 	}
 
 	public Map<Integer, Integer> printLocalList(List<Map<String, Object>> list) {
+		printMenuVar();
+		System.out.print("\t\t\t\t\t\t");
 		Map<Integer, Integer> num = new HashMap<Integer, Integer>();
 		for (Map<String, Object> map : list) {
-			System.out.print(map.get("LOC_NO") + " : " + map.get("LOC_NAME") + "  ");
+			System.out.print(map.get("LOC_NO") + " : " + map.get("LOC_NAME") + "\t\t");
 			num.put(((BigDecimal) map.get("LOC_NO")).intValue(), ((BigDecimal) map.get("LOC_NO")).intValue());
 		}
 		System.out.println();
 		return num;
+	}
+	
+	public void printMemberIndex() {
+		System.out.println("│회원번호\t│회원명\t│아이디\t\t│전화번호\t\t│대출가능일");
+	}
+	
+	public void printMemberList(Map<String, Object> map){
+		Date today = new Date();
+		String id = (String) map.get("MEM_ID"); 
+		id = id.substring(0,id.length()-3);
+		id+="***";
+		if(id.length()<=6) {
+			id+="\t";
+		}
+		Date date = new Date(((Timestamp) map.get("RENT_AVADATE")).getTime());
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy년 MM월 dd일");
+		System.out.print("│"+map.get("MEM_NO")+"\t│"+map.get("MEM_NAME")+"\t│"+id+"\t│"+map.get("MEM_TELNO")+"\t│");
+		if (date.before(today)) {
+			System.out.println(RED +dateFormat.format(date)+ END);
+		} else {
+			System.out.println(dateFormat.format(date));
+		}
+		System.out.println("───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────");
+
 	}
 }

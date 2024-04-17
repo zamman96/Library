@@ -80,4 +80,65 @@ public class AdminService {
 	}
 	
 // 회원 정보
+	// 관리자 임명
+	/**
+	 * @param admin_no, mem_no
+	 */
+	public void adminUpdate(List<Object> param) {
+		adao.adminUpdate(param);
+	}
+	
+	/**
+	 * @param ROWNUM
+	 * @return
+	 */
+	public List<Map<String, Object>> memberList(List<Object> param){
+		return adao.memberList(param);
+	}
+	
+	public int memberListCount() {
+		Map<String, Object> map = adao.memberListCount();
+		int count = ((BigDecimal)map.get("COUNT")).intValue();
+		return count;
+	}
+	
+	/**
+	 * @param ROWNUM
+	 * @param sel 1 : 대출한 사람
+	 * @param sel 2 : 예약중인 사람
+	 * @param sel 3 : 예약대기중인 사람
+	 * @param sel 4 : 반납연체
+	 * @param sel 5 : 대출불가능 회원
+	 * @return
+	 */
+	public List<Map<String, Object>> memberSearchList(List<Object> param, int sel){
+		return adao.memberSearchList(param, sel);
+	}
+	
+	public int memberSearchListCount(int sel) {
+		Map<String, Object> map = adao.memberSearchListCount(sel);
+		int count = ((BigDecimal)map.get("COUNT")).intValue();
+		return count;
+	}
+	
+	public Map<String,Object> memberInfo(int memNo){
+		return adao.memberInfo(memNo);
+	}
+	
+	public boolean memberChk(int memNo) {
+		Map<String, Object> map = adao.memberInfo(memNo);
+		if(map==null) {return false;	//회원정보없음
+		}
+		return true;
+	}
+	
+	public List<Map<String, Object>> overdueList(int start, int end){
+		return adao.overdueList(start, end);
+	}
+	
+	public int overdueListCount(){
+		Map<String, Object> map = adao.overdueListCount();
+		int count=((BigDecimal)map.get("COUNT")).intValue();
+		return count;
+	}
 }
