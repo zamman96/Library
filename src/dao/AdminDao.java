@@ -40,10 +40,11 @@ public class AdminDao {
 	 */
 	public List<Map<String, Object>> bookAdminList(List<Object> param, String sel) {
 		String sql = "SELECT * \r\n" + "FROM (\r\n" + "\r\n" + "SELECT \r\n" + "    ROWNUM AS RN, \r\n"
-				+ "    A.BOOK_NO, \r\n" + "    A.BOOK_NAME, \r\n" + "    A.BOOK_AUTHOR, A.BOOK_REMARK, \r\n" + "    A.BOOK_PUB, \r\n"
-				+ "    A.BOOK_PUB_YEAR, \r\n" + "    B.CATE_NAME, \r\n" + "    C.LIB_NAME, \r\n"
-				+ "    D.RENT_DATE, \r\n" + "    D.RETURN_DATE, \r\n" + "    F.MEM_NAME, \r\n" + "    F.MEM_TELNO\r\n"
-				+ "FROM \r\n" + "    BOOK A\r\n" + "    INNER JOIN BOOK_CATEGORY B ON A.CATE_NO = B.CATE_NO\r\n"
+				+ "    A.BOOK_NO, \r\n" + "    A.BOOK_NAME, \r\n" + "    A.BOOK_AUTHOR, A.BOOK_REMARK, \r\n"
+				+ "    A.BOOK_PUB, \r\n" + "    A.BOOK_PUB_YEAR, \r\n" + "    B.CATE_NAME, \r\n"
+				+ "    C.LIB_NAME, \r\n" + "    D.RENT_DATE, \r\n" + "    D.RETURN_DATE, \r\n" + "    F.MEM_NAME, \r\n"
+				+ "    F.MEM_TELNO\r\n" + "FROM \r\n" + "    BOOK A\r\n"
+				+ "    INNER JOIN BOOK_CATEGORY B ON A.CATE_NO = B.CATE_NO\r\n"
 				+ "    INNER JOIN LIBRARY C ON A.LIB_NO = C.LIB_NO\r\n"
 				+ "    LEFT JOIN BOOK_RENT D ON A.BOOK_NO = D.BOOK_NO\r\n"
 				+ "    LEFT JOIN BOOK_REF E ON D.BOOK_REF_NO = E.BOOK_REF_NO\r\n"
@@ -98,8 +99,8 @@ public class AdminDao {
 		sql += ") \r\n" + "WHERE \r\n" + "    RN >= ? AND RN <= ?";
 		return jdbc.selectList(sql, param);
 	}
-	
-	public Map<String, Object> bookAdminListCount (List<Object> param, String sel) {
+
+	public Map<String, Object> bookAdminListCount(List<Object> param, String sel) {
 		String sql = "SELECT count(*) AS COUNT \r\n" + "FROM (\r\n" + "\r\n" + "SELECT \r\n" + "    ROWNUM AS RN, \r\n"
 				+ "    A.BOOK_NO, \r\n" + "    A.BOOK_NAME, \r\n" + "    A.BOOK_AUTHOR, \r\n" + "    A.BOOK_PUB, \r\n"
 				+ "    A.BOOK_PUB_YEAR, \r\n" + "    B.CATE_NAME, \r\n" + "    C.LIB_NAME, \r\n"
@@ -159,8 +160,6 @@ public class AdminDao {
 		sql += ") \r\n";
 		return jdbc.selectOne(sql, param);
 	}
-	
-
 
 	// 책 추가
 
@@ -180,47 +179,155 @@ public class AdminDao {
 	 */
 	public void bookInsert(List<Object> param, int cateNo) {
 		String sql = "INSERT INTO BOOK (BOOK_NO, BOOK_NAME, BOOK_AUTHOR, BOOK_PUB, BOOK_PUB_YEAR, CATE_NO, LIB_NO)\r\n"
-				+ "SELECT MAX(BOOK_NO)+1,"
-				+ "?, ?, ?, ?, " + cateNo + ", ?\r\n" + "FROM BOOK\r\n" + "WHERE CATE_NO="
+				+ "SELECT MAX(BOOK_NO)+1," + "?, ?, ?, ?, " + cateNo + ", ?\r\n" + "FROM BOOK\r\n" + "WHERE CATE_NO="
 				+ cateNo;
 		jdbc.update(sql, param);
 	}
-	
-	/**책 이관
+
+	/**
+	 * 책 이관
+	 * 
 	 * @param LIB_NO BOOK_NO
 	 */
 	public void bookEscalation(List<Object> param) {
-		String sql = "UPDATE BOOK\r\n" + 
-				"SET LIB_NO=?\r\n" + 
-				"WHERE BOOK_NO=?";
+		String sql = "UPDATE BOOK\r\n" + "SET LIB_NO=?\r\n" + "WHERE BOOK_NO=?";
 		jdbc.update(sql, param);
 	}
-	
 
-	/**책 상태 변경
+	/**
+	 * 책 상태 변경
+	 * 
 	 * @param BOOK_REMARK, BOOK_NO
 	 */
 	public void bookStateUpdate(List<Object> param) {
-		String sql = "UPDATE BOOK\r\n" + 
-				"SET BOOK_REMARK=?\r\n" + 
-				"WHERE BOOK_NO=?";
+		String sql = "UPDATE BOOK\r\n" + "SET BOOK_REMARK=?\r\n" + "WHERE BOOK_NO=?";
 		jdbc.update(sql, param);
 	}
 
-	public Map<String, Object> CateName(int cateNo){
-		String sql="SELECT CATE_NAME\r\n" + 
-				"FROM BOOK_CATEGORY\r\n" + 
-				"WHERE CATE_NO="+cateNo;
+	public Map<String, Object> CateName(int cateNo) {
+		String sql = "SELECT CATE_NAME\r\n" + "FROM BOOK_CATEGORY\r\n" + "WHERE CATE_NO=" + cateNo;
 		return jdbc.selectOne(sql);
 	}
-	
-	public Map<String,Object> libName (int libNo){
-		String sql = "SELECT LIB_NAME\r\n" + 
-				"FROM LIBRARY\r\n" + 
-				"WHERE LIB_NO="+libNo;
+
+	public Map<String, Object> libName(int libNo) {
+		String sql = "SELECT LIB_NAME\r\n" + "FROM LIBRARY\r\n" + "WHERE LIB_NO=" + libNo;
 		return jdbc.selectOne(sql);
 	}
-	
+
 // 회원 정보
+	public List<Map<String, Object>> memberList(List<Object> param) {
+		String sql = "SELECT*\r\n" + "FROM(\r\n"
+				+ "SELECT ROWNUM AS RN, MEM_NO, MEM_NAME, MEM_ID, MEM_TELNO, RENT_AVADATE\r\n" + "FROM MEMBER\r\n"
+				+ "WHERE DEL_YN='N'\r\n" + ")\r\n" + "WHERE RN>=? AND RN<=?";
+		return jdbc.selectList(sql, param);
+	}
+
+	public Map<String, Object> memberListCount() {
+		String sql = "SELECT Count(*) AS COUNT\r\n" + "FROM(\r\n"
+				+ "SELECT ROWNUM AS RN, MEM_NO, MEM_NAME, MEM_ID, MEM_TELNO, RENT_AVADATE\r\n" + "FROM MEMBER\r\n"
+				+ "WHERE DEL_YN='N'\r\n" + ")\r\n";
+		return jdbc.selectOne(sql);
+	}
+
+	/**
+	 * @param sel 1 : 대출한 사람
+	 * @param sel 2 : 예약중인 사람
+	 * @param sel 3 : 예약대기중인 사람
+	 * @param sel 4 : 반납연체
+	 * @param sel 5 : 대출불가능 회원
+	 * @return
+	 */
+	public List<Map<String, Object>> memberSearchList(List<Object> param, int sel) {
+		String sql = "SELECT DISTINCT A.MEM_NO, A.MEM_NAME, A.MEM_ID, A.MEM_TELNO, A.RENT_AVADATE\r\n"
+				+ "FROM (SELECT ROWNUM AS RN, A.MEM_NO, A.MEM_NAME, A.MEM_ID, A.MEM_TELNO, A.RENT_AVADATE\r\n"
+				+ "FROM MEMBER A\r\n" + "LEFT OUTER JOIN BOOK_RENT B ON (A.MEM_NO=B.MEM_NO)\r\n"
+				+ "LEFT OUTER JOIN BOOK_REF C ON(B.BOOK_REF_NO=C.BOOK_REF_NO)\r\n" + "WHERE  A.DEL_YN='N'\r\n";
+		if (sel == 1) {
+			sql += "AND RETURN_YN='N' \r\n";
+		}
+		if (sel == 2) {
+			sql += "AND BOOK_REF_CHK=1 \r\n";
+		}
+		if (sel == 3) {
+			sql += "AND BOOK_REF_CHK=1 \r\n" + "AND BOOK_REF_DATE IS NOT NULL\r\n";
+		}
+		if (sel == 4) {
+			sql += "AND RETURN_YN = 'N' \r\n" + "AND RETURN_DATE<SYSDATE\r\n";
+		}
+		if (sel == 5) {
+			sql += "AND RETURN_YN = 'N' \r\n" + "AND RETURN_DATE<SYSDATE\r\n" + "OR A.RENT_AVADATE > SYSDATE\r\n";
+		}
+		sql += ") A\r\n" + "WHERE RN>=? AND RN<=?";
+		return jdbc.selectList(sql, param);
+	}
+
+	public Map<String, Object> memberSearchListCount(int sel) {
+		String sql = "SELECT count(*) AS COUNT \r\n"
+				+ "FROM (SELECT DISTINCT A.MEM_NO, A.MEM_NAME, A.MEM_ID, A.MEM_TELNO, A.RENT_AVADATE\r\n"
+				+ "FROM MEMBER A\r\n" + "LEFT OUTER JOIN BOOK_RENT B ON (A.MEM_NO=B.MEM_NO)\r\n"
+				+ "LEFT OUTER JOIN BOOK_REF C ON(B.BOOK_REF_NO=C.BOOK_REF_NO)\r\n" + "WHERE  A.DEL_YN='N'\r\n";
+		if (sel == 1) {
+			sql += "AND RETURN_YN='N' \r\n";
+		}
+		if (sel == 2) {
+			sql += "AND BOOK_REF_CHK=1 \r\n";
+		}
+		if (sel == 3) {
+			sql += "AND BOOK_REF_CHK=1 \r\n" + "AND BOOK_REF_DATE IS NOT NULL\r\n";
+		}
+		if (sel == 4) {
+			sql += "AND RETURN_YN = 'N' \r\n" + "AND RETURN_DATE<SYSDATE\r\n";
+		}
+		if (sel == 5) {
+			sql += "AND RETURN_YN = 'N' \r\n" + "AND RETURN_DATE<SYSDATE\r\n" + "OR A.RENT_AVADATE > SYSDATE\r\n";
+		}
+		sql += ") A\r\n";
+
+		return jdbc.selectOne(sql);
+	}
 	
+	public void adminUpdate(List<Object> param) {
+		String sql ="UPDATE MEMBER\r\n" + 
+				"SET ADMIN_NO =?\r\n" + 
+				"WHERE MEM_NO=?";
+		jdbc.update(sql, param);
+	}
+	
+	public Map<String, Object> memberInfo(int memNo){
+		String sql = "SELECT * "
+				+ " FROM MEMBER  "
+				+ "  WHERE = DEL_YN = 'N' "
+				+ " AND= MEM_NO"+memNo;
+		return jdbc.selectOne(sql);
+	}
+	
+	/**
+	 * @param ROWNUM
+	 * @return
+	 */
+	public List<Map<String, Object>> overdueList(int start, int end){
+		String sql = "SELECT *\r\n" + 
+				"FROM(SELECT ROWNUM AS RN ,A.MEM_NO, A.MEM_NAME, A.MEM_ID, A.MEM_TELNO, B.RETURN_DATE, C.BOOK_NAME, C.BOOK_AUTHOR, C.BOOK_NO, C.BOOK_PUB, C.BOOK_PUB_YEAR, D.CATE_NAME, F.LIB_NAME\r\n" + 
+				"FROM MEMBER A, BOOK_RENT B, BOOK C, BOOK_CATEGORY D, LIBRARY F\r\n" + 
+				"WHERE A.MEM_NO=B.MEM_NO\r\n" + 
+				"AND C.BOOK_NO=B.BOOK_NO\r\n" + 
+				"AND C.CATE_NO=D.CATE_NO\r\n" + 
+				"AND F.LIB_NO=C.LIB_NO\r\n" + 
+				"AND RETURN_YN='N'\r\n" + 
+				"AND RETURN_DATE<SYSDATE)\r\n" + 
+				"WHERE RN>="+start+" AND RN<="+end;
+		return jdbc.selectList(sql);
+	}
+
+	public Map<String, Object> overdueListCount(){
+		String sql = "SELECT COUNT(*) AS COUNT\r\n" + 
+				"FROM MEMBER A, BOOK_RENT B, BOOK C, BOOK_CATEGORY D, LIBRARY F\r\n" + 
+				"WHERE A.MEM_NO=B.MEM_NO\r\n" + 
+				"AND C.BOOK_NO=B.BOOK_NO\r\n" + 
+				"AND C.CATE_NO=D.CATE_NO\r\n" + 
+				"AND F.LIB_NO=C.LIB_NO\r\n" + 
+				"AND RETURN_YN='N'\r\n" + 
+				"AND RETURN_DATE<SYSDATE";
+		return jdbc.selectOne(sql);
+	}
 }

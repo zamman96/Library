@@ -159,10 +159,9 @@ public class BookListController extends Print {
 		}
 		System.out.println();
 		printUnderVar();
-		System.out.println("1. 페이지 번호 입력");
-		System.out.println("2. 대출 하기");
-		System.out.println("3. 도서정보");
-		String sel = ScanUtil.nextLine("메뉴 : ");
+		System.out.println(tap+"1. 페이지 번호 입력\t\t2. 대출 하기\t\t3. 도서정보");
+		printMenuVar();
+		String sel = ScanUtil.menuStr();
 		switch (sel) {
 		case "<":
 			if (pageNo > 1) {
@@ -179,17 +178,16 @@ public class BookListController extends Print {
 		case "1":
 			int no = 0;
 			do {
-				no = ScanUtil.nextInt("번호 입력 : ");
+				no = ScanUtil.menu();
 				if (no >= 1 && no <= pageEnd) {
 					MainController.sessionStorage.put("pageNo", no);
 					return View.BOOK_LIST;
 				}
-				System.out.println("페이지를 벗어났습니다.");
+				noticePageUp();
 			} while (true);
 		case "2":
 			if (!MainController.sessionStorage.containsKey("library")) {
-				System.out.println("전체 도서 검색은 대출이 불가능합니다.");
-				System.out.println("도서관 선택창으로 돌아갑니다.");
+				noticeLibraryNoSel();
 				return View.LIBRARY;
 			}
 			MainController.sessionStorage.remove("pageEnd");
@@ -199,7 +197,7 @@ public class BookListController extends Print {
 			return View.BOOK;
 		default:
 			MainController.sessionStorage.put("pageNo", pageNo);
-			System.out.println("잘못된 입력입니다.");
+			noticeNotNo();
 			return View.BOOK_LIST;
 		}
 	}
@@ -228,7 +226,7 @@ public class BookListController extends Print {
 				if (cateNo >= 0 && cateNo <= 9) {
 					break;
 				}
-				System.out.println("유효하지 않은 번호입니다.");
+				noticeNotNo();
 			}
 			MainController.sessionStorage.put("cate", cateNo);
 		} else {
@@ -287,10 +285,8 @@ public class BookListController extends Print {
 		}
 		System.out.println();
 		printUnderVar();
-		System.out.println("1. 페이지 번호 입력");
-		System.out.println("2. 대출 하기");
-		System.out.println("3. 도서정보");
-		String sel = ScanUtil.nextLine("메뉴 : ");
+		System.out.println(tap+"1. 페이지 번호 입력\t\t2. 대출 하기\t\t3. 도서정보");
+		String sel = ScanUtil.menuStr();
 		switch (sel) {
 		case "<":
 			if (pageNo > 1) {
@@ -307,19 +303,18 @@ public class BookListController extends Print {
 		case "1":
 			int no = 0;
 			do {
-				no = ScanUtil.nextInt("번호 입력 : ");
+				no = ScanUtil.menu();
 				if (no >= 1 && no <= pageEnd) {
 					MainController.sessionStorage.put("pageNo", no);
 					return View.BOOK_CATE_LIST;
 				}
-				System.out.println("페이지를 벗어났습니다.");
+				noticePageUp();
 			} while (true);
 		case "2":
 			MainController.sessionStorage.remove("cate");
 			MainController.sessionStorage.remove("pageEnd");
 			if (!MainController.sessionStorage.containsKey("library")) {
-				System.out.println("전체 도서 검색은 대출이 불가능합니다.");
-				System.out.println("도서관 선택창으로 돌아갑니다.");
+				noticeLibraryNoSel();
 				return View.LIBRARY;
 			}
 			MainController.sessionStorage.remove("cate");
@@ -331,7 +326,7 @@ public class BookListController extends Print {
 			return View.BOOK;
 		default:
 			MainController.sessionStorage.put("pageNo", pageNo);
-			System.out.println("잘못된 입력입니다.");
+			noticeNotNo();
 			return View.BOOK_CATE_LIST;
 		}
 
@@ -351,23 +346,23 @@ public class BookListController extends Print {
 		int sel = 0;
 		if (!MainController.sessionStorage.containsKey("search")) {
 			printMenuOverVar();
-			System.out.println("\t\t\t검색할 도서 정보를 선택해주세요");
+			System.out.println(tap+"검색할 도서 정보를 선택해주세요");
 			printMenuVar();
-			System.out.println("\t\t1.제목\t\t2.작가\t\t3.출판사");
+			System.out.println(tap+"1.제목\t\t2.작가\t\t3.출판사");
 			printMenuVar();
-			sel = ScanUtil.nextInt("번호 : ");
+			sel = ScanUtil.menu();
 			if (sel == 1) {
-				String name = ScanUtil.nextLine("제목 검색 : ");
+				String name = ScanUtil.nextLine(tap+"제목 검색  > ");
 				param.add(name);
 				MainController.sessionStorage.put("search", name);
 			}
 			if (sel == 2) {
-				String author = ScanUtil.nextLine("작가 검색 : ");
+				String author = ScanUtil.nextLine(tap+"작가 검색  > ");
 				param.add(author);
 				MainController.sessionStorage.put("search", author);
 			}
 			if (sel == 3) {
-				String pub = ScanUtil.nextLine("출판사 검색 : ");
+				String pub = ScanUtil.nextLine(tap+"출판사 검색   > ");
 				param.add(pub);
 				MainController.sessionStorage.put("search", pub);
 			}
@@ -406,7 +401,7 @@ public class BookListController extends Print {
 			list = bookService.bookSearchAllList(param, sel);
 		}
 		if(list==null) {
-			System.out.println("검색 결과가 없습니다.");
+			noticeNotSearch();
 			return View.BOOK;
 		}
 		printOverVar();
@@ -432,10 +427,8 @@ public class BookListController extends Print {
 		}
 		System.out.println();
 		printUnderVar();
-		System.out.println("1. 페이지 번호 입력");
-		System.out.println("2. 대출 하기");
-		System.out.println("3. 도서정보");
-		String select = ScanUtil.nextLine("메뉴 : ");
+		System.out.println(tap+"1. 페이지 번호 입력\t\t2. 대출 하기\t\t3. 도서정보");
+		String select = ScanUtil.menuStr();
 		switch (select) {
 		case "<":
 			if (pageNo > 1) {
@@ -452,17 +445,16 @@ public class BookListController extends Print {
 		case "1":
 			int no = 0;
 			do {
-				no = ScanUtil.nextInt("번호 입력 : ");
+				no = ScanUtil.menu();
 				if (no >= 1 && no <= pageEnd) {
 					MainController.sessionStorage.put("pageNo", no);
 					return View.BOOK_SEARCH_LIST;
 				}
-				System.out.println("페이지를 벗어났습니다.");
+				noticePageUp();
 			} while (true);
 		case "2":
 			if (!MainController.sessionStorage.containsKey("library")) {
-				System.out.println("전체 도서 검색은 대출이 불가능합니다.");
-				System.out.println("도서관 선택창으로 돌아갑니다.");
+				noticeLibraryNoSel();
 				return View.LIBRARY;
 			}
 			MainController.sessionStorage.remove("search");
@@ -476,7 +468,7 @@ public class BookListController extends Print {
 			return View.BOOK;
 		default:
 			MainController.sessionStorage.put("pageNo", pageNo);
-			System.out.println("잘못된 입력입니다.");
+			noticeNotNo();
 			return View.BOOK_SEARCH_LIST;
 		}
 	}
@@ -512,7 +504,7 @@ public class BookListController extends Print {
 		param.add(end);
 		List<Map<String, Object>> list = bookService.bookRentListPast(param);
 		if(list==null) {
-			System.out.println("대출한 내역이 없습니다");
+			noticeNotRent();
 			return View.BOOK;
 		}
 		printOverVar();
@@ -538,10 +530,8 @@ public class BookListController extends Print {
 		}
 		System.out.println();
 		printUnderVar();
-		System.out.println("1. 페이지 번호 입력");
-		System.out.println("2. 도서정보");
-		System.out.println("0. 홈");
-		String sel = ScanUtil.nextLine("메뉴 : ");
+		System.out.println(tap+"1. 페이지 번호 입력\t\t2. 도서정보\t\t0. 홈");
+		String sel = ScanUtil.menuStr();
 		switch (sel) {
 		case "<":
 			if (pageNo > 1) {
@@ -558,12 +548,12 @@ public class BookListController extends Print {
 		case "1":
 			int no = 0;
 			do {
-				no = ScanUtil.nextInt("번호 입력 : ");
+				no = ScanUtil.menu();
 				if (no >= 1 && no <= pageEnd) {
 					MainController.sessionStorage.put("pageNo", no);
 					return View.BOOK_RENT_LIST_PAST;
 				}
-				System.out.println("페이지를 벗어났습니다.");
+				noticePageUp();
 			} while (true);
 		case "2":
 				MainController.sessionStorage.remove("pageEnd");
@@ -573,7 +563,7 @@ public class BookListController extends Print {
 			return mainMenu();
 		default:
 			MainController.sessionStorage.put("pageNo", pageNo);
-			System.out.println("잘못된 입력입니다.");
+			noticeNotNo();
 			return View.BOOK_RENT_LIST_PAST;
 		}
 	}

@@ -43,9 +43,9 @@ public class LibraryController extends Print {
 	public View localLibrary() {
 		List<Map<String, Object>> list = libraryService.localName();
 		Map<Integer, Integer> map = printLocalList(list);
-		System.out.println("0. 이전 화면");
+		System.out.println(tap+"0. 이전 화면");
 		do {
-			int locNo = ScanUtil.nextInt("선택 : ");
+			int locNo = ScanUtil.menu();
 			if (locNo == 0) {
 				return View.LIBRARY;
 			}
@@ -54,7 +54,7 @@ public class LibraryController extends Print {
 				MainController.sessionStorage.put("Location", locNo);
 				return View.LIBRARY_LIST;
 			} 
-			System.out.println("유효하지 않은 숫자입니다.");
+			noticeNotNo();
 		} while (true);
 	}
 
@@ -68,9 +68,9 @@ public class LibraryController extends Print {
 			list = libraryService.librarylist();
 		}
 		Map<Integer, Integer> num = printLibraryList(list);
-		System.out.println("0. 이전 화면");
+		System.out.println(tap+"0. 이전 화면");
 		do {
-			int libNo = ScanUtil.nextInt("선택 : ");
+			int libNo = ScanUtil.menu();
 			if (libNo == 0) {
 				return View.LIBRARY;
 			}
@@ -82,21 +82,21 @@ public class LibraryController extends Print {
 				}
 				return mainMenu();
 			}
-			System.out.println("유효하지 않은 숫자입니다.");
+			noticeNotNo();
 		} while (true);
 	}
 
 	public View searchLibrary() {
-		String input = ScanUtil.nextLine("검색 : ");
+		String input = ScanUtil.nextLine(tap+"검색   >  ");
 		List<Map<String, Object>> list = libraryService.searchLibrary(input);
 		if (list == null) {
-			System.out.println("검색 결과가 없습니다.");
+			noticeSearch();
 			return View.LIBRARY;
 		}
 		Map<Integer, Integer> map = printLibraryList(list);
-		System.out.println("0. 이전 화면");
+		System.out.println(tap+"0. 이전 화면");
 		do {
-			int libNo = ScanUtil.nextInt("선택 : ");
+			int libNo = ScanUtil.menu();
 			if (libNo == 0) {
 				return View.LIBRARY;
 			}
@@ -108,7 +108,7 @@ public class LibraryController extends Print {
 				}
 				return mainMenu();
 			}
-			System.out.println("유효하지 않은 숫자입니다.");
+			noticeNotNo();
 		} while (true);
 	}
 

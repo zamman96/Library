@@ -69,7 +69,7 @@ public class PDSController extends Print {
 		Map<String, Object> library = (Map<String, Object>) MainController.sessionStorage.get("library");
 		String name = (String) library.get("LIB_NAME");
 		printMenuOverVar();
-		System.out.println("\t\t\t\t📖" + name);
+		System.out.println(tap+"\t\t\t\t📖" + name);
 		printMenuVar();
 
 		// 자료실 좌석 리스트 출력
@@ -85,7 +85,7 @@ public class PDSController extends Print {
 		// 좌석 정보가 없는 경우, 모든 좌석을 비어있는 상태로 출력합니다.
 		if (list == null || list.isEmpty()) {
 			for (int seat = 1; seat <= seatCount; seat++) {
-				System.out.print("PC" + seat + "\t"); // 자리 이름
+				System.out.print(tap+"PC" + seat + "\t"); // 자리 이름
 				for (int time = 9; time <= 21; time++) {
 					System.out.print("□ ");
 				}
@@ -101,7 +101,7 @@ public class PDSController extends Print {
 				seatStatus[seatNo - 1][hour - 9] = (memberNo == memNo) ? 2 : 1;
 			}
 			for (int seat = 1; seat <=seatCount; seat++) {
-				System.out.print("PC " + seat + "\t"); // 자리 이름
+				System.out.print(tap+"PC " + seat + "\t"); // 자리 이름
 				for (int time = 9; time <= 21; time++) {
 					if (seatStatus[seat-1][time-9] == 0) {
 						System.out.print("□ "); // 빈 좌석
@@ -117,13 +117,17 @@ public class PDSController extends Print {
 				}
 			}
 		}
-		System.out.println("\t\t1.좌석 예약\t\t2.좌석 예약 취소\t\t0.홈");
+		printMenuVar();
+		System.out.println(tap+"1.좌석 예약\t\t2.좌석 예약 취소\t\t0.홈");
+		printMenuVar();
 		int sel = ScanUtil.menu();
 		switch (sel) {
 		case 1:
 			return View.PDS_RESERVATION;
 		case 2:
-			System.out.println("1.좌석 예약 전체 취소\t2.좌석 부분 예약 취소\t0.홈");
+			printMenuVar();
+			System.out.println(tap+"1.좌석 예약 전체 취소\t\t2.좌석 부분 예약 취소\t\t0.홈");
+			printMenuVar();
 			int part = ScanUtil.menu();
 			switch (part) {
 			case 1:
@@ -159,37 +163,51 @@ public class PDSController extends Print {
 		int seatNo = 0;
 		int startTime = 0;
 		int endTime = 0;
+		System.out.println(var);
 		System.out.println("예약할 좌석의 번호를 입력 해주세요");
+		System.out.println(var);
 		while (true) {
 			seatNo = ScanUtil.nextInt("번호 입력 : ");
 			if (seatNo >= 1 && seatNo <= seatCount) {
 				break;
 			}
-			System.out.println("없는 번호입니다");
+			noticeNotNo();
 		}
 		int now = calendar.get(Calendar.HOUR_OF_DAY); // 현재 시간의 시간(hour) 정보를 가져옵니다.
 
 		// 시작시간은 현재 시간 이후로만 가능
-		System.out.println("예약할 시작 시간을 입력해주세요");
+		System.out.println(var);
+		System.out.println(var+"예약할 시작 시간을 입력해주세요");
+		System.out.println(var);
 		while (true) {
-			startTime = ScanUtil.nextInt("시작 시간 입력 : ");
+			startTime = ScanUtil.menu();
 			if (startTime >= now && startTime <= 21) {
 				break;
 			} else if (startTime >= 9 && startTime < now) {
-				System.out.println("지난 시간은 예약이 불가능 합니다");
+				System.out.println(RED+var+END);
+				System.out.println(tap+"지난 시간은 예약이 불가능 합니다");
+				System.out.println(RED+var+END);
 			} else {
-				System.out.println(now + "시~21시 사이의 시간을 입력해주세요");
+				System.out.println(RED+var+END);
+				System.out.println(tap+now + "시~21시 사이의 시간을 입력해주세요");
+				System.out.println(RED+var+END);
 			}
 		}
+		System.out.println(var);
 		System.out.println("예약할 마지막 시간을 입력해주세요");
+		System.out.println(var);
 		while (true) {
-			endTime = ScanUtil.nextInt("번호 입력 : ");
+			endTime = ScanUtil.menu();
 			if (endTime >= startTime && endTime <= seatCount) {
 				break;
 			} else if (endTime > startTime) {
+				System.out.println(RED+var+END);
 				System.out.println("시작시간보다 큰 값을 입력해주세요");
+				System.out.println(RED+var+END);
 			} else {
+				System.out.println(RED+var+END);
 				System.out.println(startTime + "시~21시 사이의 시간을 입력해주세요");
+				System.out.println(RED+var+END);
 			}
 		}
 		// 예약여부 확인
@@ -205,13 +223,17 @@ public class PDSController extends Print {
 			dup.add(memNo);
 			pdsTimeDupChk = pdsService.pdsTimeDupChk(dup, libNo);
 			if (!pdsRentChk) {
-				System.out.println("이미 예약된 좌석입니다.");
-				System.out.println("확인하고 다시 시도해주세요");
+				System.out.println(RED+var+END);
+				System.out.println(tap+"이미 예약된 좌석입니다.");
+				System.out.println(tap+"확인하고 다시 시도해주세요");
+				System.out.println(RED+var+END);
 				return View.PDS;
 			}
 			if (!pdsTimeDupChk) {
-				System.out.println("같은 시간에 예약한 좌석이 있습니다");
-				System.out.println("확인하고 다시 시도해주세요");
+				System.out.println(RED+var+END);
+				System.out.println(tap+"같은 시간에 예약한 좌석이 있습니다");
+				System.out.println(tap+"확인하고 다시 시도해주세요");
+				System.out.println(RED+var+END);
 				return View.PDS;
 			}
 		}
@@ -225,8 +247,9 @@ public class PDSController extends Print {
 			param.add(time);
 			pdsService.pdsRent(param, libNo, seatNo);
 		}
-
-		System.out.println("예약이 완료되었습니다.");
+		System.out.println(var);
+		System.out.println(tap+"예약이 완료되었습니다.");
+		System.out.println(var);
 		return View.PDS;
 	}
 
@@ -244,14 +267,18 @@ public class PDSController extends Print {
 		param.add(libNo);
 		// 전체 취소인 경우
 		if (!MainController.sessionStorage.containsKey("part")) {
-			System.out.println("모든 좌석의 시간대의 예약이 취소됩니다.");
-			System.out.println("정말 모두 취소하시겠습니까?");
+			System.out.println(RED+var+END);
+			System.out.println(tap+"모든 좌석의 시간대의 예약이 취소됩니다.");
+			System.out.println(tap+"정말 모두 취소하시겠습니까?");
+			System.out.println(RED+var+END);
 			while (true) {
 				String answer = ScanUtil.nextLine(" Y / N \t");
 				if (answer.equalsIgnoreCase("Y")) {
 
 					pdsService.pdsRentCancelAll(param);
+					System.out.println(var);
 					System.out.println("취소가 완료되었습니다.");
+					System.out.println(var);
 					return View.PDS;
 				} else if (answer.equalsIgnoreCase("N")) {
 					return View.PDS;
@@ -261,32 +288,43 @@ public class PDSController extends Print {
 		MainController.sessionStorage.remove("part");
 		boolean pdsResChk=true;
 		// 부분 취소 좌석별 / 시간대별
-		System.out.println("1. 좌석별 전체 취소\t\t2.좌석별 시간 부분 취소");
+		printMenuVar();
+		System.out.println(tap+"1. 좌석별 전체 취소\t\t2.좌석별 시간 부분 취소");
+		printMenuVar();
 		int sel = ScanUtil.menu();
 		switch (sel) {
 		case 1:
-			int seatNo = ScanUtil.nextInt("좌석번호입력");
+			int seatNo = ScanUtil.menu();
 			pdsResChk = pdsService.pdsResChk(param, seatNo, sel);
 			if(pdsResChk) {
+				System.out.println(var);
 				System.out.println("PC "+seatNo+" 좌석의 현재 시간 이후의 예약이 취소되었습니다.");
+				System.out.println(var);
 				pdsService.pdsRentCancel(param, seatNo, sel);
 				return View.PDS;
 			} else {
-				System.out.println("예약한 정보가 없습니다");
-				System.out.println("다시 확인하고 시도해주세요");
+				System.out.println(RED+var+END);
+				System.out.println(tap+"예약한 정보가 없습니다");
+				System.out.println(tap+"다시 확인하고 시도해주세요");
+				System.out.println(RED+var+END);
 				return View.PDS;
 			}
 			
 		case 2:
-			int seatNo2 = ScanUtil.nextInt("좌석번호입력 : ");
+			int seatNo2 = ScanUtil.menu();
 			int hour =0;
 			while(true) {
-			hour = ScanUtil.nextInt("취소할 시간 입력 : ");
+				System.out.println(var);
+				System.out.println(tap+"취소할 시간대를 입력해주세요");
+				System.out.println(var);
+			hour = ScanUtil.menu();
 			int now = calendar.get(Calendar.HOUR_OF_DAY);
 			if(hour>=now&&hour<=21) {
 				break;
 				}
-			System.out.println(now + "시~21시 사이의 시간을 입력해주세요");
+			System.out.println(RED+var+END);
+			System.out.println(tap+now + "시~21시 사이의 시간을 입력해주세요");
+			System.out.println(RED+var+END);
 			}
 			List<Object> param2 = new ArrayList<Object>();
 			param2.add(memNo);
@@ -294,12 +332,16 @@ public class PDSController extends Print {
 			param2.add(hour);
 			pdsResChk = pdsService.pdsResChk(param2, seatNo2, sel);
 			if(pdsResChk) {
-				System.out.println("PC "+seatNo2+" 좌석의 "+hour+"시의 예약이 취소되었습니다.");
+				System.out.println(var);
+				System.out.println(tap+"PC "+seatNo2+" 좌석의 "+hour+"시의 예약이 취소되었습니다.");
+				System.out.println(var);
 				pdsService.pdsRentCancel(param2, seatNo2, sel);
 				return View.PDS;
 			} else {
+				System.out.println(RED+var+END);
 				System.out.println("예약한 정보가 없습니다");
 				System.out.println("다시 확인하고 시도해주세요");
+				System.out.println(RED+var+END);
 				return View.PDS;
 			}
 
