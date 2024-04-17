@@ -250,7 +250,10 @@ public class MemberController extends Print {
 		boolean loginchk = memberService.login(param);
 		if (loginchk) {
 			Map<String, Object> member = (Map<String, Object>) MainController.sessionStorage.get("member");
-			System.out.println(tap + member.get("MEM_NAME") + "님 환영합니다");
+			System.out.println(var);
+			System.out.println(notice +"\t"+ member.get("MEM_NAME") + "님 환영합니다");
+			System.out.println(var);
+			System.out.println();
 			int no = ((BigDecimal) member.get("ADMIN_NO")).intValue();
 			if (no == 2) {
 				MainController.sessionStorage.remove("member");
@@ -262,9 +265,9 @@ public class MemberController extends Print {
 				return View.ADMIN;
 			}
 		} else if (!loginchk) {
-			System.out.println(tap + "1. 재로그인");
-			System.out.println(tap + "2. 회원가입");
-			System.out.println(tap + "3. 아이디 찾기");
+			printMenuVar();
+			System.out.println(tap + "1. 재로그인\t\t2. 회원가입\t\t3. 아이디 찾기");
+			printMenuVar();
 			int sel = ScanUtil.menu();
 
 			switch (sel) {
@@ -280,7 +283,9 @@ public class MemberController extends Print {
 		// 대출예약 기간 지난 리스트가 있으면 출력
 		boolean bookTimeOverChk = bookService.refTimeOverChk(no);
 		if (bookTimeOverChk) {
-			System.out.println(tap + "대출예약기간이 지난 도서가 있습니다");
+			System.out.println(RED+var+END);
+			System.out.println(notice + "\t대출예약기간이 지난 도서가 있습니다");
+			System.out.println(RED+var+END);
 			List<Map<String, Object>> list = bookService.refTimeOver(no); // 알림창
 			printOverVar();
 			printBookIndex();
@@ -295,7 +300,9 @@ public class MemberController extends Print {
 		// 로그인 성공 시 대출 예약한 것이 대출이 가능한지 확인
 		boolean bookRes = bookService.bookRefYN(no);
 		if (bookRes) {
-			System.out.println("대출 가능한 예약도서가 있습니다."); // 알림창
+			System.out.println("var");
+			System.out.println(notice+"\t대출 가능한 예약도서가 있습니다."); // 알림창
+			System.out.println("var");
 			return View.BOOK_RESERVATION_LIST;
 		}
 		if (MainController.sessionStorage.containsKey("View")) {
@@ -460,8 +467,8 @@ public class MemberController extends Print {
 			}
 			noticeNotNo();
 		}
-		String num1 = newPhoneNumber.substring(0, 2);
-		String num2 = newPhoneNumber.substring(3, 6);
+		String num1 = newPhoneNumber.substring(0, 3);
+		String num2 = newPhoneNumber.substring(3, 7);
 		String num3 = newPhoneNumber.substring(7);
 		newPhoneNumber = num1 + "-" + num2 + "-" + num3;
 
@@ -522,8 +529,8 @@ public class MemberController extends Print {
 				break;
 			}
 		}
-		String num1 = newPhoneNumber.substring(0, 2);
-		String num2 = newPhoneNumber.substring(3, 6);
+		String num1 = newPhoneNumber.substring(0, 3);
+		String num2 = newPhoneNumber.substring(3, 7);
 		String num3 = newPhoneNumber.substring(7);
 		newPhoneNumber = num1 + "-" + num2 + "-" + num3;
 
