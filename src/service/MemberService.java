@@ -8,6 +8,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import controller.MainController;
 import controller.MemberController;
 import dao.MemberDao;
+import util.ScanUtil;
 
 public class MemberService {
 	private static MemberService instance;
@@ -26,7 +27,6 @@ public class MemberService {
 	}
 	
 	MemberDao memdao = MemberDao.getInstance();
-
 	
 	public boolean login(List<Object> param) {
 		Map<String, Object> member = memdao.login(param);
@@ -53,6 +53,13 @@ public class MemberService {
         return true;
     	
     }
+
+    
+	public void logout() {
+		MainController.sessionStorage.remove("member");
+		System.out.println("로그아웃 되었습니다.");
+	}
+    
     
 	public String findId(String name, String tel) {
         return memdao.findId(name, tel);
@@ -62,5 +69,30 @@ public class MemberService {
 	public String findPassword(String id, String name, String tel) {
 		return memdao.findPassword(id, name, tel);
 	}
+	
+	
+
+	public void delete(List<Object> param) {
+		memdao.delete(param);
+		
+	}
+	
+	public boolean checkPw(String id, String password) {
+		String pw = ScanUtil.nextLine("PASS : ");
+		
+		List<Object> param = new ArrayList<Object>();
+		param.add(pw);
+		
+		Map<String, Object> checkmem = (Map<String, Object>) MainController.sessionStorage.get("member");
+
+		if (checkmem != null && checkmem.containsKey(param)) {
+            String storedPassword = (String) checkmem.get(param);
+            return storedPassword.equals(password);
+        } else {
+            return false; 
+        }
+    }
+	
+	
 
 }

@@ -12,6 +12,7 @@ public enum View {
 	SIGN,					// 회원가입
 	FOUND,					// 아이디 비밀번호 찾기
 	MYPAGE,
+	IDDELETE,
 	IDFOUND,
 	PWFOUND,
 	

@@ -16,6 +16,7 @@ public class MainController extends Print {
 	LibraryController libraryController = LibraryController.getInstance();
 	BookRentController bookRentController = BookRentController.getInstance();
 	MemberController memberController = MemberController.getInstance();
+	MypageController mypageController = MypageController.getInstance();
 	BookService bookService = BookService.getInstance();
 	PDSController pdsController = PDSController.getInstance();
 	static public Map<String, Object> sessionStorage = new HashMap<>();
@@ -48,8 +49,14 @@ public class MainController extends Print {
 			case SIGN:
 				view = memberController.sign();
 				break;
+			case LOGOUT:
+				view = memberController.logout();
+				break;
 			case FOUND:
 				view = found();
+				break;
+			case IDDELETE:
+				view = memberController.iddelete();
 				break;
 			case IDFOUND:
 				view = memberController.idfound();	
@@ -178,14 +185,16 @@ public class MainController extends Print {
 		printMenuVar();
 		int sel = ScanUtil.menu();
 		switch (sel) {
-//		case 1:
-//			return View.LIBRARY;
+		case 1:
+			return View.MYPAGE;
 		case 2:
 			return View.LIBRARY;
 		case 3:
 			return View.BOOK;
 		case 4:
 			return View.PDS;
+		case 5:
+			return View.LOGOUT;
 
 		default:
 			return View.MAIN_MEMBER;

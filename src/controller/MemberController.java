@@ -177,27 +177,39 @@ public class MemberController extends Print {
 		}
 		return mainMenu();
 	}
-
-//	private View home() {
-//		System.out.println("1. 로그인");
-//		System.out.println("2. 회원가입");
-//		System.out.println("3. 책 검색");
-////		System.out.println("4. 자료실 좌석 조회");
-//		System.out.println("4. 아이디 비밀번호 찾기");
-//
-//		int sel = ScanUtil.menu();
-//		switch (sel) {
-//		case 1:
-//			return View.LOGIN;
-//		case 2:
-//			return View.SIGN;
-//		case 3:
-//			return View.BOOK;
-//		case 4:
-//			return View.PDS;
-//		default:
-//			return View.MAIN;
-//		}
-//	}
+	
+	
+	public View logout() {
+        memberService.logout(); 
+        return View.MAIN;
+    }
+	
+	
+//	 public void updateUserInfo(String id, String password, String nickname, String phoneNumber) {
+//    boolean isPasswordCorrect = mypageService.checkPw(id, password);
+//    
+//    if (isPasswordCorrect) {
+//        mypageService.updateUserInfo(id, nickname, phoneNumber);
+//        System.out.println("회원정보가 성공적으로 수정되었습니다.");
+//    } else {
+//        System.out.println("비밀번호가 일치하지 않습니다. 다시 시도해주세요.");
+//    }
+//    }
+	
+	public View iddelete() {
+		Map<String,Object> 	member = (Map<String,Object>) sessionStorage.get("memneb");
+		BigDecimal no = (BigDecimal) member.get("NO");
+		int num = no.intValue();
+		List<Object> param = new ArrayList();
+		param.add(num);
+		
+		memberService.delete(param);
+		sessionStorage.clear();
+		
+		
+		
+		return View.MAIN;
+	}
+	
 
 }

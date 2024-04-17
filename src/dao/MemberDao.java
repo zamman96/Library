@@ -80,6 +80,18 @@ public class MemberDao {
             return null;
         }
     }
+
+
+	public void delete(List<Object> param) {
+		String sql = " UPDATE MEMBER\r\n" + 
+					 " SET DELYN ='Y'\r\n" + 
+					 " WHERE NO =?";
+
+		jdbc.update(sql, param);
+
+	}
+	
+	
 	
 
 	
