@@ -173,6 +173,10 @@ public class MemberController extends Print {
 			System.out.println("대출 가능한 예약도서가 있습니다."); // 알림창
 			return View.BOOK_RESERVATION_LIST;
 		}
+		if(MainController.sessionStorage.containsKey("View")) {
+			View view = (View) MainController.sessionStorage.remove("View");
+			return view;
+		}
 		return mainMenu();
 	}
 

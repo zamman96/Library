@@ -27,7 +27,7 @@ public class MainController extends Print {
 	}
 
 	private void start() {
-		View view = View.ADMIN;
+		View view = View.MAIN;
 //		View view = View.PDS_LIST;
 		while (true) {
 			switch (view) {
@@ -98,6 +98,9 @@ public class MainController extends Print {
 				break;
 			case BOOK_RESERVATION_LIST:
 				view = bookRentController.bookRefRent();
+				break;
+			case BOOK_RESERVATION_CANCEL:
+				view = bookRentController.bookResCancel();
 				break;
 			case BOOK_DELAY:
 				view = bookRentController.bookDelay();

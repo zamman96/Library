@@ -474,6 +474,20 @@ public class BookDao {
 				"AND C.MEM_NO=?";
 		return jdbc.selectList(sql, param);
 	}
+	
+	/**
+	 * @param mem_no
+	 * @param bookNo
+	 * @return 대출 예약 취소 가능한 책
+	 */
+	public Map<String, Object> bookResChk(List<Object> param, String bookNo){
+		String sql = "SELECT *\r\n" + 
+				"FROM BOOK_RENT\r\n" + 
+				"WHERE BOOK_REF_CHK=1\r\n" + 
+				"AND MEM_NO=?"
+				+ " AND BOOK_NO="+bookNo;
+		return jdbc.selectOne(sql, param);
+	}
 	// 예약 취소
 	/** O
 	 * @param param MEM_NO, BOOK_NO
@@ -698,6 +712,23 @@ public class BookDao {
 				" AND A.BOOK_NO=?) \r\n" + 
 				"WHERE MEM_NO=?";
 		jdbc.update(sql, param);
+	}
+	
+	public Map<String, Object> returnOverduebook(String bookNo) {
+		String sql ="SELECT * \r\n" + 
+				"FROM BOOK_RENT\r\n" + 
+				"WHERE RETURN_YN='N'\r\n" + 
+				"AND BOOK_NO="+bookNo+
+				"  AND RETURN_DATE<=SYSDATE";
+		return jdbc.selectOne(sql);
+	}
+	
+	public Map<String, Object> returnOverduebook() {
+		String sql ="SELECT * \r\n" + 
+				"FROM BOOK_RENT\r\n" + 
+				"WHERE RETURN_YN='N'\r\n" + 
+				"  AND RETURN_DATE<=SYSDATE";
+		return jdbc.selectOne(sql);
 	}
 	
 	/**O

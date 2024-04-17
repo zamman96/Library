@@ -220,4 +220,7 @@ public class AdminDao {
 				"WHERE LIB_NO="+libNo;
 		return jdbc.selectOne(sql);
 	}
+	
+// 회원 정보
+	
 }

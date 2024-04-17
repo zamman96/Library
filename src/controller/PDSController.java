@@ -63,6 +63,7 @@ public class PDSController extends Print {
 	public View pds() {
 		if (!MainController.sessionStorage.containsKey("library")) {
 			noticeLibrarySel();
+			MainController.sessionStorage.put("View", View.PDS);
 			return View.LIBRARY;
 		}
 		Map<String, Object> library = (Map<String, Object>) MainController.sessionStorage.get("library");
@@ -99,12 +100,12 @@ public class PDSController extends Print {
 				int memberNo = ((BigDecimal) map.get("MEM_NO")).intValue();
 				seatStatus[seatNo - 1][hour - 9] = (memberNo == memNo) ? 2 : 1;
 			}
-			for (int seat = 1; seat <= seatCount; seat++) {
+			for (int seat = 1; seat <=seatCount; seat++) {
 				System.out.print("PC " + seat + "\t"); // 자리 이름
 				for (int time = 9; time <= 21; time++) {
-					if (seatStatus[seat][time - 9] == 0) {
+					if (seatStatus[seat-1][time-9] == 0) {
 						System.out.print("□ "); // 빈 좌석
-					} else if (seatStatus[seat][time - 9] == 1) {
+					} else if (seatStatus[seat-1][time-9] == 1) {
 						System.out.print("■ "); // 예약된 좌석
 					} else {
 						System.out.print(GREEN + "■ " + END); // 자신이 예약한 좌석
@@ -145,6 +146,7 @@ public class PDSController extends Print {
 	public View pdsReserve() {
 		if (!MainController.sessionStorage.containsKey("member")) {
 			noticeMemberSel();
+			MainController.sessionStorage.put("View", View.PDS_RESERVATION);
 			return View.LOGIN;
 		}
 		Map<String, Object> map = (Map<String, Object>) MainController.sessionStorage.get("member");
@@ -267,6 +269,8 @@ public class PDSController extends Print {
 			pdsResChk = pdsService.pdsResChk(param, seatNo, sel);
 			if(pdsResChk) {
 				System.out.println("PC "+seatNo+" 좌석의 현재 시간 이후의 예약이 취소되었습니다.");
+				pdsService.pdsRentCancel(param, seatNo, sel);
+				return View.PDS;
 			} else {
 				System.out.println("예약한 정보가 없습니다");
 				System.out.println("다시 확인하고 시도해주세요");
@@ -291,6 +295,7 @@ public class PDSController extends Print {
 			pdsResChk = pdsService.pdsResChk(param2, seatNo2, sel);
 			if(pdsResChk) {
 				System.out.println("PC "+seatNo2+" 좌석의 "+hour+"시의 예약이 취소되었습니다.");
+				pdsService.pdsRentCancel(param2, seatNo2, sel);
 				return View.PDS;
 			} else {
 				System.out.println("예약한 정보가 없습니다");
