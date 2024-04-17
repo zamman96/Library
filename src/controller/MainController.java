@@ -16,7 +16,6 @@ public class MainController extends Print {
 	LibraryController libraryController = LibraryController.getInstance();
 	BookRentController bookRentController = BookRentController.getInstance();
 	MemberController memberController = MemberController.getInstance();
-	MypageController mypageController = MypageController.getInstance();
 	BookService bookService = BookService.getInstance();
 	PDSController pdsController = PDSController.getInstance();
 	static public Map<String, Object> sessionStorage = new HashMap<>();
