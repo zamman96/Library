@@ -252,7 +252,7 @@ public class MainController extends Print {
 	}
 	private View home_mypage() {
 		printMenuVar();
-		System.out.println("\t\t1. 회원 정보 수정\t2. 빌렸던 책 내용 \t3. 탈퇴 \t4. 로그아웃  ");
+		System.out.println(tap + "1. 회원 정보 수정\t2. 빌렸던 책 내용 \t3. 탈퇴 \t4. 로그아웃  ");
 		printMenuVar();
 		int sel = ScanUtil.menu();
 		switch (sel) {
