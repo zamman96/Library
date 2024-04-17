@@ -20,7 +20,7 @@ public class ScanUtil   {
 		return BookNo();
 	}
 	
-	private static String nextLine() {
+	public static String nextLine() {
 		return sc.nextLine();
 	}
 	

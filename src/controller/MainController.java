@@ -70,6 +70,15 @@ public class MainController extends Print {
 			case PWFOUND:
 				view = memberController.pwfound();
 				break;
+			case NEWPW:
+				view = memberController.newPassword();
+				break;
+			case NEWPHONE:
+				view = memberController.newPhonenumber();
+				break;
+			case TOTALNEW:
+				view = memberController.totalNew();
+				break;
 			case LIBRARY:
 				view = library();
 				break;

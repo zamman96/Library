@@ -90,14 +90,14 @@ public class MemberService {
 	}
 	
 	// 회원 정보 수정
-	public void update(List<Object> param) {
-        memdao.update(param);
+	public void update(List<Object> param, int sel ) {
+        memdao.update(param, sel);
     }
 	
 	
 	// 비번 체크 (회원정보 수정 / 탈퇴 시 확인)
 	public boolean checkPw(String id, String password) {
-		String pw = ScanUtil.nextLine("PASS : ");
+		String pw = ScanUtil.nextLine("비밀번호를 입력해 주세요 : ");
 		
 		List<Object> param = new ArrayList<Object>();
 		param.add(pw);

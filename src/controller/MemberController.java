@@ -249,11 +249,109 @@ public class MemberController extends Print {
 	}
 
 	public View update() {
-		
-		
-		
-		
-		return null;
+		System.out.println("비밀번호를 입력해 주세요");
+		String inputPassword = ScanUtil.nextLine();
+
+		// 현재 세션에 저장된 회원 정보 가져오기
+		Map<String, Object> memberid = (Map<String, Object>) MainController.sessionStorage.get("member");
+		String storedPassword = (String) memberid.get("MEM_PASS"); // 현재 세션에 저장된 비밀번호 가져오기
+
+		// 비밀번호 일치 여부 확인
+		boolean isPasswordCorrect = checkPw("", inputPassword);
+
+		if (isPasswordCorrect) {
+			isPasswordCorrect = checkPw("", inputPassword);
+			System.out.println("비밀번호가 일치합니다.");
+
+			System.out.println("수정하실 정보를 선택해 주세여");
+			System.out.println("\t\t1. 비밀번호 수정\t2. 전화 번호 수정 \t3. 전체 수정");
+
+			int sel = ScanUtil.menu();
+			switch (sel) {
+			case 1:
+				return View.NEWPW;
+			case 2:
+				return View.NEWPHONE;
+			case 3:
+				return View.TOTALNEW;
+				
+			default:
+				return View.UPDATE;
+			}
+		} else {
+			System.out.println("비밀번호가 일치하지 않습니다.");
+		}
+		return View.UPDATE;
+	}
+
+	private boolean checkPw(String string, String inputPassword) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public View newPassword() {
+		System.out.print("새로운 비밀번호를 입력하세요:");
+		String newPassword = ScanUtil.nextLine();
+
+		// 회원 번호 가져오기
+		Map<String, Object> member = (Map<String, Object>) MainController.sessionStorage.get("member");
+		BigDecimal no = (BigDecimal) member.get("MEM_NO");
+		int num = no.intValue();
+
+		// 파라미터 구성
+		List<Object> param = new ArrayList<>();
+		param.add(newPassword);
+		param.add(num);
+
+		// 회원 정보 업데이트
+		memberService.update(param, 1); // 1은 비밀번호 수정을 의미
+		System.out.println("비밀번호가 성공적으로 수정되었습니다.");
+		return View.MAIN;
+	}
+
+	public View newPhonenumber() {
+		// 전화번호 수정
+		System.out.println("새로운 전화번호를 입력하세요:");
+		String newPhoneNumber = ScanUtil.nextLine();
+
+		// 회원 번호 가져오기
+		Map<String, Object> member2 = (Map<String, Object>) MainController.sessionStorage.get("member");
+		BigDecimal no2 = (BigDecimal) member2.get("MEM_NO");
+		int num2 = no2.intValue();
+
+		// 파라미터 구성
+		List<Object> param2 = new ArrayList<>();
+		param2.add(newPhoneNumber);
+		param2.add(num2);
+
+		// 회원 정보 업데이트
+		memberService.update(param2, 2);
+		System.out.println("전화번호가 수정되었습니다.");
+		return View.MAIN;
+	}
+
+	public View totalNew() {
+		// 전체 수정
+		System.out.println("새로운 비밀번호를 입력하세요:");
+		String newPassword = ScanUtil.nextLine();
+		System.out.println("새로운 전화번호를 입력하세요:");
+		String newPhoneNumber = ScanUtil.nextLine();
+
+		// 회원 번호 가져오기
+		Map<String, Object> member3 = (Map<String, Object>) MainController.sessionStorage.get("member");
+		BigDecimal no3 = (BigDecimal) member3.get("MEM_NO");
+		int num3 = no3.intValue();
+
+		// 파라미터 구성
+		List<Object> param3 = new ArrayList<>();
+		param3.add(newPassword);
+		param3.add(newPhoneNumber);
+		param3.add(num3);
+
+		// 전체 수정 메소드 호출
+		memberService.update(param3, 3); // 3은 전체 수정을 의미
+		System.out.println("비밀번호와 전화번호가 성공적으로 수정되었습니다.");
+		return View.MAIN;
 	}
 	
 
