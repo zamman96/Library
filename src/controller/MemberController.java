@@ -201,14 +201,15 @@ public class MemberController extends Print {
 		if (loginchk) {
 			Map<String, Object> member = (Map<String, Object>) MainController.sessionStorage.get("member");
 			System.out.println(tap + member.get("MEM_NAME") + "님 환영합니다");
-			System.out.println(var);
 			int no = ((BigDecimal) member.get("ADMIN_NO")).intValue();
 			if (no == 2) {
 				MainController.sessionStorage.remove("member");
 				MainController.sessionStorage.put("admin", member);
+				return View.ADMIN;
 			} else if (no == 3) {
 				MainController.sessionStorage.remove("member");
 				MainController.sessionStorage.put("manager", member);
+				return View.ADMIN;
 			}
 		} else if (!loginchk) {
 			System.out.println("1. 재로그인");
@@ -332,7 +333,11 @@ public class MemberController extends Print {
 			System.out.println(tap + "비밀번호가 일치하지 않습니다.");
 			System.out.println(tap + "마이페이지로 돌아갑니다");
 			System.out.println(var);
-			return View.MYPAGE;
+			if (MainController.sessionStorage.containsKey("member")) {
+				return View.MYPAGE;
+			} else {
+				return View.ADMIN_PAGE;
+			}
 		}
 	}
 
@@ -370,8 +375,11 @@ public class MemberController extends Print {
 			System.out.println(var);
 
 			MainController.sessionStorage.remove("member");
-
-			return View.MYPAGE;
+			if (MainController.sessionStorage.containsKey("member")) {
+				return View.MYPAGE;
+			} else {
+				return View.ADMIN_PAGE;
+			}
 			// 안되어있을떄
 		} else {
 			String memNo = (String) MainController.sessionStorage.remove("found");
@@ -421,7 +429,13 @@ public class MemberController extends Print {
 		System.out.println(var);
 		System.out.println(tap + "전화번호가 수정되었습니다.");
 		System.out.println(var);
-		return View.MYPAGE;
+		
+		MainController.sessionStorage.remove("member");
+		if (MainController.sessionStorage.containsKey("member")) {
+			return View.MYPAGE;
+		} else {
+			return View.ADMIN_PAGE;
+		}
 	}
 
 	public View totalNew() {
@@ -478,7 +492,12 @@ public class MemberController extends Print {
 		System.out.println(var);
 		System.out.println(tap + "비밀번호와 전화번호가 성공적으로 수정되었습니다.");
 		System.out.println(var);
-		return View.MYPAGE;
+		MainController.sessionStorage.remove("member");
+		if (MainController.sessionStorage.containsKey("member")) {
+			return View.MYPAGE;
+		} else {
+			return View.ADMIN_PAGE;
+		}
 	}
 
 }

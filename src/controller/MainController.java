@@ -172,13 +172,16 @@ public class MainController extends Print {
 			case ADMIN_OVERDUE_LIST:
 				view = adminController.overdueList();
 				break;
+			case ADMIN_PAGE:
+				view = adminPage();
+				break;
 			default:
 				break;
 			}
 		}
 	}
 
-	
+
 
 	public View mainMenu() {
 		if (sessionStorage.containsKey("member") && sessionStorage.containsKey("library")) {
@@ -470,6 +473,24 @@ public class MainController extends Print {
 			return View.ADMIN_MEMBER;
 		default:
 			return View.ADMIN_MEMBER;
+		}
+	}
+	
+
+	private View adminPage() {
+		printMenuVar();
+		System.out.println(tap+"1.회원정보수정\t\t2.탈퇴\t\t0.홈");
+		printMenuVar();
+		int sel = ScanUtil.menu();
+		switch (sel) {
+		case 1:
+			return View.UPDATE;
+		case 2:
+			return View.DELETE;
+		case 0:
+			return View.ADMIN;
+		default:
+			return View.ADMIN_PAGE;
 		}
 	}
 
