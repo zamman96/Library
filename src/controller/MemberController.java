@@ -147,47 +147,140 @@ public class MemberController extends Print {
 	}
 
 	// 회원가입
+//	public View sign() {
+//
+//		while (true) {
+//			boolean Idchk = true;
+//			String id = "";
+//			do {
+//				id = ScanUtil.nextLine("아이디   > ");
+//				List<Object> idList = new ArrayList<Object>();
+//				idList.add(id);
+//				Idchk = memberService.idcheck(idList);
+//			} while (!Idchk);
+//			String pw = ScanUtil.nextLine(tap + "비밀번호  >");
+//			String nm = ScanUtil.nextLine(tap + "이름  > ");
+//			System.out.println(var);
+//			System.out.println(tap + "전화번호는 숫자만 입력해주세요");
+//			System.out.println(tap + "예시 : 01012341234");
+//			System.out.println(var);
+//			System.out.println();
+//			String tel = "";
+//			while (true) {
+//				tel = ScanUtil.nextLine(tap + "전화번호  > ");
+//				if (tel.matches("\\d+")) {
+//					break;
+//				}
+//				noticeNotNo();
+//			}
+//			String num1 = tel.substring(0, 2);
+//			String num2 = tel.substring(3, 6);
+//			String num3 = tel.substring(7);
+//			tel = num1 + "-" + num2 + "-" + num3;
+//
+//			List<Object> param = new ArrayList<Object>();
+//			param.add(id);
+//			param.add(pw);
+//			boolean loginChk = memberService.login(param); // 세션에 정보저장
+//			param.add(nm);
+//			param.add(tel);
+//			memberService.sign(param);
+//			System.out.println(tap + "회원가입이 완료되었습니다.");
+//			return mainMenu();
+//		}
+//	}
+	
 	public View sign() {
+	    while (true) {
+	        boolean Idchk = true;
+	        String id = "";
+	        id = ScanUtil.nextLine("아이디   > ");
+	        do {
+	            // 아이디 길이 및 형식 검사
+	            if (isValidId(id)) {
+	                List<Object> idList = new ArrayList<Object>();
+	                idList.add(id);
+	                Idchk = memberService.idcheck(idList);
+	            } else {
+	                System.out.println("아이디는 5자 이상 15자 이하여야 합니다.");
+	            }
+	        } while (!Idchk);
 
-		while (true) {
-			boolean Idchk = true;
-			String id = "";
-			do {
-				id = ScanUtil.nextLine("아이디   > ");
-				List<Object> idList = new ArrayList<Object>();
-				idList.add(id);
-				Idchk = memberService.idcheck(idList);
-			} while (!Idchk);
-			String pw = ScanUtil.nextLine(tap + "비밀번호  >");
-			String nm = ScanUtil.nextLine(tap + "이름  > ");
-			System.out.println(var);
-			System.out.println(tap + "전화번호는 숫자만 입력해주세요");
-			System.out.println(tap + "예시 : 01012341234");
-			System.out.println(var);
-			System.out.println();
-			String tel = "";
-			while (true) {
-				tel = ScanUtil.nextLine(tap + "전화번호  > ");
-				if (tel.matches("\\d+")) {
-					break;
-				}
-				noticeNotNo();
-			}
-			String num1 = tel.substring(0, 2);
-			String num2 = tel.substring(3, 6);
-			String num3 = tel.substring(7);
-			tel = num1 + "-" + num2 + "-" + num3;
+	        String pw = "";
+	        // 비밀번호 길이 검사
+	        while (true) {
+	            pw = ScanUtil.nextLine(tap + "비밀번호  >");
+	            if (isValidPassword(pw)) {
+	                break;
+	            } else {
+	                System.out.println("비밀번호는 5자 이상 15자 이하여야 합니다.");
+	            }
+	        }
 
-			List<Object> param = new ArrayList<Object>();
-			param.add(id);
-			param.add(pw);
-			boolean loginChk = memberService.login(param); // 세션에 정보저장
-			param.add(nm);
-			param.add(tel);
-			memberService.sign(param);
-			System.out.println(tap + "회원가입이 완료되었습니다.");
-			return mainMenu();
-		}
+	        String nm = "";
+	        // 이름 길이 및 한글 여부 검사
+	        while (true) {
+	            nm = ScanUtil.nextLine(tap + "이름  > ");
+	            if (isValidName(nm)) {
+	                break;
+	            } else {
+	                System.out.println("이름은 10자 이내의 한글로 입력해야 합니다.");
+	            }
+	        }
+
+	        System.out.println(var);
+	        System.out.println(tap + "전화번호는 숫자만 입력해주세요");
+	        System.out.println(tap + "예시 : 01012341234");
+	        System.out.println(var);
+	        System.out.println();
+
+	        String tel = "";
+	        // 전화번호 유효성 검사 및 형식 변환
+	        while (true) {
+	            tel = ScanUtil.nextLine(tap + "전화번호  > ");
+	            if (isValidPhoneNumber(tel)) {
+	                break;
+	            } else {
+	                System.out.println("전화번호 형식이 잘못되었습니다.");
+	            }
+	        }
+	        tel = formatPhoneNumber(tel);
+
+	        List<Object> param = new ArrayList<Object>();
+	        param.add(id);
+	        param.add(pw);
+	        boolean loginChk = memberService.login(param); // 세션에 정보저장
+	        param.add(nm);
+	        param.add(tel);
+	        memberService.sign(param);
+	        System.out.println(tap + "회원가입이 완료되었습니다.");
+	        return mainMenu();
+	    }
+	}
+	
+	// 아이디 유효성 검사
+	public boolean isValidId(String id) {
+	    return id.length() >= 5 && id.length() <= 15 && id.matches("^[a-z0-9]*$");
+	}
+
+	// 비밀번호 유효성 검사
+	public boolean isValidPassword(String pw) {
+	    return pw.length() >= 5 && pw.length() <= 15;
+	}
+
+	// 이름 유효성 검사
+	public boolean isValidName(String nm) {
+	    return nm.length() <= 10 && nm.matches("^[가-힣]*$");
+	}
+
+	// 전화번호 유효성 검사
+	public boolean isValidPhoneNumber(String tel) {
+	    return tel.matches("\\d{11}");
+	}
+
+	// 전화번호 형식 변환
+	public String formatPhoneNumber(String tel) {
+	    return tel.substring(0, 3) + "-" + tel.substring(3, 7) + "-" + tel.substring(7);
 	}
 
 	// 로그인
