@@ -96,22 +96,30 @@ public class MemberService {
 	
 	
 	// 비번 체크 (회원정보 수정 / 탈퇴 시 확인)
-	public boolean checkPw(String id, String password) {
-		String pw = ScanUtil.nextLine("비밀번호를 입력해 주세요 : ");
-		
-		List<Object> param = new ArrayList<Object>();
-		param.add(pw);
-		
-		Map<String, Object> checkmem = (Map<String, Object>) MainController.sessionStorage.get("member");
-
-		if (checkmem != null && checkmem.containsKey(param)) {
-            String storedPassword = (String) checkmem.get(param);
-            return storedPassword.equals(password);
-        } else {
-            return false; 
-        }
-    }
+//	public boolean checkPw(String id, String password) {
+//
+//		Map<String, Object> checkmem = (Map<String, Object>) MainController.sessionStorage.get("member");
+//
+//		if (checkmem != null) {
+//			return true;
+//		} else {
+//			return false;
+//		}
+//	}
 	
+	public boolean checkPw(String id, String inputPassword) {
+	    // 현재 세션에 저장된 회원 정보 가져오기
+	    Map<String, Object> member = (Map<String, Object>) MainController.sessionStorage.get("member");
+
+	    // 세션에서 가져온 회원 정보가 null이 아니고, 입력한 비밀번호와 세션에서 가져온 비밀번호가 일치하는지 확인
+	    if (member != null && member.containsKey("MEM_PASS")) {
+	        String storedPassword = (String) member.get("MEM_PASS");
+	        return storedPassword.equals(inputPassword);
+	    } else {
+	        return false; 
+	    }
+	}
+
 	
 
 }

@@ -220,12 +220,19 @@ public class MemberController extends Print {
 //	}
 	
 	public View delete() {
+		
+		System.out.println("비밀번호를 입력해 주세요");
+	    String inputPassword = ScanUtil.nextLine();
 	    // 세션에서 회원 정보 가져오기
 	    Map<String, Object> member = (Map<String, Object>) MainController.sessionStorage.get("member");
 	    
 	    // 회원 번호 가져오기
 	    BigDecimal no = (BigDecimal) member.get("MEM_NO");
+	    String storedPassword = (String) member.get("MEM_PASS");
 	    int num = no.intValue();
+	    
+	    boolean isPasswordCorrect = memberService.checkPw("", inputPassword);
+
 	    
 	    // 회원이 빌린 도서가 있는지 확인
 	    List<Object> param = new ArrayList<>();
@@ -249,45 +256,39 @@ public class MemberController extends Print {
 	}
 
 	public View update() {
-		System.out.println("비밀번호를 입력해 주세요");
-		String inputPassword = ScanUtil.nextLine();
+	    System.out.println("비밀번호를 입력해 주세요");
+	    String inputPassword = ScanUtil.nextLine();
 
-		// 현재 세션에 저장된 회원 정보 가져오기
-		Map<String, Object> memberid = (Map<String, Object>) MainController.sessionStorage.get("member");
-		String storedPassword = (String) memberid.get("MEM_PASS"); // 현재 세션에 저장된 비밀번호 가져오기
+	    // 현재 세션에 저장된 회원 정보 가져오기
+	    Map<String, Object> member = (Map<String, Object>) MainController.sessionStorage.get("member");
+	    String storedPassword = (String) member.get("MEM_PASS"); // 현재 세션에 저장된 비밀번호 가져오기
 
-		// 비밀번호 일치 여부 확인
-		boolean isPasswordCorrect = checkPw("", inputPassword);
+	    // 비밀번호 일치 여부 확인
+	    boolean isPasswordCorrect = memberService.checkPw("", inputPassword);
 
-		if (isPasswordCorrect) {
-			isPasswordCorrect = checkPw("", inputPassword);
-			System.out.println("비밀번호가 일치합니다.");
+	    if (isPasswordCorrect) {
+	        System.out.println("비밀번호가 일치합니다.");
 
-			System.out.println("수정하실 정보를 선택해 주세여");
-			System.out.println("\t\t1. 비밀번호 수정\t2. 전화 번호 수정 \t3. 전체 수정");
+	        System.out.println("수정하실 정보를 선택해 주세요");
+	        System.out.println("\t\t1. 비밀번호 수정\t2. 전화 번호 수정 \t3. 전체 수정");
 
-			int sel = ScanUtil.menu();
-			switch (sel) {
-			case 1:
-				return View.NEWPW;
-			case 2:
-				return View.NEWPHONE;
-			case 3:
-				return View.TOTALNEW;
-				
-			default:
-				return View.UPDATE;
-			}
-		} else {
-			System.out.println("비밀번호가 일치하지 않습니다.");
-		}
-		return View.UPDATE;
+	        int sel = ScanUtil.menu();
+	        switch (sel) {
+	            case 1:
+	                return View.NEWPW;
+	            case 2:
+	                return View.NEWPHONE;
+	            case 3:
+	                return View.TOTALNEW;
+	            default:
+	                return View.UPDATE;
+	        }
+	    } else {
+	        System.out.println("비밀번호가 일치하지 않습니다.");
+	    }
+	    return View.UPDATE;
 	}
-
-	private boolean checkPw(String string, String inputPassword) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	
 
 	public View newPassword() {
 		System.out.print("새로운 비밀번호를 입력하세요:");
@@ -306,7 +307,7 @@ public class MemberController extends Print {
 		// 회원 정보 업데이트
 		memberService.update(param, 1); // 1은 비밀번호 수정을 의미
 		System.out.println("비밀번호가 성공적으로 수정되었습니다.");
-		return View.MAIN;
+		return View.MYPAGE;
 	}
 
 	public View newPhonenumber() {
@@ -327,7 +328,7 @@ public class MemberController extends Print {
 		// 회원 정보 업데이트
 		memberService.update(param2, 2);
 		System.out.println("전화번호가 수정되었습니다.");
-		return View.MAIN;
+		return View.MYPAGE;
 	}
 
 	public View totalNew() {
@@ -351,7 +352,7 @@ public class MemberController extends Print {
 		// 전체 수정 메소드 호출
 		memberService.update(param3, 3); // 3은 전체 수정을 의미
 		System.out.println("비밀번호와 전화번호가 성공적으로 수정되었습니다.");
-		return View.MAIN;
+		return View.MYPAGE;
 	}
 	
 
