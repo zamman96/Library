@@ -91,16 +91,33 @@ public class MemberController extends Print {
 		String id = ScanUtil.nextLine("아이디를 입력하세요 : ");
 		String tel = ScanUtil.nextLine("전화번호를 입력하세요 : ");
 
-		String password = memberService.findPassword(id, name, tel);
-		if (password.length() > 3) {
-			String truncatedPw = password.substring(0, id.length() - 3);
-			System.out.println("회원님의 비밀번호는 " + truncatedPw + "***" + "입니다.");
-		} else {
-			System.out.println("일치하는 회원 정보가 없습니다.");
-		}
+		
+			// 일치하면 저장하고 newpw이동
+			MainController.sessionStorage.put("found", id);
+			return View.NEWPW;
+			Map = map.get	
+			select mem_no
+			
 
-		return mainMenu();
+			// 일치하지않으면 메인으로 이동
+			}
+		}
 	}
+	        
+//
+//		String password = memberService.findPassword(id, name, tel);
+//		if (password.length() > 3) {
+//			String truncatedPw = password.substring(0, id.length() - 3);
+//			System.out.println("회원님의 비밀번호는 " + truncatedPw + "***" + "입니다.");
+//		} else {
+//			System.out.println("일치하는 회원 정보가 없습니다.");
+//		}
+
+//		con - bool remove
+//		없으면 메인 
+//		세션이 있으면 마이페이지
+//		
+	
 
 	// 회원가입
 	public View sign() {
@@ -189,36 +206,6 @@ public class MemberController extends Print {
     }
 	
 	
-	
-//	 public void updateUserInfo(String id, String password, String nickname, String phoneNumber) {
-//    boolean isPasswordCorrect = mypageService.checkPw(id, password);
-//    
-//    if (isPasswordCorrect) {
-//        mypageService.updateUserInfo(id, nickname, phoneNumber);
-//        System.out.println("회원정보가 성공적으로 수정되었습니다.");
-//    } else {
-//        System.out.println("비밀번호가 일치하지 않습니다. 다시 시도해주세요.");
-//    }
-//    }
-	
-	
-
-//	public View delete() {
-//		Map<String,Object> 	member = (Map<String,Object>) MainController.sessionStorage.get("member");
-//		
-//		
-//		
-//		BigDecimal no = (BigDecimal) member.get("MEM_NO");
-//		int num = no.intValue();
-//		List<Object> param = new ArrayList();
-//		param.add(num);
-//		
-//		memberService.delete(param);
-//		sessionStorage.clear();
-//		
-//		return View.MAIN;
-//	}
-	
 	public View delete() {
 		
 		System.out.println("비밀번호를 입력해 주세요");
@@ -252,6 +239,7 @@ public class MemberController extends Print {
 	    // 세션 클리어
 	    MainController.sessionStorage.clear();
 	    
+	  
 	    return View.MAIN;
 	}
 
@@ -295,6 +283,7 @@ public class MemberController extends Print {
 		String newPassword = ScanUtil.nextLine();
 
 		// 회원 번호 가져오기
+		if(MainController.sessionStorage.containsKey("member")) {
 		Map<String, Object> member = (Map<String, Object>) MainController.sessionStorage.get("member");
 		BigDecimal no = (BigDecimal) member.get("MEM_NO");
 		int num = no.intValue();
@@ -307,7 +296,20 @@ public class MemberController extends Print {
 		// 회원 정보 업데이트
 		memberService.update(param, 1); // 1은 비밀번호 수정을 의미
 		System.out.println("비밀번호가 성공적으로 수정되었습니다.");
+		
+		MainController.sessionStorage.remove("member");
+		
 		return View.MYPAGE;
+		
+		} else {
+			String id = (String) MainController.sessionStorage.remove("found");
+			List<Object> found = new ArrayList<Object>();
+			found.add(newPassword);
+			found.add(id);
+			
+			System.out.println("변경이 완료되었습니다");
+			return View.MAIN;
+		}
 	}
 
 	public View newPhonenumber() {

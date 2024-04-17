@@ -59,18 +59,24 @@ public class MemberDao {
 	}
 
 	// 비밀번호 찾기
-	public String findPassword(String id, String name, String tel) {
-		String sql = "SELECT MEM_PASS FROM MEMBER WHERE MEM_ID = ? AND MEM_NAME = ? AND MEM_TELNO = ?";
-		List<Object> param = new ArrayList<>();
-		param.add(id);
-		param.add(name);
-		param.add(tel);
-		Map<String, Object> result = jdbc.selectOne(sql, param);
-		if (result != null && result.containsKey("MEM_PASS")) {
-			return (String) result.get("MEM_PASS");
-		} else {
-			return null;
-		}
+	public Map<String, Object> findPassword(String id, String name, String tel) {
+	    String sql = " SELECT MEM_PASS " +
+	    			 " FROM MEMBER " +
+	    			 " WHERE MEM_ID = ? "+
+	    			 " AND MEM_NAME = ? " +
+	    			 " AND MEM_TELNO = ?";
+	    List<Object> param = new ArrayList<>();
+	    param.add(id);
+	    param.add(name);
+	    param.add(tel);
+	    
+//	    Map<String, Object> result = jdbc.selectOne(sql, param);
+//	    if (result != null && result.containsKey("MEM_PASS")) {
+//	        return (String) result.get("MEM_PASS");
+//	    } else {
+//	        return null;
+//	    }
+	    return jdbc.selectOne(sql, param);
 	}
 
 	// 탈퇴
