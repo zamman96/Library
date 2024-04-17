@@ -76,6 +76,10 @@ public class LibraryController extends Print {
 			}
 			if (num.containsValue(libNo)) {
 				libraryService.librarySel(libNo);
+				if(MainController.sessionStorage.containsKey("View")) {
+					View view = (View) MainController.sessionStorage.remove("View");
+					return view;
+				}
 				return mainMenu();
 			}
 			System.out.println("유효하지 않은 숫자입니다.");
@@ -98,6 +102,10 @@ public class LibraryController extends Print {
 			}
 			if (map.containsValue(libNo)) {
 				libraryService.librarySel(libNo);
+				if(MainController.sessionStorage.containsKey("View")) {
+					View view = (View) MainController.sessionStorage.remove("View");
+					return view;
+				}
 				return mainMenu();
 			}
 			System.out.println("유효하지 않은 숫자입니다.");

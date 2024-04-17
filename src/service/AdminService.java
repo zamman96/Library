@@ -20,7 +20,7 @@ public class AdminService {
 		return instance;
 	}
 	AdminDao adao = AdminDao.getInstance();
-	
+// 책관리
 	// 전체 책 검색 폐기된 것도 조회가능
 	// 대출된 책 조회/예약된 책 조회/연체된 책조회
 	/**
@@ -78,4 +78,6 @@ public class AdminService {
 		String name = (String) map.get("LIB_NAME");
 		return name;
 	}
+	
+// 회원 정보
 }
