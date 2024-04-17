@@ -87,21 +87,22 @@ public class MemberController extends Print {
 
 	// 비번 찾기
 	public View pwfound() {
-		String name = ScanUtil.nextLine("이름을 입력하세요 : ");
-		String id = ScanUtil.nextLine("아이디를 입력하세요 : ");
-		String tel = ScanUtil.nextLine("전화번호를 입력하세요 : ");
-
-		
-			// 일치하면 저장하고 newpw이동
-			MainController.sessionStorage.put("found", id);
-			return View.NEWPW;
-			Map = map.get	
-			select mem_no
-			
-
-			// 일치하지않으면 메인으로 이동
-			}
-		}
+//		String name = ScanUtil.nextLine("이름을 입력하세요 : ");
+//		String id = ScanUtil.nextLine("아이디를 입력하세요 : ");
+//		String tel = ScanUtil.nextLine("전화번호를 입력하세요 : ");
+//
+//		
+//			// 일치하면 저장하고 newpw이동
+//			MainController.sessionStorage.put("found", id);
+//			return View.NEWPW;
+//			Map = map.get	
+//			select mem_no
+//			
+//
+//			// 일치하지않으면 메인으로 이동
+//			}
+//		}
+		return View.MAIN_MEMBER;
 	}
 	        
 //
@@ -140,7 +141,7 @@ public class MemberController extends Print {
 	        boolean Idchk = memberService.idcheck(idList);
 
 
-	        return View.SIGN;
+	        return View.MAIN_MEMBER;
 	    }
 	}
 
