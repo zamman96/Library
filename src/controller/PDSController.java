@@ -297,7 +297,7 @@ public class PDSController extends Print {
 			System.out.println(notice + "   정말 모두 취소하시겠습니까?");
 			System.out.println("\t"+RED + var + END);
 			while (true) {
-				String answer = ScanUtil.nextLine(" Y / N \t");
+				String answer = ScanUtil.nextLine(tap+" Y / N \t");
 				if (answer.equalsIgnoreCase("Y")||answer.equals("<")) {
 
 					pdsService.pdsRentCancelAll(param);

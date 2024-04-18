@@ -137,7 +137,7 @@ public class PDSDao {
 		if(sel==1) {
 				sql+="AND SEAT_NAME='PC'||? )";}
 		if(sel==2) {
-			sql+="  AND SEAT_REF_HOUR=?  ";
+			sql+="  AND SEAT_REF_HOUR=? ) ";
 		}
 		jdbc.update(sql, param);
 	}

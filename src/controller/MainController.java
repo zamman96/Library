@@ -51,7 +51,7 @@ public class MainController extends Print {
 				break;
 			case SIGN:
 				view = memberController.sign();
-				break;
+				break;  
 			case LOGOUT:
 				view = memberController.logout();
 				break;
@@ -282,7 +282,7 @@ public class MainController extends Print {
 		Map<String, Object> library = (Map<String, Object>) sessionStorage.get("library");
 		String name = (String) library.get("LIB_NAME");
 		printMenuOverVar();
-		System.out.println(tap+"\t\t\t\t📖" + name);
+		System.out.println(tap+"📖" + name);
 		printMenuVar();
 		System.out.println(tap+"1. 로그인\t\t2. 아이디/비밀번호 찾기\t\t3. 회원가입");
 		System.out.println(tap+"4. 도서관 이동\t\t5.도서 조회\t\t6. 자료실 좌석 조회");
@@ -312,7 +312,7 @@ public class MainController extends Print {
 		Map<String, Object> library = (Map<String, Object>) sessionStorage.get("library");
 		String name = (String) library.get("LIB_NAME");
 		printMenuOverVar();
-		System.out.println(tap+"\t\t\t\t📖" + name);
+		System.out.println(tap+"📖" + name);
 		printMenuVar();
 		System.out.println(tap+tap+"\t\t\t👤 "+mname+"님");
 		printMenuVar();
@@ -341,14 +341,14 @@ public class MainController extends Print {
 		if (!sessionStorage.containsKey("library")) {
 			noticeLibraryNoSel();
 			printMenuOverVar();
-			System.out.println(tap+"\t\t\t\t📖인기 도서 순위");
+			System.out.println(tap+"📖인기 도서 순위");
 			printMenuVar();
 
 		} else {
 			Map<String, Object> library = (Map<String, Object>) sessionStorage.get("library");
 			String name = (String) library.get("LIB_NAME");
 			printMenuOverVar();
-			System.out.println(tap+"\t\t\t\t📖" + name + "의 인기 도서 순위");
+			System.out.println(tap+"📖" + name + "의 인기 도서 순위");
 			printMenuVar();
 		}
 		bookListController.bookTopList();

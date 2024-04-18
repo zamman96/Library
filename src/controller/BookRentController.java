@@ -610,6 +610,7 @@ public class BookRentController extends Print {
 		// 확인 후 대출 가능 권수와 함께 빌린 책의 반납일을 고지할 것
 		System.out.println(var);
 		System.out.println(notice+"\t대출이 완료되었습니다.");
+		System.out.println(var);
 		System.out.println();
 		Date returnDate = new Date(((Timestamp) date.get("RETURN_DATE")).getTime());
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy년 MM월 dd일");

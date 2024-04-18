@@ -113,7 +113,7 @@ public class BookListController extends Print {
 			} else {
 				pageEnd = bookService.bookAllListCount() / cut;
 			}
-			if (pageEnd % cut != 0||pageEnd==0) {
+			if (pageEnd % cut != 0 || pageEnd == 0) {
 				pageEnd++;
 			}
 			MainController.sessionStorage.put("pageEnd", pageEnd);
@@ -159,7 +159,7 @@ public class BookListController extends Print {
 		}
 		System.out.println();
 		printUnderVar();
-		System.out.println(tap+"1. 페이지 번호 입력\t\t2. 대출 하기\t\t3. 도서정보");
+		System.out.println(tap + "1. 페이지 번호 입력\t\t2. 대출 하기\t\t3. 도서정보");
 		printMenuVar();
 		String sel = ScanUtil.menuStr();
 		switch (sel) {
@@ -240,7 +240,7 @@ public class BookListController extends Print {
 			} else {
 				pageEnd = bookService.bookCateAllListCount(param) / cut;
 			}
-			if (pageEnd % cut != 0||pageEnd==0) {
+			if (pageEnd % cut != 0 || pageEnd == 0) {
 				pageEnd++;
 			}
 			MainController.sessionStorage.put("pageEnd", pageEnd);
@@ -285,7 +285,7 @@ public class BookListController extends Print {
 		}
 		System.out.println();
 		printUnderVar();
-		System.out.println(tap+"1. 페이지 번호 입력\t\t2. 대출 하기\t\t3. 도서정보");
+		System.out.println(tap + "1. 페이지 번호 입력\t\t2. 대출 하기\t\t3. 도서정보");
 		String sel = ScanUtil.menuStr();
 		switch (sel) {
 		case "<":
@@ -346,23 +346,23 @@ public class BookListController extends Print {
 		int sel = 0;
 		if (!MainController.sessionStorage.containsKey("search")) {
 			printMenuOverVar();
-			System.out.println(tap+"검색할 도서 정보를 선택해주세요");
+			System.out.println(tap + "검색할 도서 정보를 선택해주세요");
 			printMenuVar();
-			System.out.println(tap+"1.제목\t\t2.작가\t\t3.출판사");
+			System.out.println(tap + "1.제목\t\t2.작가\t\t3.출판사");
 			printMenuVar();
 			sel = ScanUtil.menu();
 			if (sel == 1) {
-				String name = ScanUtil.nextLine(tap+"제목 검색  > ");
+				String name = ScanUtil.nextLine(tap + "제목 검색  > ");
 				param.add(name);
 				MainController.sessionStorage.put("search", name);
 			}
 			if (sel == 2) {
-				String author = ScanUtil.nextLine(tap+"작가 검색  > ");
+				String author = ScanUtil.nextLine(tap + "작가 검색  > ");
 				param.add(author);
 				MainController.sessionStorage.put("search", author);
 			}
 			if (sel == 3) {
-				String pub = ScanUtil.nextLine(tap+"출판사 검색   > ");
+				String pub = ScanUtil.nextLine(tap + "출판사 검색   > ");
 				param.add(pub);
 				MainController.sessionStorage.put("search", pub);
 			}
@@ -379,7 +379,7 @@ public class BookListController extends Print {
 			} else {
 				pageEnd = bookService.bookSearchAllListCount(param, sel) / cut;
 			}
-			if (pageEnd % cut != 0||pageEnd==0) {
+			if (pageEnd % cut != 0 || pageEnd == 0) {
 				pageEnd++;
 			}
 			MainController.sessionStorage.put("pageEnd", pageEnd);
@@ -400,7 +400,7 @@ public class BookListController extends Print {
 		} else {
 			list = bookService.bookSearchAllList(param, sel);
 		}
-		if(list==null) {
+		if (list == null) {
 			noticeNotSearch();
 			return View.BOOK;
 		}
@@ -427,7 +427,7 @@ public class BookListController extends Print {
 		}
 		System.out.println();
 		printUnderVar();
-		System.out.println(tap+"1. 페이지 번호 입력\t\t2. 대출 하기\t\t3. 도서정보");
+		System.out.println(tap + "1. 페이지 번호 입력\t\t2. 대출 하기\t\t3. 도서정보");
 		String select = ScanUtil.menuStr();
 		switch (select) {
 		case "<":
@@ -508,13 +508,18 @@ public class BookListController extends Print {
 			return View.BOOK;
 		}
 		printOverVar();
-		System.out.print("   순번\t│대출일\t\t");
+		System.out.print("   순번\t│반납일\t\t");
 		printBookIndex();
 		printMiddleVar();
 		for (Map<String, Object> map : list) {
-			Date date = new Date(((Timestamp) map.get("RENT_DATE")).getTime());
+			String rentYN = (String) map.get("RETURN_YN");
+			if(rentYN.equalsIgnoreCase("Y")) {
+			Date date = new Date(((Timestamp) map.get("RETURN_DATE")).getTime());
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy년 MM월 dd일");			
 			System.out.print("  " + map.get("RN") + "\t│"+dateFormat.format(date)+"\t");
+			} else {
+			System.out.print("  " + map.get("RN") + "\t│"+"현재 대출 중"+"\t");
+			}
 			printBookList(map);
 		}
 
