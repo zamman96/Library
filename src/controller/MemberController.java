@@ -355,17 +355,16 @@ public class MemberController extends Print {
 		List<Map<String,Object>> list = bookService.bookRefList(param);
 		bookService.bookRefCancelAll(param);
 		// 다음 순번 사람에게 순번
+		if(list!=null) {
 		for(Map<String, Object> map : list) {
 			String bookNo = (String) map.get("BOOK_NO");
 			bookService.updateRefDate(bookNo);
 		}
-		
+		}
 		// 예약취소
-		System.out.println(var);
-		System.out.println(notice+"탈퇴가 완료되었습니다");
-		System.out.println(var);
-		System.out.println();
+
 		memberService.delete(param);
+		System.out.println();
 		// 세션 클리어
 		MainController.sessionStorage.remove("member");
 		MainController.sessionStorage.remove("admin");
