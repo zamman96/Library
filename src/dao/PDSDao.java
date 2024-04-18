@@ -162,5 +162,17 @@ public class PDSDao {
 				sql+="AND A.SEAT_REF_HOUR >= TO_CHAR(SYSDATE, 'HH24')";
 		return jdbc.selectOne(sql, param);
 	}
-	
+
+	/**
+	 * @param memNo
+	 * 회원 삭제시 현재 시간이후의 좌석 예약 삭제
+	 */
+	public void pdsResDelete(int memNo) {
+		String sql ="UPDATE PDS_REF\r\n" + 
+				"SET SEAT_REF_YN = 'Y'\r\n" + 
+				"WHERE TO_CHAR(SEAT_REF_DATE,'YYYYMMDD')=TO_CHAR(SYSDATE, 'YYYYMMDD')\r\n" + 
+				"AND TO_CHAR(SYSDATE, 'HH24') <=SEAT_REF_HOUR\r\n" + 
+				"AND MEM_NO="+memNo;
+		jdbc.update(sql);
+	}
 }

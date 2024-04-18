@@ -9,6 +9,7 @@ import java.util.Map;
 import print.Print;
 import service.BookService;
 import service.MemberService;
+import service.PDSService;
 import util.ScanUtil;
 import util.View;
 
@@ -29,6 +30,7 @@ public class MemberController extends Print {
 	static public Map<String, Object> sessionStorage;
 	MemberService memberService = MemberService.getInstance();
 	BookService bookService = BookService.getInstance();
+	PDSService pdsService = PDSService.getInstance();
 
 	/**
 	 * @return 로그인과 도서관 선택에 따라 main화면이 다름
@@ -334,13 +336,13 @@ public class MemberController extends Print {
 		// 회원 번호 가져오기
 		BigDecimal no = (BigDecimal) member.get("MEM_NO");
 		String storedPassword = (String) member.get("MEM_PASS");
-		int num = no.intValue();
+		int memNo = no.intValue();
 
 		boolean isPasswordCorrect = memberService.checkPw("", inputPassword);
 
 		// 회원이 빌린 도서가 있는지 확인
 		List<Object> param = new ArrayList<>();
-		param.add(num);
+		param.add(memNo);
 		List<Map<String, Object>> rentBooks = memberService.mem_book_rent(param);
 
 		// 빌린 도서가 있는 경우 탈퇴 불가 안내 메시지 출력
@@ -361,9 +363,10 @@ public class MemberController extends Print {
 			bookService.updateRefDate(bookNo);
 		}
 		}
-		// 예약취소
-
+		// 도서예약취소
 		memberService.delete(param);
+		// 자료실 예약취소
+		pdsService.pdsResDelete(memNo);
 		System.out.println();
 		// 세션 클리어
 		MainController.sessionStorage.remove("member");

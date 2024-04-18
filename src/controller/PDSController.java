@@ -223,7 +223,7 @@ public class PDSController extends Print {
 		System.out.println(var);
 		while (true) {
 			endTime = ScanUtil.menu();
-			if (endTime >= startTime && endTime <= seatCount) {
+			if (endTime >= startTime && endTime <= 21) {
 				break;
 			} else if (endTime > startTime) {
 				System.out.println("\t"+RED + var + END);

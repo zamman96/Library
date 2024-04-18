@@ -100,4 +100,12 @@ public class PDSService {
 		if(map==null) {return false;}
 		return true;
 	}
+	
+	/**
+	 * @param memNo
+	 * 회원 삭제시 현재 시간이후의 좌석 예약 삭제
+	 */
+	public void pdsResDelete(int memNo) {
+		pdao.pdsResDelete(memNo);
+	}
 }
