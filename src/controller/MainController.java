@@ -352,10 +352,9 @@ public class MainController extends Print {
 		printMenuVar();
 		System.out.println(tap+"1. 모든 도서 조회\t2. 분류별 도서 조회\t\t3. 도서 검색");
 		if (sessionStorage.containsKey("member")) {
-			System.out.println(tap+"4. 대출\t5. 대출 예약\t6. 연장\t7. 반납");
-			System.out.println(tap+"8. 현재 대출/예약내역\t\t9.과거 대출내역");
+			System.out.println(tap+"4. 대출\t5. 대출 예약\t6. 연장\t7. 반납\t\t8. 현재 대출/예약내역");
 		}
-		System.out.println(tap+"\t\t0. 홈");
+		System.out.println(tap+"9.도서관 변경\t\t0. 홈");
 		printMenuVar();
 		int sel = ScanUtil.menu();
 		// 회원으로 로그인하지 않으면 메뉴에 들어가지지않음
@@ -381,7 +380,7 @@ public class MainController extends Print {
 		case 8:
 			return View.BOOK_RENT_LIST;
 		case 9:
-			return View.BOOK_RENT_LIST_PAST;
+			return View.LIBRARY;
 		case 0:
 			return mainMenu();
 		default:

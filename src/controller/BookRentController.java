@@ -306,7 +306,7 @@ public class BookRentController extends Print {
 		if (rentList != null) {
 			Date today = new Date();
 			printOverVar();
-			System.out.print("   반납예정일\t");
+			System.out.print("   반납예정일\t\t");
 			printBookIndex();
 			printMiddleVar();
 			for (Map<String, Object> map : rentList) {
@@ -827,7 +827,7 @@ public class BookRentController extends Print {
 		memParam.add(memNo);
 
 		boolean overdue = bookService.returnOverduebook();
-		if (!overdue) {
+		if (overdue) {
 			bookService.memberOverdueUpdateAll(libMemNo);
 			String overdueDate = bookService.memberOverdueInfo(memNo);
 			System.out.println("\t"+RED+var+END);
@@ -843,6 +843,10 @@ public class BookRentController extends Print {
 		for (String no : bookNoList) {
 			bookService.bookRefDate(no);
 		}
+		System.out.println(var);
+		System.out.println(notice+"현재 도서관의 모든 대출 도서가 반납되었습니다");
+		System.out.println(var);
+		System.out.println();
 		MainController.sessionStorage.remove("return");
 		return View.BOOK;
 	}

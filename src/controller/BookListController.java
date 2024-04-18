@@ -532,7 +532,7 @@ public class BookListController extends Print {
 		printUnderVar();
 		System.out.println();
 		printMenuVar();
-		System.out.println(tap+"1. 페이지 번호 입력\t\t2. 도서정보\t\t0. 홈");
+		System.out.println(tap+"1. 페이지 번호 입력\t\t2. 도서 조회\t\t0. 홈");
 		printMenuVar();
 		String sel = ScanUtil.menuStr();
 		switch (sel) {
