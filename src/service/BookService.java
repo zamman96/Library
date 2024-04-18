@@ -179,8 +179,8 @@ public class BookService {
 	/**
 	 * @return 넘긴 책만 나옴 > 연체된사람 연체되면 false
 	 */
-	public boolean returnOverduebook() {
-		Map<String,Object> map= bdao.returnOverduebook();
+	public boolean returnOverduebook(List<Object> param) {
+		Map<String,Object> map= bdao.returnOverduebook(param);
 		if(map==null) {
 			return true;
 		}
@@ -194,6 +194,9 @@ public class BookService {
 		return bdao.bookLibraryChk(param);
 	}
 		
+	public void bookRefCancelAll(List<Object> param) {
+		bdao.bookRefCancelAll(param);
+	}
 	
 // 대출 예약
 	
@@ -439,6 +442,18 @@ public class BookService {
 	 */
 	public void bookDelay(List<Object> param) {
 		bdao.bookDelay(param);
+	}
+	
+	/**
+	 * @param bookNo
+	 * @return true는 연장가능
+	 */
+	public boolean bookDelayRes(String bookNo){
+		List<Map<String, Object>> list = bdao.bookDelayRes(bookNo);
+		if(list==null) {
+			return true;
+		}
+		return false;
 	}
 	
 // 반납

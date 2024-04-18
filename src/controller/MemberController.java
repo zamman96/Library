@@ -147,6 +147,9 @@ public class MemberController extends Print {
 	}
 
 	public View sign() {
+		printMenuOverVar();
+		System.out.println(tap+"회원 가입");
+		printMenuVar();
 		while (true) {
 			String id = "";
 			boolean idCheck = false;
@@ -210,6 +213,7 @@ public class MemberController extends Print {
 			param.add(tel);
 			memberService.sign(param);
 			System.out.println(tap + "회원가입이 완료되었습니다.");
+			System.out.println();
 			return mainMenu();
 		}
 	}
@@ -241,6 +245,9 @@ public class MemberController extends Print {
 
 	// 로그인
 	public View login() {
+		printMenuOverVar();
+		System.out.println(tap+"로그인");
+		printMenuVar();
 		String id = ScanUtil.nextLine(tap + "아이디  > ");
 		String pw = ScanUtil.nextLine(tap + "비밀번호  > ");
 		List<Object> param = new ArrayList();
@@ -297,9 +304,9 @@ public class MemberController extends Print {
 		// 로그인 성공 시 대출 예약한 것이 대출이 가능한지 확인
 		boolean bookRes = bookService.bookRefYN(no);
 		if (bookRes) {
-			System.out.println("var");
+			System.out.println(var);
 			System.out.println(notice + "  대출 가능한 예약도서가 있습니다."); // 알림창
-			System.out.println("var");
+			System.out.println(var);
 			return View.BOOK_RESERVATION_LIST;
 		}
 		if (MainController.sessionStorage.containsKey("View")) {
@@ -314,6 +321,9 @@ public class MemberController extends Print {
 		return View.MAIN;
 	}
 
+	/**
+	 * @return
+	 */
 	public View delete() {
 
 		System.out.println(tap + "비밀번호를 입력해 주세요");
@@ -341,10 +351,21 @@ public class MemberController extends Print {
 			return View.MYPAGE;
 			// 탈퇴 불가 시 에러 뷰를 반환하거나, 적절한 처리를 수행합니다.
 		}
-
-		// 빌린 도서가 없는 경우 회원 삭제
+		
+		List<Map<String,Object>> list = bookService.bookRefList(param);
+		bookService.bookRefCancelAll(param);
+		// 다음 순번 사람에게 순번
+		for(Map<String, Object> map : list) {
+			String bookNo = (String) map.get("BOOK_NO");
+			bookService.updateRefDate(bookNo);
+		}
+		
+		// 예약취소
+		System.out.println(var);
+		System.out.println(notice+"탈퇴가 완료되었습니다");
+		System.out.println(var);
+		System.out.println();
 		memberService.delete(param);
-
 		// 세션 클리어
 		MainController.sessionStorage.remove("member");
 		MainController.sessionStorage.remove("admin");

@@ -146,6 +146,17 @@ public class BookDao {
 		return jdbc.selectOne(sql, param);
 	}
 	
+	/**
+	 * @param bookNo
+	 * @return 
+	 */
+	public List<Map<String,Object>> bookDelayRes(String bookNo){
+		String sql ="SELECT *\r\n" + 
+				"FROM BOOK_RENT\r\n" + 
+				"WHERE BOOK_REF_CHK=1\r\n" + 
+				"AND BOOK_NO="+bookNo;
+		return jdbc.selectList(sql);
+	}
 	
 	/** O
 	 * @param param MEM_NO, BOOK_NO
@@ -420,6 +431,9 @@ public class BookDao {
 		return jdbc.selectOne(sql, param);
 	}
 	
+	/** 반납 시 업데이트
+	 * @param bookNo
+	 */
 	public void updateRefDate(String bookNo) {
 		String sql = "UPDATE BOOK_REF\r\n" + 
 				"SET BOOK_REF_DATE = SYSDATE\r\n" + 
@@ -506,6 +520,21 @@ public class BookDao {
 		jdbc.update(sql, param);
 	}
 	
+	/** 전체 취소
+	 * @param mem_no
+	 */
+	public void bookRefCancelAll(List<Object> param) {
+		String sql = "UPDATE BOOK_RENT\r\n" + 
+				"SET BOOK_REF_CHK=3\r\n" + 
+				"WHERE BOOK_REF_NO IN(\r\n" + 
+				"SELECT BOOK_REF_NO\r\n" + 
+				"FROM BOOK_RENT\r\n" + 
+				"WHERE MEM_NO=?\r\n" + 
+				"AND BOOK_REF_CHK=1\r\n" + 
+				")";
+		jdbc.update(sql, param);
+	}
+	
 	
 	// 연장 (다른 도서관에서도 가능) 연장메뉴와 반납 메뉴를 다르게 둘것!
 	/**
@@ -522,7 +551,10 @@ public class BookDao {
 				"				AND A.LIB_NO=L.LIB_NO \r\n" + 
 				"				AND B.DELAY_YN='N' \r\n" + 
 				"                AND B.RETURN_YN='N'\r\n" + 
-				"				AND B.RENT_DATE+7<SYSDATE\r\n" + 
+				"				AND B.RENT_DATE+7<SYSDATE\r\n  "
+				+ "  AND A.BOOK_NO NOT IN (SELECT BOOK_NO\r\n" + 
+				"FROM BOOK_RENT\r\n" + 
+				"WHERE BOOK_REF_CHK=1) " + 
 				"				AND B.MEM_NO=?";
 		return jdbc.selectList(sql, param);
 	}
@@ -539,7 +571,11 @@ public class BookDao {
 				"SELECT RENT_NO\r\n" + 
 				"FROM BOOK_RENT\r\n" + 
 				"WHERE DELAY_YN='N'\r\n" + 
-				"AND RENT_DATE+7<SYSDATE\r\n" + 
+				"AND RENT_DATE+7<SYSDATE\r\n  "
+				+ " AND BOOK_NO NOT IN (SELECT BOOK_NO\r\n" + 
+				"FROM BOOK_RENT\r\n" + 
+				"WHERE BOOK_REF_CHK=1\r\n" + 
+				") " + 
 				"AND MEM_NO=?)";
 		jdbc.update(sql,param);
 	}
@@ -723,12 +759,13 @@ public class BookDao {
 		return jdbc.selectOne(sql);
 	}
 	
-	public Map<String, Object> returnOverduebook() {
+	public Map<String, Object> returnOverduebook(List<Object> param) {
 		String sql ="SELECT * \r\n" + 
 				"FROM BOOK_RENT\r\n" + 
 				"WHERE RETURN_YN='N'\r\n" + 
-				"  AND RETURN_DATE<=SYSDATE";
-		return jdbc.selectOne(sql);
+				"AND RETURN_DATE<=SYSDATE\r\n" + 
+				"AND MEM_NO=?";
+		return jdbc.selectOne(sql, param);
 	}
 	
 	/**O

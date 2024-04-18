@@ -51,7 +51,7 @@ public class MemberService extends Print{
     	Map<String, Object> result = memdao.idcheck(param);
     	if (result != null && !result.isEmpty()) {
     		System.out.println(RED+var+END);
-            System.out.println(notice+"\t중복된 아이디입니다. 다시 시도해주세요" );
+            System.out.println(notice+"중복된 아이디입니다. 다시 시도해주세요" );
             System.out.println(RED+var+END);
             return false; // 중복된 아이디가 있음을 나타내는 값을 반환
         }
@@ -62,7 +62,7 @@ public class MemberService extends Print{
 	public void logout() {
 		MainController.sessionStorage.remove("member");
 		System.out.println(var);
-		System.out.println(notice+"\t로그아웃 되었습니다.");
+		System.out.println(notice+"로그아웃 되었습니다.");
 		System.out.println(var);
 	}
     
@@ -78,17 +78,10 @@ public class MemberService extends Print{
 	
 	// 탈퇴
 	public void delete(List<Object> param) {
-	    // 탈퇴 불가능한 상태인지 확인
-	    List<Map<String, Object>> rentBooks = memdao.mem_book_rent(param);
-	    if (rentBooks != null && !rentBooks.isEmpty()) {
-	        // 빌린 도서가 있는 경우 탈퇴 불가능
-	    } else {
-	        // 빌린 도서가 없는 경우 회원 삭제
 	        memdao.delete(param);
 	        System.out.println(var);
-	        System.out.println(notice+"\t탈퇴되었습니다.");
+	        System.out.println(notice+"탈퇴되었습니다.");
 	        System.out.println(var);
-	    }
 	}
 	
 	public List<Map<String, Object>> mem_book_rent (List<Object> param) {

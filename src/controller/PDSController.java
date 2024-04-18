@@ -82,23 +82,23 @@ public class PDSController extends Print {
 		}
 		int seatCount = pdsService.seatCount(libNo);
 		List<Map<String, Object>> list = pdsService.pdsSeat(libNo);
-		// 좌석 정보가 없는 경우, 모든 좌석을 비어있는 상태로 출력합니다.
-//		if (list == null || list.isEmpty()) {
-//			System.out.println("\t\t\t\t좌석 이름\t9시\t10시\t11시\t12시\t13시\t14시\t15시\t16시\t17시\t18시\t19시\t20시\t21시");
-//			System.out.println("───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────");
-//
-//			for (int seat = 1; seat <= seatCount; seat++) {
-//				System.out.print("\t\t\t\tPC " + seat + "\t"); // 자리 이름
-//				for (int time = 9; time <= 21; time++) {
-//					System.out.print("□\t");
-//				}
-//				System.out.println("");
-//				if (seat % 10 == 0) {
-//					System.out.println();
-//				}
-//			}
-//			// 좌석 정보가 있을 때
-//		} else {
+//		 좌석 정보가 없는 경우, 모든 좌석을 비어있는 상태로 출력합니다.
+		if (list == null || list.isEmpty()) {
+			System.out.println("\t\t\t\t좌석 이름\t9시\t10시\t11시\t12시\t13시\t14시\t15시\t16시\t17시\t18시\t19시\t20시\t21시");
+			System.out.println("───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────");
+
+			for (int seat = 1; seat <= seatCount; seat++) {
+				System.out.print("\t\t\t\tPC " + seat + "\t"); // 자리 이름
+				for (int time = 9; time <= 21; time++) {
+					System.out.print("□\t");
+				}
+				System.out.println("");
+				if (seat % 10 == 0) {
+					System.out.println();
+				}
+			}
+			// 좌석 정보가 있을 때
+		} else {
 			int[][] seatStatus = new int[seatCount + 1][21 - 9 + 1];
 			for (Map<String, Object> map : list) {
 				int seatNo = Integer.parseInt(((String) map.get("SEAT_NAME")).replace("PC", ""));
@@ -125,7 +125,7 @@ public class PDSController extends Print {
 				if (seat % 10 == 0) {
 					System.out.println();
 				}
-//			}
+			}
 		}
 		printMenuVar();
 		
