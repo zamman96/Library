@@ -222,6 +222,7 @@ public class MainController extends Print {
 	private View home_member() {
 		Map<String, Object> map = (Map<String, Object>) sessionStorage.get("member");
 		String mname = (String) map.get("MEM_NAME");
+		printMenuOverVar();
 		System.out.println(tap+tap+"\t\t\t👤 "+mname+"님");
 		printMenuVar();
 		System.out.println(tap+"1. 마이페이지\t2. 도서관 선택\t3. 도서 조회 ");
@@ -309,6 +310,7 @@ public class MainController extends Print {
 		String name = (String) library.get("LIB_NAME");
 		printMenuOverVar();
 		System.out.println(tap+"\t\t\t\t📖" + name);
+		printMenuVar();
 		System.out.println(tap+tap+"\t\t\t👤 "+mname+"님");
 		printMenuVar();
 		System.out.println(tap+"1. 마이페이지\t2.도서관 이동 3.도서 조회 ");

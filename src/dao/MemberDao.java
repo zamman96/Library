@@ -60,7 +60,7 @@ public class MemberDao {
 
 	// 비밀번호 찾기
 	public Map<String, Object> findPassword(List<Object> param) {
-	    String sql = " SELECT MEM_PASS " +
+	    String sql = " SELECT * " +
 	    			 " FROM MEMBER " +
 	    			 " WHERE MEM_ID = ? "+
 	    			 " AND MEM_NAME = ? " +

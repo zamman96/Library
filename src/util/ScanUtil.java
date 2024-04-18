@@ -46,7 +46,9 @@ public class ScanUtil extends Print   {
 				int result = Integer.parseInt(sc.nextLine());
 				return result;
 			}catch (NumberFormatException e) {
-				System.out.println("잘못 입력!!");
+				System.out.println("\t"+RED+var+END);
+				System.out.println(notice+"숫자만 입력해주세요");
+				System.out.println("\t"+RED+var+END);
 			}
 		}
 	}
@@ -58,10 +60,14 @@ public class ScanUtil extends Print   {
                 if (result.length() == 5 && result.matches("\\d+")) {
                     return result;
                 } else {
-                    System.out.println("다섯 자리 숫자를 입력하세요.");
+                	System.out.println("\t"+RED+var+END);
+                    System.out.println(notice+"다섯 자리 숫자를 입력하세요.");
+                    System.out.println("\t"+RED+var+END);
                 }
             } catch (NumberFormatException e) {
-                System.out.println("잘못 입력!!");
+            	System.out.println("\t"+RED+var+END);
+                System.out.println(notice+"잘못 입력!!");
+                System.out.println("\t"+RED+var+END);
             }
         }
     }

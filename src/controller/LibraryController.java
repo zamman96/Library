@@ -43,7 +43,6 @@ public class LibraryController extends Print {
 	public View localLibrary() {
 		List<Map<String, Object>> list = libraryService.localName();
 		Map<Integer, Integer> map = printLocalList(list);
-		System.out.println(tap+"0. 이전 화면");
 		do {
 			int locNo = ScanUtil.menu();
 			if (locNo == 0) {
@@ -68,10 +67,10 @@ public class LibraryController extends Print {
 			list = libraryService.librarylist();
 		}
 		Map<Integer, Integer> num = printLibraryList(list);
-		System.out.println(tap+"0. 이전 화면");
 		printMenuVar();
 		do {
 			int libNo = ScanUtil.menu();
+			printMenuVar();
 			if (libNo == 0) {
 				return View.LIBRARY;
 			}

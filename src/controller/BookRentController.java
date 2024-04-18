@@ -118,8 +118,10 @@ public class BookRentController extends Print {
 			boolean memberVol = bookService.memberRefChk(param);
 			if (!memberVol) {
 				MainController.sessionStorage.put("overdue", "reservation");
-				System.out.println("최대 대출 예약 가능한 도서의 수를 넘겼습니다.");
-				System.out.println("최대 대출 예약 가능 도서 : 3권");
+				System.out.println("\t"+RED+var+END);
+				System.out.println(notice+"최대 대출 예약 가능한 도서의 수를 넘겼습니다.");
+				System.out.println(notice+"최대 대출 예약 가능 도서 : 3권");
+				System.out.println("\t"+RED+var+END);
 			}
 
 		}
@@ -201,7 +203,9 @@ public class BookRentController extends Print {
 			System.out.println(notice + "\t현재 위치한 도서관에서 대출불가합니다");
 			System.out.println(RED + var + END);
 			System.out.println();
-			System.out.println(tap + "1. 다른 도서 대출\t\t2. 다른 도서관 선택\t\t3. 홈");
+			printMenuVar();
+			System.out.println(tap + "1. 다른 도서 대출\t\t2. 다른 도서관 선택\t\t3.도서조회\t\t0. 홈");
+			printMenuVar();
 			int number = ScanUtil.menu();
 			switch (number) {
 			case 1:
@@ -209,6 +213,8 @@ public class BookRentController extends Print {
 			case 2:
 				return View.LIBRARY;
 			case 3:
+				return View.BOOK;
+			case 0:
 				return mainMenu();
 			default:
 				return View.BOOK_RENT;
@@ -223,8 +229,7 @@ public class BookRentController extends Print {
 			System.out.println(RED + var + END);
 			System.out.println();
 			printMenuVar();
-			System.out.println("1. 대출 예약\t\t2.다른 도서 대출");
-			System.out.println("\t\t0.홈");
+			System.out.println(tap+"1. 대출 예약\t\t2.다른 도서 대출\t\t0.홈");
 			printMenuVar();
 			int sel = ScanUtil.menu();
 			switch (sel) {
@@ -252,7 +257,7 @@ public class BookRentController extends Print {
 		System.out.println(notice + "\t이 도서를 대출하시겠습니까?");
 		System.out.println(var);
 		while (true) {
-			String yn = ScanUtil.nextLine("Y / N");
+			String yn = ScanUtil.nextLine(tap+"Y / N");
 			if (yn.equalsIgnoreCase("N") || yn.equals(">")) {
 				noticeCancel();
 				return View.BOOK;
@@ -349,7 +354,7 @@ public class BookRentController extends Print {
 			noticeNotRes();
 		}
 		printMenuVar();
-		System.out.println(tap + "1.대출\t\t2. 대출 예약\t3\t.대출 예약 취소\t\t4.연장");
+		System.out.println(tap + "1.대출\t\t2. 대출 예약\t\t3.대출 예약 취소\t\t4.연장");
 		System.out.println(tap + "5.반납\t\t6.도서조회\t\t7.도서관 변경\t\t0.홈");
 		printMenuVar();
 		int sel = ScanUtil.menu();
@@ -418,6 +423,7 @@ public class BookRentController extends Print {
 			printMenuVar();
 			System.out.println(tap + "1. 다른 도서 대출 예약\t\t2.대출\t\t3.도서관변경");
 			System.out.println(tap + "\t\t0.홈");
+			printMenuVar();
 			int sel = ScanUtil.menu();
 			switch (sel) {
 			case 1:
@@ -467,16 +473,17 @@ public class BookRentController extends Print {
 		// 책 대출 예약완료
 		bookService.bookRefUpdate(book);
 		bookService.bookReservation(param);
-		System.out.println(var);
-		System.out.println("남은 대출 예약 가능 권 수는 " + (vol - 1) + "권 입니다.");
+		printMenuOverVar();
+		System.out.println(tap+"남은 대출 예약 가능 권 수는 " + (vol - 1) + "권 입니다.");
+		
 		System.out.println();
 		// 대출 예약 순번을 보여줄 것
 		List<Object> memparam = memberNo();
 		int seq = bookService.bookMySeq(memparam, bookNo);
-
 		System.out.println(tap + "예약 순번은 " + seq + "번 째입니다");
 		printMenuVar();
 		System.out.println(tap+"1. 대출예약\t\t2.도서 조회\t\t0.홈");
+		printMenuVar();
 		int lastSel = ScanUtil.menu();
 		switch (lastSel) {
 		case 1:
@@ -531,16 +538,23 @@ public class BookRentController extends Print {
 		boolean bookLibraryChk = bookService.bookLibraryChk(book, libNo);
 		Map<String, Object> map = bookService.bookInformation(book);
 		if (!bookLibraryChk) {
-			System.out.println(map.get("LIB_NAME") + "에 위치한 도서입니다");
-			System.out.println(tap+"현재 위치한 도서관에서 대출불가합니다");
-			System.out.println(tap+"1. 다른 도서 대출\t\t2. 다른 도서관 선택");
+			System.out.println("\t"+RED+var+END);
+			System.out.println(notice+map.get("LIB_NAME") + "에 위치한 도서입니다");
+			System.out.println(notice+"현재 위치한 도서관에서 대출불가합니다");
+			System.out.println("\t"+RED+var+END);
+			System.out.println();
+			printMenuVar();
+			System.out.println(tap+"1. 다른 도서 대출\t\t2. 다른 도서관 선택\t\t3.도서조회");
 			System.out.println(tap+"0. 홈");
+			printMenuVar();
 			int number = ScanUtil.menu();
 			switch (number) {
 			case 1:
 				return View.BOOK_RENT;
 			case 2:
 				return View.LIBRARY;
+			case 3:
+				return View.BOOK;
 			case 0:
 				return mainMenu();
 			default:
@@ -559,8 +573,9 @@ public class BookRentController extends Print {
 		System.out.println();
 		printMenuVar();
 		System.out.println(tap+"이 도서를 대출하시겠습니까?");
+		printMenuVar();		
 		while (true) {
-			String yn = ScanUtil.nextLine("Y / N");
+			String yn = ScanUtil.nextLine(tap+"Y / N");
 			if (yn.equalsIgnoreCase("N") || yn.equals(">")) {
 				System.out.println(var);
 				System.out.println(notice+"\t대출을 취소합니다");
@@ -588,10 +603,12 @@ public class BookRentController extends Print {
 		System.out.println();
 		Date returnDate = new Date(((Timestamp) date.get("RETURN_DATE")).getTime());
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy년 MM월 dd일");
-		System.out.println(notice+"반납일 : " + dateFormat.format(returnDate));
-		System.out.println(notice+"남은 대출 가능 권 수는 " + (vol - 1) + "권 입니다.");
-		System.out.println(var);
+		printMenuOverVar();
+		System.out.println(tap+"반납일 : " + dateFormat.format(returnDate));
+		System.out.println(tap+"남은 대출 가능 권 수는 " + (vol - 1) + "권 입니다.");
+		System.out.println();
 		System.out.println(tap+"1. 대출\t\t2.도서 조회\t\t0.홈");
+		printMenuVar();
 		int lastSel = ScanUtil.menu();
 		switch (lastSel) {
 		case 1:
@@ -623,8 +640,8 @@ public class BookRentController extends Print {
 		List<Map<String, Object>> bookList = bookService.bookDelayList(param);
 		if (bookList == null) {
 			System.out.println(var);
-			System.out.println(notice+"\t연장 가능한 도서가 없습니다");
-			System.out.println(notice+"\t이전 화면으로 돌아갑니다.");
+			System.out.println(notice+"연장 가능한 도서가 없습니다");
+			System.out.println(notice+"이전 화면으로 돌아갑니다.");
 			System.out.println(var);
 			return View.BOOK;
 		}
@@ -642,9 +659,12 @@ public class BookRentController extends Print {
 		}
 		MainController.sessionStorage.put("delay", save);
 		printUnderVar();
-
+		
+		System.out.println();
+		printMenuVar();
 		System.out.println(tap+"1.전체 연장\t\t2.부분 연장\t\t3.도서조회");
 		System.out.println(tap+"0.홈");
+		printMenuVar();
 		int sel = ScanUtil.menu();
 		switch (sel) {
 		case 1:
@@ -685,10 +705,10 @@ public class BookRentController extends Print {
 	 */
 	public View Delay() {
 		if (!MainController.sessionStorage.containsKey("delay")) {
-			System.out.println(RED+var+END);
+			System.out.println("\t"+RED+var+END);
 			System.out.println(notice+"\t연장할 도서가 없습니다");
 			System.out.println(notice+"\t이전 화면으로 돌아갑니다.");
-			System.out.println(RED+var+END);
+			System.out.println("\t"+RED+var+END);
 			return View.BOOK;
 		}
 		List<Object> param = memberNo();
@@ -711,7 +731,7 @@ public class BookRentController extends Print {
 		bookService.bookDelay(param);
 		System.out.println();
 		System.out.println(var);
-		System.out.println(notice+"\t해당 도서의 반납일이 7일 연장되었습니다");
+		System.out.println(notice+"해당 도서의 반납일이 7일 연장되었습니다");
 		System.out.println(var);
 		System.out.println();
 		printMenuVar();
@@ -719,8 +739,10 @@ public class BookRentController extends Print {
 		if (map != null) {
 			MainController.sessionStorage.put("delay", map);
 		}
+		printMenuVar();
 		System.out.println(tap+"1. 다른 책 연장\t2.도서조회");
 		System.out.println(tap+"\t\t\t0.홈");
+		printMenuVar();
 		int sel = ScanUtil.menu();
 		switch (sel) {
 		case 1:
@@ -742,14 +764,14 @@ public class BookRentController extends Print {
 			return View.LIBRARY;
 		}
 		List<Object> param = libMemNo();
-		System.out.println(GREEN+menuU+END);
+		printMenuVar();
 		System.out.println(tap+"현재 도서관에서 반납 가능한 목록");
-		System.out.println(GREEN+menuD+END);
+		printMenuVar();
 		List<Map<String, Object>> list = bookService.bookReturnList(param);
 		if (list == null) {
-			System.out.println(GREEN+menuU+END);
-			System.out.println(tap+"반납할 도서가 없습니다.");
-			System.out.println(GREEN+menuD+END);
+			System.out.println("\t"+GREEN+var+END);
+			System.out.println(notice+"반납할 도서가 없습니다.");
+			System.out.println("\t"+GREEN+var+END);
 			return View.BOOK;
 		}
 		Date today = new Date();
@@ -772,8 +794,10 @@ public class BookRentController extends Print {
 			save.put((String) map.get("BOOK_NO"), 1);
 		}
 		MainController.sessionStorage.put("return", save);
+		printMenuVar();
 		System.out.println(tap+"1.전체 반납\t\t2.부분반납\t\t3.도서조회");
 		System.out.println(tap+"\t\t\t0.홈");
+		printMenuVar();
 		int sel = ScanUtil.menu();
 		switch (sel) {
 		case 1:
@@ -806,8 +830,11 @@ public class BookRentController extends Print {
 		if (!overdue) {
 			bookService.memberOverdueUpdateAll(libMemNo);
 			String overdueDate = bookService.memberOverdueInfo(memNo);
-			System.out.println("반납일을 넘어서 반납하셨습니다.");
-			System.out.println(overdueDate + "부터 대출이 가능합니다.");
+			System.out.println("\t"+RED+var+END);
+			System.out.println("\t"+RED+var+END);
+			System.out.println(notice+"반납일을 넘어서 반납하셨습니다.");
+			System.out.println(notice+"\t"+overdueDate + "부터 대출이 가능합니다.");
+			System.out.println("\t"+RED+var+END);
 		}
 		bookService.bookReturnAll(libMemNo);
 
@@ -825,10 +852,10 @@ public class BookRentController extends Print {
 	 */
 	public View returnBookPart() {
 		if (!MainController.sessionStorage.containsKey("return")) {
-			System.out.println(RED+var+END);
-			System.out.println(notice+"\t반납할 도서가 없습니다");
-			System.out.println(notice+"\t이전 화면으로 돌아갑니다.");
-			System.out.println(RED+var+END);
+			System.out.println("\t"+RED+var+END);
+			System.out.println(notice+"반납할 도서가 없습니다");
+			System.out.println(notice+"이전 화면으로 돌아갑니다.");
+			System.out.println("\t"+RED+var+END);
 			return View.BOOK;
 		}
 		Map<String, String> map = (Map<String, String>) MainController.sessionStorage.remove("return");
@@ -860,38 +887,43 @@ public class BookRentController extends Print {
 		if (!overdue) {
 			bookService.memberOverdueUpdate(param);
 			String overdueDate = bookService.memberOverdueInfo(memNo);
-			System.out.println(RED+var+END);
-			System.out.println(notice+"\t반납일을 넘어서 반납하셨습니다.");
-			System.out.println(notice+"\t"+overdueDate + "부터 대출이 가능합니다.");
-			System.out.println(RED+var+END);
+			System.out.println("\t"+RED+var+END);
+			System.out.println(notice+"반납일을 넘어서 반납하셨습니다.");
+			System.out.println(notice+overdueDate + "부터 대출이 가능합니다.");
+			System.out.println("\t"+RED+var+END);
 		}
 		bookService.bookReturn(param);
 		bookService.bookRefDate(bookNo);
 		List<Object> memParam = new ArrayList<>();
 		memParam.add(memNo);
 		System.out.println(var);
-		System.out.println(notice+"\t반납이 완료되었습니다");
+		System.out.println(notice+"반납이 완료되었습니다");
 		System.out.println(var);
 		return View.BOOK_RETURN;
 
 	}
 
 	public View bookResCancel() {
-		System.out.println(notice+"\t예약 취소할 도서 번호를 입력해주세요");
-		String bookNo = ScanUtil.bookNo();
 		List<Object> param = memberNo();
+		List<Map<String, Object>> resList = bookService.bookResList(param);
+		if (resList == null) {
+			noticeNotRes();
+			return View.BOOK;
+		}
+		System.out.println(notice+"예약 취소할 도서 번호를 입력해주세요");
+		String bookNo = ScanUtil.bookNo();
 		boolean bookResChk = bookService.bookResChk(param, bookNo);
 		if (!bookResChk) {
-			System.out.println(RED+var+END);
-			System.out.println(notice+"\t대출 예약 기록이 없습니다");
-			System.out.println(RED+var+END);
+			System.out.println("\t"+RED+var+END);
+			System.out.println(notice+"대출 예약 기록이 없습니다");
+			System.out.println("\t"+RED+var+END);
 			return View.BOOK_RENT_LIST;
 		}
 		param.add(bookNo);
 		bookService.bookRefCancel(param);
-		System.out.println(RED+var+END);
-		System.out.println(notice+"\t예약이 취소되었습니다");
-		System.out.println(RED+var+END);
+		System.out.println("\t"+RED+var+END);
+		System.out.println(notice+"예약이 취소되었습니다");
+		System.out.println("\t"+RED+var+END);
 		return View.BOOK_RENT_LIST;
 	}
 }
