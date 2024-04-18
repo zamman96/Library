@@ -537,7 +537,7 @@ public class BookListController extends Print {
 		printUnderVar();
 		System.out.println();
 		printMenuVar();
-		System.out.println(tap+"1. 페이지 번호 입력\t\t2. 도서 조회\t\t0. 홈");
+		System.out.println(tap+"1. 페이지 번호 입력\t\t2. 도서 조회\t\t3. 마이페이지\t\t0. 홈");
 		printMenuVar();
 		String sel = ScanUtil.menuStr();
 		switch (sel) {
@@ -566,6 +566,9 @@ public class BookListController extends Print {
 		case "2":
 				MainController.sessionStorage.remove("pageEnd");
 				return View.BOOK;
+		case "3":
+			MainController.sessionStorage.remove("pageEnd");
+			return View.MYPAGE;
 		case "0":
 			MainController.sessionStorage.remove("pageEnd");
 			return mainMenu();
