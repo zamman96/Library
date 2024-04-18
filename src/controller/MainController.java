@@ -256,7 +256,8 @@ public class MainController extends Print {
 		System.out.println();
 		System.out.println(tap+"전화번호 : "+tel);
 		printMenuVar();
-		System.out.println(tap + "1. 회원 정보 수정\t\t2. 전체 대출내역 \t\t3.현재 대출/예약내역\t4. 탈퇴 \t5. 로그아웃  ");
+		System.out.println(tap + "1. 회원 정보 수정\t\t2. 전체 대출내역 \t\t3.현재 대출/예약내역");
+		System.out.println(tap+"4. 탈퇴 \t5. 로그아웃  ");
 		printMenuVar();
 		int sel = ScanUtil.menu();
 		switch (sel) {
