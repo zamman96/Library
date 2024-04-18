@@ -395,7 +395,7 @@ public class MainController extends Print {
 		printMenuOverVar();
 		System.out.println(tap+"도서관 선택");
 		printMenuVar();
-		System.out.println(tap+"1. 지역구 선택\t\t2. 도서관 이름 검색\t\t3. 전체 도서관 리스트");
+		System.out.println(tap+"1. 지역구 선택\t\t2. 도서관 이름 검색\t\t3. 전체 도서관 리스트\t\t4.도서관 접속 정보");
 		System.out.println(tap+"\t\t0. 홈");
 		printMenuVar();
 		int sel = ScanUtil.menu();
@@ -406,6 +406,9 @@ public class MainController extends Print {
 			return View.LIBRARY_SEARCH;
 		case 3:
 			return View.LIBRARY_LIST;
+		case 4:
+			sessionStorage.remove("library");
+			return mainMenu();
 		case 0:
 			return mainMenu();
 		default:
