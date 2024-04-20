@@ -11,7 +11,6 @@ java 코드를 작성하다가 다시 db로 돌아가 데이터를 옮기거나 
 
 <h2>1. MAIN</h2>
 <img src = "https://github.com/zamman96/LibraryService/assets/123943954/9574912c-b2be-4892-9eb6-793c36428d83" alt = "메인">
-![image](https://github.com/zamman96/LibraryService/assets/123943954/9574912c-b2be-4892-9eb6-793c36428d83)
 메인 창은 상황에 따라 구분을 해놓았다
   1) 회원 로그인 X, 도서관 선택X
   2) 회원 로그인 O, 도서관 선택X
@@ -21,20 +20,20 @@ java 코드를 작성하다가 다시 db로 돌아가 데이터를 옮기거나 
 선택 메뉴가 다르므로 5개의 view를 따로 만들어 세션에 저장된 정보에 따라 홈에 갈 경우 해당하는 곳에 향하도록 하였다.
 
 <h2>2. 도서관 선택</h2>
-![image](https://github.com/zamman96/LibraryService/assets/123943954/2aefa5d0-64ef-4a00-9b49-13eced010bb6)
+<img src = "https://github.com/zamman96/LibraryService/assets/123943954/2aefa5d0-64ef-4a00-9b49-13eced010bb6" alt = "메인">
 도서관은 전국으로 정할까 싶었지만 초급 프로젝트치고 너무 주제가 넓어질 것 같아 대전한정으로 결정하였다.
 대전의 20개의 도서관의 이름을 따서 사용하는 것으로 가정을 하였고 회원이 지역구를 통해 검색하기 용이하게
 '1 : 중구		2 : 서구		3 : 동구		4 : 대덕구		5 : 유성구' 로 정해 번호를 받으면 원하는 도서관이 뜨도록 설정하였고, 그 외에도 이름 키워드로 검색할 수 있고,
 전체의 리스트를 통해 번호를 입력해 들어가도록 설계하였다.
 
 <h2>3. 도서 조회</h2>
-![image](https://github.com/zamman96/LibraryService/assets/123943954/c9a125b6-4d2e-42f9-97b8-7b09bffe1297)
+<img src = https://github.com/zamman96/LibraryService/assets/123943954/c9a125b6-4d2e-42f9-97b8-7b09bffe1297"" alt = "메인">
 도서 대출은 도서번호를 통해 받기에 도서 번호를 보기 편한 조건으로 설계를 하였다.
 처음 도서 조회를 들어오면 도서관을 선택하지 않았을 때는 전체의 도서관 대출 순위에 따른 도서 대출 순위를 보여주며, 선택했을 때는 해당하는 도서관의 순위가 뜨도록 하였다.
 그리고 대출하기 용이하도록 도서가 대출이 가능한지 여부를 앞에 색으로 표시해두어 명확하게 파악할 수 있도록 했다.
 
 <h3>  1) 모든 도서 조회</h3> 
-![image](https://github.com/zamman96/LibraryService/assets/123943954/69000b7d-3add-4ef0-99a7-f3596b2c4b45)
+<img src = "https://github.com/zamman96/LibraryService/assets/123943954/69000b7d-3add-4ef0-99a7-f3596b2c4b45" alt = "메인">
 모든 도서는 보기 좋게 페이징 처리를 하였으며 5페이지씩 끊어서 볼 수 있도록 처리하였다.
 처음엔 >> 으로 5페이지나 10페이지씩 넘기게 설정할까 싶었지만 더욱 보기 쉽게 직접 페이지를 입력해 바꾸는 것으로 수정되어 <, >, 이나 숫자로 쉽게 페이지를 왔다갔다 할 수 있게 설계하였다.
 (여기서 만약에 도서관을 선택했다면 해당 도서관의 도서관만 나온다)
@@ -143,12 +142,12 @@ DB에서는 '-'도 포함하여 저장하였지만 java에서는 숫자 11자리
 <h3>- 도서 조회</h3>
 도서관리는 도서상태에 따라 폐기/이관이나 도서추가 같은 것을 관리하기 편하게 일단 도서 조회를 꼼꼼하게 파악해야된다고 생각하여 단순히 전엔
 제목과 작가 출판사 검색 3개만 추가했던 것과 다르게 더 꼼꼼하게 넣도록 하였다
-![image](https://github.com/zamman96/LibraryService/assets/123943954/0d0dab8f-d353-4fae-a661-b4a34a111b79)
+<img src = "https://github.com/zamman96/LibraryService/assets/123943954/0d0dab8f-d353-4fae-a661-b4a34a111b79" alt = "메인">
 contains 메서드를 써서 더욱더 세세하게 검색할 수 있게하도록 하였다.
 
 <h2>15. 관리자 회원 관리</h2>
 <h3>- 회원 조회</h3>
-![image](https://github.com/zamman96/LibraryService/assets/123943954/850c7a6c-d668-4340-a12b-2ed89571333e)  <br>
+<img src = "https://github.com/zamman96/LibraryService/assets/123943954/850c7a6c-d668-4340-a12b-2ed89571333e" alt = "메인">
 회원 조회도 여러 정보를 따로 조회하는 형식으로 표현 했지만,
 지금 생각하기론 이름 검색이라던지, 관리자여부라던지는 추가로 썼으면 더 좋지 않았을까 하는 생각이 든다.
 <h3>- 연체된 책 별 회원 정보</h3>
