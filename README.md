@@ -10,6 +10,7 @@
 java 코드를 작성하다가 다시 db로 돌아가 데이터를 옮기거나 추가하는 등 일이 있었지만 무사히 마칠 수 있었다. 
 
 <h2>1. MAIN</h2>
+<img src = "https://github.com/zamman96/LibraryService/assets/123943954/9574912c-b2be-4892-9eb6-793c36428d83" alt = "메인">
 ![image](https://github.com/zamman96/LibraryService/assets/123943954/9574912c-b2be-4892-9eb6-793c36428d83)
 메인 창은 상황에 따라 구분을 해놓았다
   1) 회원 로그인 X, 도서관 선택X
